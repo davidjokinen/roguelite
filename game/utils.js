@@ -1,3 +1,4 @@
+import { SHEETS } from './resources.js';
 
 export const createCooldown = (timeout) => {
   let curTime = 0;
@@ -22,4 +23,15 @@ export const loopXbyX = (startX, startY, width, height, promise) => {
       promise(newX, newY);
     }
   }
+}
+
+export const getTextureID = (data, sheet) => {
+  let targetTextureMap = SHEETS[sheet || 'roguelikeChar'];
+  if (data !== undefined && typeof data === 'number')
+    return data;
+  if (data !== undefined && typeof data === 'object') {
+    const countX = targetTextureMap.countX || 0;
+    return data.x + countX * data.y;
+  }
+  return null;
 }
