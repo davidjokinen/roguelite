@@ -349,7 +349,7 @@ export class Texture extends BaseTexture {
         texture.magFilter = THREE.NearestFilter;
         texture.minFilter = THREE.NearestMipmapNearestFilter;
         
-        texture.anisotropy = 4;
+        // texture.anisotropy = 4;
         texture.needsUpdate = true;
 
         const material = new THREE.MeshBasicMaterial({
@@ -357,7 +357,7 @@ export class Texture extends BaseTexture {
           alphaTest: .6,
           side : THREE.DoubleSide,
         });
-        material.map.minFilter = THREE.NearestMipmapNearestFilter;
+        material.map.minFilter = THREE.NearestFilter;
         this._texture = texture;
         this._material = material;
         this._loaded = true;

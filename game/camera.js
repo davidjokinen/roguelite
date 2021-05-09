@@ -29,7 +29,7 @@ export function enableCameraMovement(camera, mouse) {
     click.x = e.pageX;
     click.y = e.pageY;
   });
-  return;
+  // return;
   const onZoom = mouse.addOnZoom((e) => {
     const SCREEN_WIDTH = window.innerWidth;
     const SCREEN_HEIGHT = window.innerHeight;
