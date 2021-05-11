@@ -1,12 +1,10 @@
-import { loopXbyX } from './utils';
-import { getConfig } from './tiles/get-tile';
+import { getConfig } from '../tiles/get-tile';
 
-import { LAYERS, SHEETS } from './resources.js';
+import { LAYERS, SHEETS } from '../resources.js';
 
-import { getTextureID } from './utils';
+import { getTextureID } from '../utils';
 
-
-class Tile {
+export default class Tile {
   constructor(type, x, y) {
     this.type = type;
     this.x = x;
@@ -138,65 +136,5 @@ class Tile {
       }
       this.sprite = LAYERS['tile'].createSprite(this.texture, this.x, this.y);
     }
-  }
-}
-
-const SIZE = 100;
-
-export default class Map {
-  constructor() {
-    this.tiles = [];
-
-    this.init();
-  }
-
-  getTile(x, y) {
-    let i = x*SIZE+y%SIZE;
-    return this.tiles[i];
-  }
-
-  init() {
-    for(let x=0;x<SIZE;x++) {
-      for(let y=0;y<SIZE;y++) {
-        let tileType = 'grass';
-        let i = x*SIZE+y%SIZE;
-        this.tiles[i] = new Tile(tileType, x, y);
-      }
-    }
-    loopXbyX(25,20,20,3, (x, y) => {
-      const tile = this.getTile(x, y);
-      if (!tile) return;
-      tile.updateType('dirt');
-    });
-    loopXbyX(10,10,8,20, (x, y) => {
-      const tile = this.getTile(x, y);
-      if (!tile) return;
-      tile.updateType('water');
-    });
-    loopXbyX(11,25,8,10, (x, y) => {
-      const tile = this.getTile(x, y);
-      if (!tile) return;
-      tile.updateType('water');
-    });
-
-    loopXbyX(4, 5,8,10, (x, y) => {
-      const tile = this.getTile(x, y);
-      if (!tile) return;
-      tile.updateType('water');
-    });
-
-    this.tiles.forEach(tile => {
-      tile.checkEdges(this);
-    })
-  }
-
-  update() {
-    this.tiles.forEach(tile => {
-      tile.updateType(TileTypeList[~~(Math.random()*3)]);
-    });
-  }
-
-  render() {
-    this.tiles.forEach(tile => tile.render());
   }
 }
