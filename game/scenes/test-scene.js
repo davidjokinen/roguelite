@@ -16,8 +16,14 @@ export default class TestScene {
     const e2 = new Entity('npm-wander', 20, 22);
     const bush = new Entity('bush', 24, 24);
     loopXbyX(28, 25, 20, 20, (x, y) => {
-      if (Math.random() > .3)
+      if (Math.random() > .5)
         this.entities.push(new Entity('tree', x, y));
+      else if (Math.random() > .7)
+        this.entities.push(new Entity('small-tree', x, y));
+      else if (Math.random() > .95)
+        this.entities.push(new Entity('dead-tree', x, y));
+      else if (Math.random() > .95)
+        this.entities.push(new Entity('small-dead-tree', x, y));
     });
     this.entities.push(e1);
     this.entities.push(e2);

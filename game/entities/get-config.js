@@ -3,6 +3,9 @@ import player from './configs/player';
 import bush from './configs/bush';
 import longBush from './configs/long-bush';
 import tree from './configs/tree';
+import smallTree from './configs/small-tree';
+import deadTree from './configs/dead-tree';
+import smallDeadTree from './configs/small-dead-tree';
 
 const configMap = {}
 
@@ -35,3 +38,6 @@ registerConfig(npcWander);
 registerConfig(bush);
 registerConfig(longBush);
 registerConfig(tree);
+registerConfig(smallTree);
+registerConfig(deadTree);
+registerConfig(smallDeadTree);
