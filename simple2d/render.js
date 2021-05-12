@@ -615,10 +615,12 @@ class GroupMesh {
 
     this.geometry.computeVertexNormals();
     this.geometry.renderOrder = handler.defaultZPosition*100;
+    this.geometry.depthTest = false;
 
     this.texture.getMaterial().then(material => {
       this.mesh = new THREE.Mesh( this.geometry, material );
-      this.mesh.renderOrder = handler.defaultZPosition;
+      this.mesh.renderOrder = handler.defaultZPosition*100;
+      material.depthTest = false;
       this.mesh.frustumCulled = false;
       if (this.handler) {
         const scene = this.handler.getScene();
