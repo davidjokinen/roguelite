@@ -15,7 +15,7 @@ export default class TestScene {
     const e1 = new Entity('player', 20, 20);
     const e2 = new Entity('npm-wander', 20, 22);
     const bush = new Entity('bush', 24, 24);
-    loopXbyX(28, 25, 20, 20, (x, y) => {
+    loopXbyX(28, 25, 120, 120, (x, y) => {
       if (Math.random() > .5)
         this.entities.push(new Entity('tree', x, y));
       else if (Math.random() > .7)
@@ -61,5 +61,6 @@ export default class TestScene {
 
   render() {
     this.map.render();
+    this.entities.forEach(entity => entity.render());
   }
 }
