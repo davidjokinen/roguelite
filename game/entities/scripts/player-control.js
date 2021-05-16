@@ -33,12 +33,17 @@ export default class PlayerControl extends EntityScript {
     let clearSpot = true;
     let newX = target.x + moveX;
     let newY = target.y + moveY;
-    entities.forEach(entity => {
-      if (entity === target) return;
-      if (entity.x === newX && entity.y === newY && !entity.walkable) {
+    const tile = map.getTile(newX, newY);
+    if (tile) {
+      if (!tile.walkable) {
         clearSpot = false;
       }
-    });
+      tile.entities.forEach(entity => {
+        if (!entity.walkable) {
+          clearSpot = false;
+        }
+      });
+    }
 
     if (!clearSpot) return;
 

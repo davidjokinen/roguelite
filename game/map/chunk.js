@@ -13,14 +13,24 @@ export default class Chunk {
   }
 
   generate() {
-    console.log(this.x,this.y)
     this.grid = new Array(SIZE*SIZE);
     for (let x=0;x<SIZE*SIZE;x++) {
-      const posx = x%SIZE+this.x*SIZE;
-      const posy = ~~(x/SIZE)+this.y*SIZE;
+      const posx = ~~(x%SIZE+this.x*SIZE);
+      const posy = ~~(~~(x/SIZE)+this.y*SIZE);
       const type = (this.x+this.y)%2 === 0 ? 'grass' : 'dirt';
-      this.grid[x] = new Tile(type, ~~posx, ~~posy);
+      if (this.map.generator) {
+        const newType = this.map.generator.tileInit(posx, posy);
+        if (newType) type = newType;
+      }
+      this.grid[x] = new Tile(type, posx, posy);
     }
+    
+  }
+
+  checkEdges() {
+    this.grid.forEach(tile => {
+      tile.checkEdges(this.map);
+    });
   }
 
   getTile(posX, posY) {

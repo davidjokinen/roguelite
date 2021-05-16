@@ -9,6 +9,8 @@ import { LAYERS } from './resources.js';
 import { getTextureID } from './utils';
 import { getEdgesTextureID, newEdgeHits, getEdgeData, getTextureData } from './entity-common';
 
+import Map from './map/map';
+
 export default class Entity {
   constructor(data, x, y) {
     this.data = null;
@@ -27,6 +29,7 @@ export default class Entity {
     // pos 
     this.x = x;
     this.y = y;
+    this._curTile = null;
 
     this.walkable = data.walkable || false;
     this.movingTime = 100;
@@ -61,6 +64,19 @@ export default class Entity {
     if (textureData.topTargetTextureId) {
       this.topTargetTextureId = textureData.topTargetTextureId;
     }
+    this._onChangePosition();
+  }
+
+  _onChangePosition() {
+    const map = Map.getFocus();
+    if (!map) return;
+    const tile = map.getTile(~~this.x, ~~this.y);
+    if (!tile) return;
+    if (this._curTile) {
+      this._curTile.entities.splice(this._curTile.entities.indexOf(this), 1);
+    }
+    this._curTile = tile;
+    tile.entities.push(this);
   }
 
   update(map, entities) {
@@ -134,6 +150,7 @@ export default class Entity {
     this.lastY = this.y;
     this.x += x;
     this.y += y;
+    this._onChangePosition();
   }
 
   attack(target) {

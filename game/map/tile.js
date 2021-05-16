@@ -10,6 +10,10 @@ export default class Tile {
     this.x = x;
     this.y = y;
     this.data = null;
+
+    this.entities = [];
+
+    this.walkable = true;
     
     this.textureMap = null;
     this.textureId = null;
@@ -27,6 +31,8 @@ export default class Tile {
     } else {
       console.error('error')
     }
+
+    this.walkable = data.walkable;
 
     const textureData = getTextureData(data);
 
@@ -47,13 +53,13 @@ export default class Tile {
     const hits = newEdgeHits();
     
     let targetTile = map.getTile(x-1, y);
-    if (targetTile.type === type) hits.left = true;
+    if (targetTile && targetTile.type === type) hits.left = true;
     targetTile = map.getTile(x+1, y);
-    if (targetTile.type === type) hits.right = true;
+    if (targetTile && targetTile.type === type) hits.right = true;
     targetTile = map.getTile(x, y+1);
-    if (targetTile.type === type) hits.top = true;
+    if (targetTile && targetTile.type === type) hits.top = true;
     targetTile = map.getTile(x, y-1);
-    if (targetTile.type === type) hits.bottom = true;
+    if (targetTile && targetTile.type === type) hits.bottom = true;
     if (
       edges.cornertopleft ||
       edges.cornertopright ||
@@ -61,14 +67,15 @@ export default class Tile {
       edges.cornerbottomright 
       ) {
       let targetTile = map.getTile(x-1, y+1);
-      if (targetTile.type === type) hits.cornertopleft = true;
+      if (targetTile && targetTile.type === type) hits.cornertopleft = true;
       targetTile = map.getTile(x+1, y+1);
-      if (targetTile.type === type) hits.cornertopright = true;
+      if (targetTile && targetTile.type === type) hits.cornertopright = true;
       targetTile = map.getTile(x-1, y-1);
-      if (targetTile.type === type) hits.cornerbottomleft = true;
+      if (targetTile && targetTile.type === type) hits.cornerbottomleft = true;
       targetTile = map.getTile(x+1, y-1);
-      if (targetTile.type === type) hits.cornerbottomright = true;
+      if (targetTile && targetTile.type === type) hits.cornerbottomright = true;
     }
+    
     const sheet = this.data.sprite.sheet;
     this.textureId = getEdgesTextureID(sheet, edges, hits) || this.textureId;
   }

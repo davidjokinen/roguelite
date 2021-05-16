@@ -20,7 +20,27 @@ export default class AiWander extends EntityScript {
     if (Math.random() > .95)
       moveX -= 1;
 
+    
+
     if (moveX != 0 || moveY != 0) {
+      let clearSpot = true;
+      let newX = target.x + moveX;
+      let newY = target.y + moveY;
+      const tile = map.getTile(newX, newY);
+      if (tile) {
+        if (!tile.walkable) {
+          clearSpot = false;
+        }
+        tile.entities.forEach(entity => {
+          if (!entity.walkable) {
+            clearSpot = false;
+          }
+        });
+      }
+
+      if (!clearSpot || !tile) {
+        return;
+      }
       target.move(moveX, moveY);
       this.inputCooldown.updateTimeout(1000 + 5000 * Math.random());
       this.inputCooldown.reset();
