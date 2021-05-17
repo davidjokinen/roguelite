@@ -6,6 +6,9 @@ import tree from './configs/tree';
 import smallTree from './configs/small-tree';
 import deadTree from './configs/dead-tree';
 import smallDeadTree from './configs/small-dead-tree';
+import rock from './configs/rock';
+import grass from './configs/grass';
+import berryBush from './configs/berry-bush'
 
 const configMap = {}
 
@@ -36,8 +39,11 @@ export function getConfig(id) {
 registerConfig(player);
 registerConfig(npcWander);
 registerConfig(bush);
+registerConfig(berryBush);
 registerConfig(longBush);
 registerConfig(tree);
 registerConfig(smallTree);
 registerConfig(deadTree);
 registerConfig(smallDeadTree);
+registerConfig(rock);
+registerConfig(grass);

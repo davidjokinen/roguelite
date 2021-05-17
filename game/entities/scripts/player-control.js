@@ -45,7 +45,7 @@ export default class PlayerControl extends EntityScript {
       });
     }
 
-    if (!clearSpot) return;
+    if (!clearSpot || !tile) return;
 
     target.move(moveX, moveY);
     this.inputCooldown.reset();
