@@ -7,6 +7,8 @@ const handler = GroupMeshHandler.getRootHandler();
 
 const tileHandler = handler.createChildHandler();
 tileHandler.setDefaultZ(0);
+const entityFloorHandler = handler.createChildHandler();
+entityFloorHandler.setDefaultZ(0.999);
 const entityHandler = handler.createChildHandler();
 entityHandler.setDefaultZ(1);
 const entityTopHandler = handler.createChildHandler();
@@ -14,6 +16,7 @@ entityTopHandler.setDefaultZ(1.0001);
 
 export const LAYERS = {
   tile: tileHandler,
+  entityFloor: entityFloorHandler,
   entity: entityHandler,
   entityTops: entityTopHandler
 }

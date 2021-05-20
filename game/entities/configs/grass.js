@@ -1,6 +1,7 @@
 export default {
   id: 'grass',
   walkable: true,
+  layer: 'floor',
   sprite: {
     sheet: 'roguelikeSheet',
     randomTiles: [

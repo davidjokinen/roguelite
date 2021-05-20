@@ -8,7 +8,8 @@ import deadTree from './configs/dead-tree';
 import smallDeadTree from './configs/small-dead-tree';
 import rock from './configs/rock';
 import grass from './configs/grass';
-import berryBush from './configs/berry-bush'
+import berryBush from './configs/berry-bush';
+import woodPile from './configs/wood-pile';
 
 const configMap = {}
 
@@ -47,3 +48,4 @@ registerConfig(deadTree);
 registerConfig(smallDeadTree);
 registerConfig(rock);
 registerConfig(grass);
+registerConfig(woodPile);

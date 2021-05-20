@@ -50,6 +50,7 @@ export default class Entity {
     }
 
     // sprite 
+    this.layer = data.layer === 'floor' ? LAYERS['entityFloor'] :  LAYERS['entity'];
     this.textureMap = null;
     this.textureId = null;
     this.topTargetTextureId = null;
@@ -121,6 +122,7 @@ export default class Entity {
     const sheet = this.data.sprite.sheet;
     this.textureId = getTextureID(this.data.sprite.default, sheet);
     this.textureId = getEdgesTextureID(sheet, edges, hits) || this.textureId;
+    
     if (this.sprite) {
       this.texture = this.textureMap.getTexture(this.textureId);
       this.sprite.setTexture(this.texture);
@@ -133,7 +135,7 @@ export default class Entity {
         const { textureMap, textureId } = this;
         this.texture = textureMap.getTexture(textureId);
       }
-      this.sprite = LAYERS['entity'].createSprite(this.texture, this.x, this.y);
+      this.sprite = this.layer.createSprite(this.texture, this.x, this.y);
       if (this.topTargetTextureId) {
         const { textureMap, topTargetTextureId } = this;
         this.topSprite = LAYERS['entityTops'].createSprite(

@@ -14,11 +14,17 @@ export default class TestScene {
     
     let tile = this.map.findEmptyTile(75,75);
     const e1 = new Entity('player', tile.x, tile.y);
-    tile = this.map.findEmptyTile(80,80);
-    const e2 = new Entity('npm-wander', tile.x, tile.x);
-
     this.entities.push(e1);
+
+    tile = this.map.findEmptyTile(80,80);
+    const e2 = new Entity('npm-wander', tile.x, tile.y);
     this.entities.push(e2);
+
+    for (let i=0;i<87;i++) {
+      let tile = this.map.findEmptyTile(75,75);
+      const wood = new Entity('wood-pile', tile.x, tile.y);
+      this.entities.push(wood);
+    }
 
     // e1.attack(e2);
     this.cameraTarget = e1;

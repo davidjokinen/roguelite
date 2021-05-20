@@ -35,16 +35,20 @@ export default class Map {
   findEmptyTile(findX, findY) {
     let searchSize = 0;
     let tile = null;
-    const isTileGood = (tile) => {
+    const isTileGood = (checkTile) => {
+      // console.log('check ', tile)
       // replace condition later
-      return tile.type !== 'water' && tile.entities.length === 0;
+      return checkTile && checkTile.type !== 'water' && checkTile.entities.length === 0;
     }
 
-    while (searchSize < 10) {
+    while (searchSize < 20) {
       let curX = findX - searchSize;
       let curY = findY - searchSize;
-      tile = this.getTile(curX, curY);
-      if (isTileGood(tile)) return tile;
+      if (searchSize === 0) {
+        tile = this.getTile(curX, curY);
+        if (isTileGood(tile)) return tile;
+      }
+      
       const size = searchSize*2;
       for(let i=0;i<size;i++) {
         curX += 1;
@@ -61,7 +65,7 @@ export default class Map {
         tile = this.getTile(curX, curY);
         if (isTileGood(tile)) return tile;
       }
-      for(let i=0;i<size-1;i++) {
+      for(let i=0;i<size;i++) {
         curY -= 1;
         tile = this.getTile(curX, curY);
         if (isTileGood(tile)) return tile;
