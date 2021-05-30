@@ -32,7 +32,7 @@ export default class Entity {
     this._curTile = null;
 
     this.walkable = data.walkable || false;
-    this.movingTime = 100;
+    this.movingTime = 100
     // cur image/animation
     // status
 
@@ -58,6 +58,13 @@ export default class Entity {
     this.sprite = null;
     this.topSprite = null;
 
+    this.checkTextureData();
+    
+    this._onChangePosition();
+  }
+
+  checkTextureData() {
+    const data = this.data || {};
     const textureData = getTextureData(data);
 
     this.textureId = textureData.targetTextureId;
@@ -65,7 +72,6 @@ export default class Entity {
     if (textureData.topTargetTextureId) {
       this.topTargetTextureId = textureData.topTargetTextureId;
     }
-    this._onChangePosition();
   }
 
   _onChangePosition() {
@@ -166,5 +172,12 @@ export default class Entity {
 
   useItem(item) {
 
+  }
+
+  remove() {
+    this.sprite.remove();
+    if (this.topSprite) 
+      this.topSprite.remove();
+    this._remove = true;
   }
 }

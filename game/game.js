@@ -3,7 +3,9 @@ import regeneratorRuntime from "regenerator-runtime";
 import * as THREE from 'three';;
 import Mouse from "./mouse";
 import { enableCameraMovement } from './camera.js';
-import TestScene from './scenes/test-scene'
+import TestScene from './scenes/test-scene';
+import TitleScreen from './scenes/title-screen';
+import PauseScreen from './scenes/pause-screen';
 import { Texture, TextureMap, GroupMeshHandler, Sprite } from 'simple2d';
 
 const scene = new THREE.Scene();
@@ -34,8 +36,30 @@ window.addEventListener('resize', () => {
 }, false);
 resizeCanvas();
 
-const gameScene = new TestScene(camera);
-gameScene.init();
+let gameScene = new TitleScreen(camera);
+const changeScene = (id) => {
+  const sceneMap = {
+    'title': TitleScreen,
+    'game': TestScene,
+    'pause': PauseScreen,
+  }
+  let newScene = null
+  if (typeof id === 'string') {
+    newScene = new sceneMap[id]();
+  } else {
+    newScene = id;
+  }
+  const oldScene = gameScene;
+  gameScene = newScene;
+  gameScene._changeScene = changeScene;
+  gameScene.camera = camera;
+  const remove = gameScene.focusScene(oldScene);
+  if (oldScene && remove) {
+    oldScene.remove();
+  }
+}
+
+changeScene('title');
 const gameLoop = function () {
   requestAnimationFrame( gameLoop );
 

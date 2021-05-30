@@ -47,4 +47,10 @@ export default class Chunk {
       tile.render();
     });
   }
+
+  remove() {
+    this.grid.forEach(tile => {
+      tile.remove();
+    });
+  }
 }

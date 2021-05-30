@@ -89,4 +89,8 @@ export default class Tile {
       this.sprite = LAYERS['tile'].createSprite(this.texture, this.x, this.y);
     }
   }
+
+  remove() {
+    this.sprite.remove();
+  }
 }

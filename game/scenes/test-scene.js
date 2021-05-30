@@ -1,14 +1,21 @@
 import Entity from '../entity';
 import Map from '../map/map.js';
-import BaseGenerator from '../map/generators/base-generator'
+import BaseGenerator from '../map/generators/base-generator';
+import DefaultScene from './default-scene';
 
-export default class TestScene {
+import Game from '../ui/pages/game';
+
+import React from 'react';
+
+export default class TestScene extends DefaultScene {
   constructor(camera) {
+    super();
     this.camera = camera;
     this.cameraTarget = null;
   }
 
   init() {
+    super.init();
     this.entities = [];
     this.map = new Map(new BaseGenerator(this.entities));
     
@@ -30,6 +37,9 @@ export default class TestScene {
     this.cameraTarget = e1;
     
     this.entities.forEach(entity => entity.checkEdges(this.map, this.entities));
+
+    this.sceneComponent = <Game {...this.getUiProps()}/>;
+    this.drawUI();
   }
 
   update() {
@@ -55,5 +65,10 @@ export default class TestScene {
   render() {
     this.map.render();
     this.entities.forEach(entity => entity.render());
+  }
+
+  remove() {
+    this.map.remove();
+    this.entities.forEach(entity => entity.remove());
   }
 }

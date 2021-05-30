@@ -36,7 +36,6 @@ export default class Map {
     let searchSize = 0;
     let tile = null;
     const isTileGood = (checkTile) => {
-      // console.log('check ', tile)
       // replace condition later
       return checkTile && checkTile.type !== 'water' && checkTile.entities.length === 0;
     }
@@ -98,5 +97,9 @@ export default class Map {
 
   render() {
     Object.values(this.chunks).forEach(chunk => chunk.render());
+  }
+
+  remove() {
+    Object.values(this.chunks).forEach(chunk => chunk.remove());
   }
 }
