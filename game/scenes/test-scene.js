@@ -5,6 +5,8 @@ import DefaultScene from './default-scene';
 
 import Game from '../ui/pages/game';
 
+import Keyboard from '../keyboard';
+
 import React from 'react';
 
 export default class TestScene extends DefaultScene {
@@ -33,12 +35,21 @@ export default class TestScene extends DefaultScene {
       this.entities.push(wood);
     }
 
+    const keyboard = Keyboard.getKeyboard();
+    this.onKeyUpEvent = keyboard.onKeyUp((e) => {
+      const code = e.keyCode;
+      if (code === 27) {
+        this.changeScene('pause');
+        return false;
+      }
+    });
+
     // e1.attack(e2);
     this.cameraTarget = e1;
     
     this.entities.forEach(entity => entity.checkEdges(this.map, this.entities));
 
-    this.sceneComponent = <Game {...this.getUiProps()}/>;
+    this.sceneComponent = <Game {...this.getUiProps()} keyboard={keyboard}/>;
     this.drawUI();
   }
 
@@ -68,6 +79,8 @@ export default class TestScene extends DefaultScene {
   }
 
   remove() {
+    const keyboard = Keyboard.getKeyboard();
+    keyboard.removeOnKeyUp(this.onKeyUpEvent);
     this.map.remove();
     this.entities.forEach(entity => entity.remove());
   }

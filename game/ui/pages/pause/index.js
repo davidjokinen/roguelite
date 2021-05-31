@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
   },
   button: {
-    margin: theme.spacing(2),
+    marginBottom: theme.spacing(2),
   },
 }));
 
@@ -49,9 +49,9 @@ export default function Pause(props) {
         </Typography>
       </Paper>
       <Paper className={classes.paper}>
-        <Button variant="contained" className={classes.button} onClick={startAction}>Back to Game</Button>
-        <Button variant="contained" className={classes.button} onClick={settingsAction}>Settings</Button>
-        <Button variant="contained" className={classes.button} onClick={titleAction}>Exit to Title Screen</Button>
+        <Button variant="contained" fullWidth={true} className={classes.button} onClick={startAction}>Back to Game</Button>
+        <Button variant="contained" fullWidth={true} className={classes.button} onClick={settingsAction}>Settings</Button>
+        <Button variant="contained" fullWidth={true} className={classes.button} onClick={titleAction}>Exit to Title Screen</Button>
       </Paper>
     </Container>
   );

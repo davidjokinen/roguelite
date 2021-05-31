@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
   },
   button: {
-    margin: theme.spacing(2),
+    marginBottom: theme.spacing(2),
   },
 }));
 
@@ -47,8 +47,8 @@ export default function Title(props) {
         </Typography>
       </Paper>
       <Paper className={classes.paper}>
-        <Button variant="contained" className={classes.button} onClick={startAction}>Start Test</Button>
-        <Button variant="contained" className={classes.button} onClick={settingsAction}>Settings</Button>
+        <Button variant="contained" fullWidth={true} className={classes.button} onClick={startAction}>New Game</Button>
+        <Button variant="contained" fullWidth={true} className={classes.button} onClick={settingsAction}>Settings</Button>
       </Paper>
     </Container>
   );
