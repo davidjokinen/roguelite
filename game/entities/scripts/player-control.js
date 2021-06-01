@@ -1,4 +1,4 @@
-import Keyboard from '../../keyboard';
+import Keyboard from '../../core/keyboard';
 import EntityScript from '../entity-script';
 import { createCooldown } from '../../utils';
 

@@ -5,6 +5,8 @@ export default class DefaultScene {
   constructor() {
     this.sceneComponent = null;
     this.changeScene = this.changeScene.bind(this);
+    this.components = [];
+    this.componentMap = {};
     this._inited = false;
   }
 
@@ -15,6 +17,14 @@ export default class DefaultScene {
       return;
     }
     return this._changeScene(sceneId);
+  }
+
+  addComponent(com) {
+    com.init();
+    if (com.id) {
+      this.componentMap[com.id] = com;
+    }
+    this.components.push(com);
   }
 
   init() {
@@ -32,6 +42,7 @@ export default class DefaultScene {
   getUiProps() {
     return {
       changeScene: this.changeScene,
+      components: this.componentMap,
     };
   }
 
@@ -60,6 +71,6 @@ export default class DefaultScene {
   }
 
   remove() {
-
+    this.components.forEach(com => com.remove());
   }
 }

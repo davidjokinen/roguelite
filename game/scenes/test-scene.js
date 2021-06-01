@@ -5,7 +5,9 @@ import DefaultScene from './default-scene';
 
 import Game from '../ui/pages/game';
 
-import Keyboard from '../keyboard';
+import Keyboard from '../core/keyboard';
+
+import TileSelector from '../map/tile-selector';
 
 import React from 'react';
 
@@ -18,6 +20,9 @@ export default class TestScene extends DefaultScene {
 
   init() {
     super.init();
+
+    const tileSelector = new TileSelector(this.camera);
+    this.addComponent(tileSelector);
     this.entities = [];
     this.map = new Map(new BaseGenerator(this.entities));
     
@@ -36,7 +41,7 @@ export default class TestScene extends DefaultScene {
     }
 
     const keyboard = Keyboard.getKeyboard();
-    this.onKeyUpEvent = keyboard.onKeyUp((e) => {
+    this.onKeyEvent = keyboard.onKeyDown((e) => {
       const code = e.keyCode;
       if (code === 27) {
         this.changeScene('pause');
@@ -79,8 +84,9 @@ export default class TestScene extends DefaultScene {
   }
 
   remove() {
+    super.remove();
     const keyboard = Keyboard.getKeyboard();
-    keyboard.removeOnKeyUp(this.onKeyUpEvent);
+    keyboard.removeOnKeyDown(this.onKeyEvent);
     this.map.remove();
     this.entities.forEach(entity => entity.remove());
   }

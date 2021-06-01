@@ -3,7 +3,7 @@ import DefaultScene from './default-scene';
 import React from 'react';
 import Pause from '../ui/pages/pause';
 
-import Keyboard from '../keyboard';
+import Keyboard from '../core/keyboard';
 
 export default class PauseScreen extends DefaultScene {
 
@@ -20,7 +20,7 @@ export default class PauseScreen extends DefaultScene {
       return pausedScene;
     }
     const keyboard = Keyboard.getKeyboard();
-    this.onKeyUpEvent = keyboard.onKeyUp((e) => {
+    this.onKeyEvent = keyboard.onKeyDown((e) => {
       const code = e.keyCode;
       if (code === 27) {
         this.changeScene(returnToGame());
@@ -33,7 +33,7 @@ export default class PauseScreen extends DefaultScene {
 
   remove() {
     const keyboard = Keyboard.getKeyboard();
-    keyboard.removeOnKeyUp(this.onKeyUpEvent);
+    keyboard.removeOnKeyDown(this.onKeyEvent);
     if (this.pausedScene)
       this.pausedScene.remove();
   }

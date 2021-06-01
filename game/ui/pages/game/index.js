@@ -1,11 +1,9 @@
 import React from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
-
 import Button from '@material-ui/core/Button';
-import Container from '@material-ui/core/Container';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
+
+import TileSelector from '../../components/tile-selector';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,13 +33,11 @@ export default function Game(props) {
   const startAction = () => { 
     changeScene('pause');
   };
-  const settingsAction = () => { 
-    alert('clicked settings') 
-  };
 
   return (
     <div className={classes.root}>
       <Button variant="contained" className={classes.button} onClick={startAction}>Pause</Button>
+      <TileSelector {...props} />
     </div>
   );
 }

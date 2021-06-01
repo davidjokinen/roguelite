@@ -1,8 +1,8 @@
 import regeneratorRuntime from "regenerator-runtime";
 
 import * as THREE from 'three';;
-import Mouse from "./mouse";
-import { enableCameraMovement } from './camera.js';
+import Mouse from "./core/mouse";
+import { enableCameraMovement } from './core/camera.js';
 import TestScene from './scenes/test-scene';
 import TitleScreen from './scenes/title-screen';
 import PauseScreen from './scenes/pause-screen';
