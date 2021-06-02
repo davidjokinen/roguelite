@@ -807,6 +807,8 @@ export class Sprite {
     this._w = w || 1;
     this._h = h || 1;
 
+    this._onPositionChange = [];
+
     this.needsUpdate = true;
 
     this.texture = null;
@@ -900,6 +902,7 @@ export class Sprite {
     this._z += z;
     this._link.mesh.updateSpritePos(this);
     this.needsUpdate = true;
+    this._onPositionChange.forEach(event => event(x, y));
   }
 
   updatePosition(x,y,z) {
@@ -908,6 +911,7 @@ export class Sprite {
     // if (z) this._z = z;
     this._link.mesh.updateSpritePos(this);
     this.needsUpdate = true;
+    this._onPositionChange.forEach(event => event(x, y));
   }
 
   updateSize(w, h) {
@@ -915,6 +919,16 @@ export class Sprite {
     this._h = h || 1;
     this._link.mesh.updateSpritePos(this);
     this.needsUpdate = true;
+  }
+
+  addOnPositionChange(event) {
+    this._onPositionChange.push(event);
+  }
+
+  removeOnPositionChange(event) {
+    const index = this._onPositionChange.indexOf(event);
+		if (index < -1) return;
+		this._onPositionChange.splice(index, 1); 
   }
 }
 

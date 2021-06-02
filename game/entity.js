@@ -17,13 +17,14 @@ export default class Entity {
     if (!y) {
       y = x;
       x = data;
-      data = {};
+      this.data = {};
     } else {
       if (typeof data === 'string') {
         data = getConfig(data);
       }
       this.data = data;
     }
+    this._remove = false;
     // id
 
     // pos 
@@ -50,6 +51,7 @@ export default class Entity {
     }
 
     // sprite 
+    this.updateTextures = false;
     this.layer = data.layer === 'floor' ? LAYERS['entityFloor'] :  LAYERS['entity'];
     this.textureMap = null;
     this.textureId = null;
@@ -58,9 +60,23 @@ export default class Entity {
     this.sprite = null;
     this.topSprite = null;
 
+    this.updateTopSprite = (x, y) => {
+      if (this.topSprite) {
+        this.topSprite.updatePosition(x, y+1);
+      }
+    }
+    this.updateTopSprite = this.updateTopSprite.bind(this);
+
     this.checkTextureData();
     
     this._onChangePosition();
+  }
+
+  updateType(newType) {
+    const data = getConfig(newType);
+    this.data = data;
+    this.checkTextureData();
+    this.updateTextures = true;
   }
 
   checkTextureData() {
@@ -71,6 +87,8 @@ export default class Entity {
     this.textureMap = textureData.targetTextureMap;
     if (textureData.topTargetTextureId) {
       this.topTargetTextureId = textureData.topTargetTextureId;
+    } else {
+      this.topTargetTextureId = null;
     }
   }
 
@@ -136,19 +154,35 @@ export default class Entity {
   }
 
   render() {
-    if (!this.sprite) {
-      if (!this.texture) {
+    if (!this.sprite || this.updateTextures) {
+      if (!this.texture || this.updateTextures) {
         const { textureMap, textureId } = this;
         this.texture = textureMap.getTexture(textureId);
       }
-      this.sprite = this.layer.createSprite(this.texture, this.x, this.y);
+      if (!this.sprite)
+        this.sprite = this.layer.createSprite(this.texture, this.x, this.y);
+      else 
+        this.sprite.setTexture(this.texture);
+      
       if (this.topTargetTextureId) {
         const { textureMap, topTargetTextureId } = this;
-        this.topSprite = LAYERS['entityTops'].createSprite(
-          textureMap.getTexture(topTargetTextureId), 
-          this.x, this.y+1);
+        this.sprite.addOnPositionChange(this.updateTopSprite);
+        if (this.topSprite) {
+          this.topSprite.setTexture(textureMap.getTexture(topTargetTextureId));
+        } else {
+          this.topSprite = LAYERS['entityTops'].createSprite(
+            textureMap.getTexture(topTargetTextureId), 
+            this.x, this.y+1);
+        }
+      } else {
+        if (this.topSprite) {
+          this.topSprite.remove();
+          this.topSprite = null;
+        }
       }
+      this.updateTextures = false;
     }
+    
   }
 
   move(x, y) {
@@ -175,9 +209,14 @@ export default class Entity {
   }
 
   remove() {
-    this.sprite.remove();
+    if (this._remove) return;
+    if (this.sprite)
+      this.sprite.remove();
     if (this.topSprite) 
       this.topSprite.remove();
     this._remove = true;
+    if (this._curTile) {
+      this._curTile.entities.splice(this._curTile.entities.indexOf(this), 1);
+    }
   }
 }

@@ -16,6 +16,7 @@ export default class TileSelector extends React.Component {
     const { components } = this.props;
     const tileSelector = components['tile-selector'];
     tileSelector.addOnMouseMove(this.updateMouse);
+    this.updateMouse();
   }
 
   componentWillUnmount() {

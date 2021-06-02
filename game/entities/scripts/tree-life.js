@@ -1,36 +1,51 @@
 import EntityScript from '../entity-script';
 import { createCooldown } from '../../utils';
 
-import { getConfig } from '../get-config';
+import Entity from '../../entity';
 
 export default class TreeLife extends EntityScript {
   start(target) {
-    this.inputCooldown = createCooldown(5000);
+    this.inputCooldown = createCooldown(1000);
   }
 
   update(target, map, entities) {
     if (this.inputCooldown.check()) return;
 
-    const grow = false;
-    const die = false;
-    const repopulate = false;
+    let grow = false;
+    let die = false;
+    let repopulate = false;
     // TODO replace with growing system that checks map and stuff
     if (Math.random() > .95)
       grow = true;
     else if (Math.random() > .99)
       die = true;
-    else if (Math.random() > .99)
-      repopulate = true;
+    if (target.data.id === 'dead-tree') {
+      if (Math.random() > .8)
+        die = true;
+    }
+    if (target.data.id === 'tree') {
+      if (Math.random() > .99)
+        repopulate = true;
+    }
 
     if (grow) {
-      if (target.type === 'small-tree') {
-        target.type = 'tree';
-        target.
+      if (target.data.id === 'small-tree') {
+        target.updateType('tree');
       }
+      // if (target.data.id === 'tree') {
+      //   target.updateType('small-tree');
+      // }
     } else if (die) {
-      target.remove();
+      if (target.data.id === 'small-tree') {
+        target.updateType('small-dead-tree');
+      } else if (target.data.id === 'tree') {
+        target.updateType('dead-tree');
+      } else {
+        target.remove();
+      }
     } else if (repopulate) {
-
+      const tile = map.findEmptyTile(target.x, target.y);
+      entities.push(new Entity('small-tree', tile.x, tile.y));
     }
     this.inputCooldown.reset();
   }
