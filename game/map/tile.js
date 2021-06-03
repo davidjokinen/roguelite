@@ -9,6 +9,7 @@ export default class Tile {
     this.type = type;
     this.x = x;
     this.y = y;
+    this.id = `${x}_${y}`
     this.data = null;
 
     this.entities = [];

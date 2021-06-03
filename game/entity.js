@@ -120,6 +120,7 @@ export default class Entity {
         const iDelta = 1-delta;
         this.moveX = this.x*delta + this.lastX*iDelta;
         this.moveY = this.y*delta + this.lastY*iDelta;
+        // console.log(this.x,this.lastX, delta)
         if (this.sprite)
           this.sprite.updatePosition(this.moveX, this.moveY);
       }
@@ -186,6 +187,12 @@ export default class Entity {
   }
 
   move(x, y) {
+    if (y === undefined) {
+      let tile = x;
+      x = tile.x - this.x;
+      y = tile.y - this.y;
+      // console.log(this.x, this.y)
+    }
     this.moving = true;
     this.movingStart = Date.now();
     this.lastX = this.x;

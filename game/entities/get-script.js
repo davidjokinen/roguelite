@@ -1,6 +1,6 @@
 
 import PlayerControl from './scripts/player-control';
-import AiWander from './scripts/ai-wander';
+import AiWander from './scripts/ai-find';
 import TreeLife from './scripts/tree-life';
 
 export default function getScript(name) {

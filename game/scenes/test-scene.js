@@ -30,14 +30,16 @@ export default class TestScene extends DefaultScene {
     const e1 = new Entity('player', tile.x, tile.y);
     this.entities.push(e1);
 
-    tile = this.map.findEmptyTile(80,80);
-    const e2 = new Entity('npm-wander', tile.x, tile.y);
-    this.entities.push(e2);
+    for (let i=0;i<100;i++) {
+      tile = this.map.findEmptyTile(80,80);
+      const e2 = new Entity('npm-wander', tile.x, tile.y);
+      this.entities.push(e2);
+    }
 
     for (let i=0;i<87;i++) {
-      let tile = this.map.findEmptyTile(75,75);
-      const wood = new Entity('wood-pile', tile.x, tile.y);
-      this.entities.push(wood);
+      // let tile = this.map.findEmptyTile(75,75);
+      // const wood = new Entity('wood-pile', tile.x, tile.y);
+      // this.entities.push(wood);
     }
 
     const keyboard = Keyboard.getKeyboard();
@@ -48,6 +50,19 @@ export default class TestScene extends DefaultScene {
         return false;
       }
     });
+
+    // this.entities.push(new Entity('tree', 53, 56));
+    // this.entities.push(new Entity('tree', 53, 55));
+    // this.entities.push(new Entity('tree', 53, 54));
+    // this.entities.push(new Entity('tree', 53, 53));
+    // this.entities.push(new Entity('tree', 53, 52));
+    // this.entities.push(new Entity('tree', 53, 51));
+    // const path = this.map.findPath(50, 50, 70, 70) || [];
+    // path.forEach(tile => {
+    //   const tes = new Entity('bush', tile.x, tile.y);
+    //   this.entities.push(tes);
+    // })
+    // console.log(path)
 
     // e1.attack(e2);
     this.cameraTarget = e1;

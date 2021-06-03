@@ -9,6 +9,7 @@ export default class TreeLife extends EntityScript {
   }
 
   update(target, map, entities) {
+    return;
     if (this.inputCooldown.check()) return;
 
     let grow = false;
