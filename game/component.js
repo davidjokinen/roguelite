@@ -9,6 +9,10 @@ export default class Component {
 
   }
 
+  update() {
+
+  }
+
   remove() {
     
   }

@@ -8,8 +8,9 @@ const SIZE = 50;
 let mapFocus = null;
 
 export default class Map {
-  constructor(generator) {
+  constructor(generator, pathFindingComponent) {
     this.generator = generator;
+    this.pathFindingComponent = pathFindingComponent;
     this.chunks = {};
 
     this.setFocus();
@@ -107,58 +108,59 @@ export default class Map {
   findPath(startX, startY, endX, endY) {
     const startTile = this.getTile(startX, startY);
     const endTile = this.getTile(endX, endY);
-    const searchList = [startTile];
-    const cameFromMap = {};
+    return this.pathFindingComponent.findPath(this, startTile, endTile);
+    // const searchList = [startTile];
+    // const cameFromMap = {};
 
-    const tileCost = (tile) => {
-      const difX = Math.abs(tile.x-endTile.x);
-      const difY = Math.abs(tile.y-endTile.y);
-      return ~~(Math.sqrt(difX*difX + difY*difY)*10);
-    }
+    // const tileCost = (tile) => {
+    //   const difX = Math.abs(tile.x-endTile.x);
+    //   const difY = Math.abs(tile.y-endTile.y);
+    //   return ~~(Math.sqrt(difX*difX + difY*difY)*10);
+    // }
 
-    const reconstructPath = (current) => {
-      const path = [current];
-      while(cameFromMap[current.id] && current !== startTile) {
-        path.push(cameFromMap[current.id]);
-        current = cameFromMap[current.id];
-      }
-      return path.reverse();
-    }
+    // const reconstructPath = (current) => {
+    //   const path = [current];
+    //   while(cameFromMap[current.id] && current !== startTile) {
+    //     path.push(cameFromMap[current.id]);
+    //     current = cameFromMap[current.id];
+    //   }
+    //   return path.reverse();
+    // }
 
-    // G - walking cost from start (total)
-    // H - Cost to move
-    // F - G + H
+    // // G - walking cost from start (total)
+    // // H - Cost to move
+    // // F - G + H
 
-    const gScore = {};
-    gScore[startTile.id] = 0;
-    const fScore = {};
-    fScore[startTile.id] = tileCost(startTile);
+    // const gScore = {};
+    // gScore[startTile.id] = 0;
+    // const fScore = {};
+    // fScore[startTile.id] = tileCost(startTile);
 
-    while (searchList.length > 0) {
-      const searchTile = searchList[0];
-      searchList.splice(0, 1); 
-      if (searchTile === endTile) {
-        return reconstructPath(searchTile);
-      }
+    // while (searchList.length > 0) {
+    //   const searchTile = searchList[0];
+    //   searchList.splice(0, 1); 
+    //   if (searchTile === endTile) {
+    //     return reconstructPath(searchTile);
+    //   }
 
-      this.getNeighbors(searchTile.x, searchTile.y).forEach(neighborTile => {
-        // console.log(neighborTile, gScore[neighborTile.id], gScore)
-        // TODO replace
-        if (neighborTile.type === 'water') return;
-        if (neighborTile.entities.length > 0) return;
+    //   this.getNeighbors(searchTile.x, searchTile.y).forEach(neighborTile => {
+    //     // console.log(neighborTile, gScore[neighborTile.id], gScore)
+    //     // TODO replace
+    //     if (neighborTile.type === 'water') return;
+    //     if (neighborTile.entities.length > 0) return;
 
-        if (cameFromMap[neighborTile.id] !== undefined) return;
-        let newG = gScore[searchTile.id] + 8;
-        cameFromMap[neighborTile.id] = searchTile;
-        gScore[neighborTile.id] = newG;
-        fScore[neighborTile.id] = tileCost(neighborTile);
-        searchList.push(neighborTile);
-      });
+    //     if (cameFromMap[neighborTile.id] !== undefined) return;
+    //     let newG = gScore[searchTile.id] + 14;
+    //     cameFromMap[neighborTile.id] = searchTile;
+    //     gScore[neighborTile.id] = newG;
+    //     fScore[neighborTile.id] = tileCost(neighborTile) + newG;
+    //     searchList.push(neighborTile);
+    //   });
       
-      searchList.sort((t1, t2) => fScore[t1.id] - fScore[t2.id]);
-      // console.log(searchList)
-    }
-    return null;
+    //   searchList.sort((t1, t2) => fScore[t1.id] - fScore[t2.id]);
+    //   // console.log(searchList)
+    // }
+    // return null;
   }
 
   update() {

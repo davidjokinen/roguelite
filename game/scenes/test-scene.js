@@ -7,7 +7,8 @@ import Game from '../ui/pages/game';
 
 import Keyboard from '../core/keyboard';
 
-import TileSelector from '../map/tile-selector';
+import TileSelector from '../components/tile-selector';
+import PathFindingComponent from '../components/path-finding';
 
 import React from 'react';
 
@@ -22,15 +23,17 @@ export default class TestScene extends DefaultScene {
     super.init();
 
     const tileSelector = new TileSelector(this.camera);
+    const pathFindingComponent = new PathFindingComponent();
     this.addComponent(tileSelector);
+    this.addComponent(pathFindingComponent);
     this.entities = [];
-    this.map = new Map(new BaseGenerator(this.entities));
+    this.map = new Map(new BaseGenerator(this.entities), pathFindingComponent);
     
     let tile = this.map.findEmptyTile(75,75);
     const e1 = new Entity('player', tile.x, tile.y);
     this.entities.push(e1);
 
-    for (let i=0;i<100;i++) {
+    for (let i=0;i<300;i++) {
       tile = this.map.findEmptyTile(80,80);
       const e2 = new Entity('npm-wander', tile.x, tile.y);
       this.entities.push(e2);
@@ -74,6 +77,7 @@ export default class TestScene extends DefaultScene {
   }
 
   update() {
+    super.update();
     const { cameraTarget, camera } = this;
     
     const listLength = this.entities.length;

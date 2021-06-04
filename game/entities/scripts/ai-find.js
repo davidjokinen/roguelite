@@ -5,22 +5,27 @@ export default class AiWander extends EntityScript {
   start(target) {
     this.inputCooldown = createCooldown(target.movingTime);
     this.path = null;
+    this.pathWorker = null;
   }
 
   update(target, map, entities) {
     if (this.inputCooldown.check()) return;
+    if (this.pathWorker) {
+      if (this.pathWorker.done) {
+        this.path = this.pathWorker.path;
+        if (this.path) {
+          this.path.splice(0, 1);
+        }
+        this.pathWorker = null
+      }
+      return;
+    }
     if (this.path === null) {
       let goToEntity = entities[~~(entities.length*Math.random())];
       if (goToEntity === target) return;
       const gotoTile = map.findEmptyTile(goToEntity.x, goToEntity.y);
       if (!gotoTile) return;
-      const path = map.findPath(target.x, target.y, gotoTile.x, gotoTile.y);
-      
-      if (path) {
-        // console.log('Got a new path: ', path)
-        path.splice(0, 1);
-        this.path = path;
-      }
+      this.pathWorker  = map.findPath(target.x, target.y, gotoTile.x, gotoTile.y);
       return;
     } else {
       if (!this.path) return;

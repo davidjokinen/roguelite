@@ -63,7 +63,7 @@ export default class DefaultScene {
   }
 
   update() {
-
+    this.components.forEach(com => com.update());
   }
 
   render() {
