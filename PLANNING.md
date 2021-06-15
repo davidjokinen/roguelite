@@ -1,16 +1,28 @@
-## Game ideas
-Rouge like.
-AI doesing the same as the player. 
-
-
-## Programming Ideas
-* Perlin Noise
-* Path Finding
-  * A*
-* Build tools
-  * https://github.com/szwacz/electron-boilerplate
+## Planning
 
 
 
-## Links
-* http://rogueliketutorials.com/tutorials/tcod/
+### Actions
+* Walk
+* Run
+* Build
+* Pick Up
+* Drop
+* Use
+* Eat
+* Talk
+* Plan Actions
+
+### Needs
+* Food
+* Energy
+* Metal Health
+* Physical Health
+
+### Items
+* Generic Food
+* Bed
+* Camp Fire
+* Logs
+* Door
+* Wall

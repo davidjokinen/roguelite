@@ -95,7 +95,7 @@ export default class PathFindingComponent extends Component {
   }
 
   update() {
-    const limitJob = 10;
+    const limitJob = 20;
     let updateLimit = 1400;
     let index = 0;
     while(updateLimit > 0 && this.workers.length > 0) {

@@ -43,9 +43,10 @@ export default class Chunk {
   }
 
   render() {
-    this.grid.forEach(tile => {
-      tile.render();
-    });
+    const length = this.grid.length;
+    for (let i=0; i<length; i++) {
+      this.grid[i].render();
+    }
   }
 
   remove() {

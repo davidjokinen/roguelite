@@ -2,6 +2,8 @@ import Keyboard from '../../core/keyboard';
 import EntityScript from '../entity-script';
 import { createCooldown } from '../../utils';
 
+import WalkAction from '../../actions/walk-action';
+
 export default class PlayerControl extends EntityScript {
   start(target) {
     this.inputCooldown = createCooldown(target.movingTime);
@@ -47,8 +49,9 @@ export default class PlayerControl extends EntityScript {
 
     if (!clearSpot || !tile) return;
 
-    target.move(moveX, moveY);
+    // target.move(moveX, moveY);
     this.inputCooldown.reset();
+    return new WalkAction(moveX, moveY);
   }
 
   end(target, map, entities) {

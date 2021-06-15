@@ -1,6 +1,8 @@
 import EntityScript from '../entity-script';
 import { createCooldown } from '../../utils';
 
+import WalkAction from '../../actions/walk-action';
+
 export default class AiWander extends EntityScript {
   start(target) {
     this.inputCooldown = createCooldown(target.movingTime);
@@ -41,9 +43,11 @@ export default class AiWander extends EntityScript {
       if (!clearSpot || !tile) {
         return;
       }
-      target.move(moveX, moveY);
+      // target.move(moveX, moveY);
       this.inputCooldown.updateTimeout(1000 + 5000 * Math.random());
       this.inputCooldown.reset();
+      return new WalkAction(moveX, moveY);
+      
     } 
   }
 

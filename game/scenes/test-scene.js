@@ -33,7 +33,7 @@ export default class TestScene extends DefaultScene {
     const e1 = new Entity('player', tile.x, tile.y);
     this.entities.push(e1);
 
-    for (let i=0;i<300;i++) {
+    for (let i=0;i<20;i++) {
       tile = this.map.findEmptyTile(80,80);
       const e2 = new Entity('npm-wander', tile.x, tile.y);
       this.entities.push(e2);
@@ -86,9 +86,9 @@ export default class TestScene extends DefaultScene {
     }
 
     if (cameraTarget) {
-      if (cameraTarget.moving) {
-        camera.position.x = cameraTarget.moveX + .5;
-        camera.position.y = cameraTarget.moveY + .5;
+      if (cameraTarget.sprite) {
+        camera.position.x = cameraTarget.sprite._x + .5;
+        camera.position.y = cameraTarget.sprite._y + .5;
       } else {
         camera.position.x = cameraTarget.x + .5;
         camera.position.y = cameraTarget.y + .5;
@@ -99,7 +99,10 @@ export default class TestScene extends DefaultScene {
 
   render() {
     this.map.render();
-    this.entities.forEach(entity => entity.render());
+    const listLength = this.entities.length;
+    for(let i=0; i<listLength; i++) {
+      this.entities[i].render();
+    }
   }
 
   remove() {

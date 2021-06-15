@@ -4,10 +4,9 @@ import { createBag } from './bag';
 import getScript from './entities/get-script';
 import { getConfig } from './entities/get-config';
 
-import { LAYERS } from './resources.js';
+import EntityGraphic from './graphics/entity-graphic.js';
 
-import { getTextureID } from './utils';
-import { getEdgesTextureID, newEdgeHits, getEdgeData, getTextureData } from './entity-common';
+import { PREFORM_ACTION_RESULT } from './action';
 
 import Map from './map/map';
 
@@ -50,24 +49,7 @@ export default class Entity {
       }
     }
 
-    // sprite 
-    this.updateTextures = false;
-    this.layer = data.layer === 'floor' ? LAYERS['entityFloor'] :  LAYERS['entity'];
-    this.textureMap = null;
-    this.textureId = null;
-    this.topTargetTextureId = null;
-    this.texture = null;
-    this.sprite = null;
-    this.topSprite = null;
-
-    this.updateTopSprite = (x, y) => {
-      if (this.topSprite) {
-        this.topSprite.updatePosition(x, y+1);
-      }
-    }
-    this.updateTopSprite = this.updateTopSprite.bind(this);
-
-    this.checkTextureData();
+    this.graphic = new EntityGraphic(this);
     
     this._onChangePosition();
   }
@@ -75,24 +57,12 @@ export default class Entity {
   updateType(newType) {
     const data = getConfig(newType);
     this.data = data;
-    this.checkTextureData();
-    this.updateTextures = true;
-  }
-
-  checkTextureData() {
-    const data = this.data || {};
-    const textureData = getTextureData(data);
-
-    this.textureId = textureData.targetTextureId;
-    this.textureMap = textureData.targetTextureMap;
-    if (textureData.topTargetTextureId) {
-      this.topTargetTextureId = textureData.topTargetTextureId;
-    } else {
-      this.topTargetTextureId = null;
-    }
+    this.graphic.checkTextureData();
+    this.graphic.updateTextures = true;
   }
 
   _onChangePosition() {
+    // This needs cleanup. along with sprite positions
     const map = Map.getFocus();
     if (!map) return;
     const tile = map.getTile(~~this.x, ~~this.y);
@@ -105,101 +75,29 @@ export default class Entity {
   }
 
   update(map, entities) {
-    if (this.script) {
-      this.script.update(this, map, entities)
+    // This will change later. In the future Actions will queue up and the script will be able to cancel actions.
+    if (!this.action && this.script) {
+      const action = this.script.update(this, map, entities);
+      if (action) {
+        this.action = action;
+      }
     }
-    // Moving animation
-    if (this.moving) {
-      const now = Date.now();
-      if (now >= this.movingStart + this.movingTime) {
-        if (this.sprite)
-          this.sprite.updatePosition(this.x, this.y);
-        this.moving = false;
+    if (this.action) {
+      const actionResult = this.action.perform(this, map, entities);
+      if (actionResult !== PREFORM_ACTION_RESULT.ACTIVE) {
+        this.action = null;
       } else {
-        const delta = (now - this.movingStart)/this.movingTime;
-        const iDelta = 1-delta;
-        this.moveX = this.x*delta + this.lastX*iDelta;
-        this.moveY = this.y*delta + this.lastY*iDelta;
-        // console.log(this.x,this.lastX, delta)
-        if (this.sprite)
-          this.sprite.updatePosition(this.moveX, this.moveY);
+        return;
       }
     }
   }
 
   checkEdges(map, entities) {
-    const edges = getEdgeData(this);
-    if (!edges) return;
-    
-    const hits = newEdgeHits();
-    // Replace when map sorts entities
-    entities.forEach(entity => {
-      if (entity === this) return;
-      if (!entity.data) return;
-      if (entity.data.id !== this.data.id) return;
-      const deltaX = this.x - entity.x;
-      const deltaY = this.y - entity.y;
-      if (Math.abs(deltaX) > 1 || Math.abs(deltaY) > 1 )
-        return;
-      if (deltaX === -1 && deltaY === 0) hits.right = true;
-      if (deltaX === 1 && deltaY === 0) hits.left = true;
-    });
-    const sheet = this.data.sprite.sheet;
-    this.textureId = getTextureID(this.data.sprite.default, sheet);
-    this.textureId = getEdgesTextureID(sheet, edges, hits) || this.textureId;
-    
-    if (this.sprite) {
-      this.texture = this.textureMap.getTexture(this.textureId);
-      this.sprite.setTexture(this.texture);
-    }
+    this.graphic.checkEdges(map, entities);
   }
 
   render() {
-    if (!this.sprite || this.updateTextures) {
-      if (!this.texture || this.updateTextures) {
-        const { textureMap, textureId } = this;
-        this.texture = textureMap.getTexture(textureId);
-      }
-      if (!this.sprite)
-        this.sprite = this.layer.createSprite(this.texture, this.x, this.y);
-      else 
-        this.sprite.setTexture(this.texture);
-      
-      if (this.topTargetTextureId) {
-        const { textureMap, topTargetTextureId } = this;
-        this.sprite.addOnPositionChange(this.updateTopSprite);
-        if (this.topSprite) {
-          this.topSprite.setTexture(textureMap.getTexture(topTargetTextureId));
-        } else {
-          this.topSprite = LAYERS['entityTops'].createSprite(
-            textureMap.getTexture(topTargetTextureId), 
-            this.x, this.y+1);
-        }
-      } else {
-        if (this.topSprite) {
-          this.topSprite.remove();
-          this.topSprite = null;
-        }
-      }
-      this.updateTextures = false;
-    }
-    
-  }
-
-  move(x, y) {
-    if (y === undefined) {
-      let tile = x;
-      x = tile.x - this.x;
-      y = tile.y - this.y;
-      // console.log(this.x, this.y)
-    }
-    this.moving = true;
-    this.movingStart = Date.now();
-    this.lastX = this.x;
-    this.lastY = this.y;
-    this.x += x;
-    this.y += y;
-    this._onChangePosition();
+    this.graphic.render();
   }
 
   attack(target) {
@@ -217,10 +115,9 @@ export default class Entity {
 
   remove() {
     if (this._remove) return;
-    if (this.sprite)
-      this.sprite.remove();
-    if (this.topSprite) 
-      this.topSprite.remove();
+    if (this.graphic) {
+      this.graphic.remove();
+    }
     this._remove = true;
     if (this._curTile) {
       this._curTile.entities.splice(this._curTile.entities.indexOf(this), 1);

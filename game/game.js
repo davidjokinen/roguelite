@@ -1,6 +1,7 @@
 import regeneratorRuntime from "regenerator-runtime";
 
 import * as THREE from 'three';;
+import * as Stats from 'stats.js';
 import Mouse from "./core/mouse";
 import { enableCameraMovement } from './core/camera.js';
 import TestScene from './scenes/test-scene';
@@ -18,7 +19,7 @@ handler.setDefaultZ(0);
 
 const renderer = new THREE.WebGLRenderer({
   alpha : true,
-  preserveDrawingBuffer : false,
+  // preserveDrawingBuffer : false,
 });
 renderer.getPixelRatio(window.devicePixelRatio);
 document.body.appendChild( renderer.domElement );
@@ -35,6 +36,10 @@ window.addEventListener('resize', () => {
   resizeCanvas();
 }, false);
 resizeCanvas();
+
+var stats = new Stats();
+stats.showPanel( 1 ); // 0: fps, 1: ms, 2: mb, 3+: custom
+document.body.appendChild( stats.dom );
 
 let gameScene = new TitleScreen(camera);
 const changeScene = (id) => {
@@ -61,6 +66,7 @@ const changeScene = (id) => {
 
 changeScene('title');
 const gameLoop = function () {
+  stats.begin();
   requestAnimationFrame( gameLoop );
 
   gameScene.update();
@@ -68,6 +74,7 @@ const gameLoop = function () {
 
   handler.checkMeshes();
   renderer.render( scene, camera );
+  stats.end();
 };
 
 
