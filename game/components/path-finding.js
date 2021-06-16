@@ -13,6 +13,9 @@ class PathWorker {
     this.fScore = {};
     this.fScore[start.id] = this.tileCost(start);
 
+    // Just give up if it is too much work. 
+    this.maxSearch = this.tileCost(start)*2.5;
+
     this.done = false;
     this.path = null;
   }
@@ -68,7 +71,10 @@ class PathWorker {
         let newG = gScore[searchTile.id] + 8;
         cameFromMap[neighborTile.id] = searchTile;
         gScore[neighborTile.id] = newG;
-        fScore[neighborTile.id] = this.tileCost(neighborTile) + newG;
+        const tileCost = this.tileCost(neighborTile) 
+        if (tileCost > this.maxSearch)
+          return;
+        fScore[neighborTile.id] = tileCost + newG;
         searchList.push(neighborTile);
       });
     }
@@ -95,7 +101,7 @@ export default class PathFindingComponent extends Component {
   }
 
   update() {
-    const limitJob = 20;
+    const limitJob = 30;
     let updateLimit = 1400;
     let index = 0;
     while(updateLimit > 0 && this.workers.length > 0) {
