@@ -13,6 +13,9 @@ export default class Map {
     this.pathFindingComponent = pathFindingComponent;
     this.chunks = {};
 
+    this.entities = [];
+    this.tickEntities = [];
+
     this.setFocus();
     this.init();
   }
@@ -23,6 +26,14 @@ export default class Map {
 
   setFocus() {
     mapFocus = this;
+  }
+
+  addEntity(entity) {
+    this.entities.push(entity);
+    if (entity.script) {
+      console.log(entity.data.id)
+      this.tickEntities.push(entity);
+    }
   }
 
   getTile(x, y) {
@@ -112,12 +123,23 @@ export default class Map {
   }
 
   update() {
-
+    const length = this.tickEntities.length;
+    // console.log(length)
+    for (let i=0; i<length; i++) {
+      this.tickEntities[i].update(this, this.entities);
+    }
   }
 
   render() {
+    const listLength = this.entities.length;
+    // TODO: can be moved into chunks 
+    for(let i=0; i<listLength; i++) {
+      if (this.entities[i].renderUpdate)
+        this.entities[i].render();
+    }
     const chunks = Object.values(this.chunks);
     const length = chunks.length;
+    // TODO: Check if we need to render 
     for (let i=0; i<length; i++) {
       chunks[i].render();
     }

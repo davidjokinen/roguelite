@@ -26,17 +26,17 @@ export default class TestScene extends DefaultScene {
     const pathFindingComponent = new PathFindingComponent();
     this.addComponent(tileSelector);
     this.addComponent(pathFindingComponent);
-    this.entities = [];
-    this.map = new Map(new BaseGenerator(this.entities), pathFindingComponent);
+
+    this.map = new Map(new BaseGenerator(), pathFindingComponent);
     
     let tile = this.map.findEmptyTile(75,75);
     const e1 = new Entity('player', tile.x, tile.y);
-    this.entities.push(e1);
+    this.map.addEntity(e1);
 
     for (let i=0;i<20;i++) {
       tile = this.map.findEmptyTile(80,80);
       const e2 = new Entity('npm-wander', tile.x, tile.y);
-      this.entities.push(e2);
+      this.map.addEntity(e2);
     }
 
     for (let i=0;i<87;i++) {
@@ -70,7 +70,7 @@ export default class TestScene extends DefaultScene {
     // e1.attack(e2);
     this.cameraTarget = e1;
     
-    this.entities.forEach(entity => entity.checkEdges(this.map, this.entities));
+    this.map.entities.forEach(entity => entity.checkEdges(this.map, this.entities));
 
     this.sceneComponent = <Game {...this.getUiProps()} keyboard={keyboard}/>;
     this.drawUI();
@@ -80,10 +80,7 @@ export default class TestScene extends DefaultScene {
     super.update();
     const { cameraTarget, camera } = this;
     
-    const listLength = this.entities.length;
-    for(let i=0; i<listLength; i++) {
-      this.entities[i].update(this.map, this.entities);
-    }
+    this.map.update();
 
     if (cameraTarget) {
       if (cameraTarget.sprite) {
@@ -99,10 +96,6 @@ export default class TestScene extends DefaultScene {
 
   render() {
     this.map.render();
-    const listLength = this.entities.length;
-    for(let i=0; i<listLength; i++) {
-      this.entities[i].render();
-    }
   }
 
   remove() {

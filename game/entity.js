@@ -49,6 +49,7 @@ export default class Entity {
       }
     }
 
+    this.renderUpdate = true;
     this.graphic = new EntityGraphic(this);
     
     this._onChangePosition();
@@ -98,6 +99,7 @@ export default class Entity {
 
   render() {
     this.graphic.render();
+    this.renderUpdate = false;
   }
 
   attack(target) {

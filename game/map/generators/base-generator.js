@@ -5,9 +5,9 @@ import perlinNoise from './utils/perlin-noise';
 
 export default class BaseGenerator {
 
-  constructor(entities) {
+  constructor() {
     this.map = null;
-    this.entities = entities;
+    // this.entities = entities;
     this.waterNoise = perlinNoise(1);
     this.plantNoise = perlinNoise(2);
   }
@@ -36,23 +36,23 @@ export default class BaseGenerator {
       if (!tile || tile.type === 'water') return;
       
       if (Math.random() > .95+plantDense)
-        this.entities.push(new Entity('tree', x, y));
+        this.map.addEntity(new Entity('tree', x, y));
       else if (Math.random() > .99)
-        this.entities.push(new Entity('bush', x, y));
+        this.map.addEntity(new Entity('bush', x, y));
       else if (Math.random() > .99)
-        this.entities.push(new Entity('berry-bush', x, y));
+        this.map.addEntity(new Entity('berry-bush', x, y));
       else if (Math.random() > .95+plantDense+height/3)
-        this.entities.push(new Entity('small-tree', x, y));
+        this.map.addEntity(new Entity('small-tree', x, y));
       else if (height > .55 && Math.random() > .9)
-        this.entities.push(new Entity('rock', x, y));
+        this.map.addEntity(new Entity('rock', x, y));
       else if (height > .1 && Math.random() > .995)
-        this.entities.push(new Entity('rock', x, y));
+        this.map.addEntity(new Entity('rock', x, y));
       else if (Math.random() > 1.05-plantDense)
-        this.entities.push(new Entity('grass', x, y));
+        this.map.addEntity(new Entity('grass', x, y));
       else if (Math.random() > .99)
-        this.entities.push(new Entity('dead-tree', x, y));
+        this.map.addEntity(new Entity('dead-tree', x, y));
       else if (Math.random() > .99)
-        this.entities.push(new Entity('small-dead-tree', x, y));
+        this.map.addEntity(new Entity('small-dead-tree', x, y));
     });
   }
 }
