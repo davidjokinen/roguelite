@@ -6,6 +6,7 @@ import DefaultScene from './default-scene';
 import Game from '../ui/pages/game';
 
 import Keyboard from '../core/keyboard';
+import Mouse from '../core/mouse';
 
 import TileSelector from '../components/tile-selector';
 import PathFindingComponent from '../components/path-finding';
@@ -27,6 +28,8 @@ export default class TestScene extends DefaultScene {
     this.addComponent(tileSelector);
     this.addComponent(pathFindingComponent);
 
+    
+
     this.map = new Map(new BaseGenerator(), pathFindingComponent);
     
     let tile = this.map.findEmptyTile(75,75);
@@ -45,6 +48,7 @@ export default class TestScene extends DefaultScene {
       // this.entities.push(wood);
     }
 
+    const mouse = Mouse.getMouse();
     const keyboard = Keyboard.getKeyboard();
     this.onKeyEvent = keyboard.onKeyDown((e) => {
       const code = e.keyCode;
@@ -53,6 +57,27 @@ export default class TestScene extends DefaultScene {
         return false;
       }
     });
+
+    // let lastPos = null;
+    // tileSelector.addOnMouseMove(cursorPoint => {
+      
+    //   if (!lastPos) {
+    //     lastPos = {
+    //       x: cursorPoint.rawX,
+    //       y: cursorPoint.rawY,
+    //     }
+    //   }
+    //   console.log(lastPos.x - cursorPoint.rawX)
+    //   if (mouse.buttons[2]) {
+
+    //     this.camera.position.x += lastPos.x - cursorPoint.rawX;
+    //     this.camera.position.y += lastPos.y - cursorPoint.rawY;
+    //   }
+    //   lastPos = {
+    //     x: cursorPoint.rawX,
+    //     y: cursorPoint.rawY,
+    //   }
+    // });
 
     // this.entities.push(new Entity('tree', 53, 56));
     // this.entities.push(new Entity('tree', 53, 55));
@@ -68,11 +93,11 @@ export default class TestScene extends DefaultScene {
     // console.log(path)
 
     // e1.attack(e2);
-    this.cameraTarget = e1;
+    // this.cameraTarget = e1;
     
     this.map.entities.forEach(entity => entity.checkEdges(this.map, this.entities));
 
-    this.sceneComponent = <Game {...this.getUiProps()} keyboard={keyboard}/>;
+    this.sceneComponent = <Game {...this.getUiProps()} map={this.map} keyboard={keyboard} mouse={mouse}/>;
     this.drawUI();
   }
 
@@ -103,6 +128,5 @@ export default class TestScene extends DefaultScene {
     const keyboard = Keyboard.getKeyboard();
     keyboard.removeOnKeyDown(this.onKeyEvent);
     this.map.remove();
-    this.entities.forEach(entity => entity.remove());
   }
 }

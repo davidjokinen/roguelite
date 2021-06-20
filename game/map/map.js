@@ -31,7 +31,6 @@ export default class Map {
   addEntity(entity) {
     this.entities.push(entity);
     if (entity.script) {
-      console.log(entity.data.id)
       this.tickEntities.push(entity);
     }
   }
@@ -146,6 +145,7 @@ export default class Map {
   }
 
   remove() {
+    this.entities.forEach(entity => entity.remove());
     Object.values(this.chunks).forEach(chunk => chunk.remove());
   }
 }

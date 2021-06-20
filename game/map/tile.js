@@ -31,6 +31,7 @@ export default class Tile {
       this.data = data;
     } else {
       console.error('error')
+      return;
     }
 
     this.walkable = data.walkable;
@@ -40,7 +41,7 @@ export default class Tile {
     this.textureMap = textureData.targetTextureMap;
     this.textureId = textureData.targetTextureId;
     if (this.sprite) {
-      const newTexture = targetTextureMap.getTexture(targetTextureId);
+      const newTexture = this.textureMap.getTexture(this.textureId);
       this.texture = newTexture;
       this.sprite.setTexture(newTexture);
     }
@@ -52,6 +53,8 @@ export default class Tile {
     if (!edges) return;
     const { type, x, y } = this;
     const hits = newEdgeHits();
+    const textureData = getTextureData(this.data);
+    const defaultTextureId = textureData.targetTextureId;
     
     let targetTile = map.getTile(x-1, y);
     if (targetTile && targetTile.type === type) hits.left = true;
@@ -78,7 +81,13 @@ export default class Tile {
     }
     
     const sheet = this.data.sprite.sheet;
-    this.textureId = getEdgesTextureID(sheet, edges, hits) || this.textureId;
+    this.textureId = getEdgesTextureID(sheet, edges, hits) || defaultTextureId;
+    
+    if (this.sprite) {
+      const newTexture = this.textureMap.getTexture(this.textureId);
+      this.texture = newTexture;
+      this.sprite.setTexture(newTexture);
+    }
   }
 
   render() {

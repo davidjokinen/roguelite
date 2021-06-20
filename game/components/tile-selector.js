@@ -10,7 +10,7 @@ export default class TileSelector extends Component {
     this.camera = camera;
     this.raycaster = new THREE.Raycaster();
     this.mousePoint = new THREE.Vector2();
-    this.plane = new THREE.Plane( new THREE.Vector3( 0, 0, 1 ),  2.2 );
+    this.plane = new THREE.Plane( new THREE.Vector3( 0, 0, 1 ),  -1 );
     this.cursorPoint = {x:0,y:0};
 
     this._onMouseMove = [];
@@ -40,8 +40,9 @@ export default class TileSelector extends Component {
     if (cursorPoint.x !== x || cursorPoint.y !== y) {
       cursorPoint.x = x;
       cursorPoint.y = y;
+      cursorPoint.rawX = intersects.x;
+      cursorPoint.rawY = intersects.y;
       this._onMouseMove.forEach(event => event(cursorPoint));
-      // console.log(x,y)
     }
   }
 

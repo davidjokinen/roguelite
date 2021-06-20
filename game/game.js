@@ -40,6 +40,8 @@ resizeCanvas();
 var stats = new Stats();
 stats.showPanel( 1 ); // 0: fps, 1: ms, 2: mb, 3+: custom
 document.body.appendChild( stats.dom );
+stats.dom.style.right = '0px';
+stats.dom.style.left = 'initial';
 
 let gameScene = new TitleScreen(camera);
 const changeScene = (id) => {
@@ -64,7 +66,7 @@ const changeScene = (id) => {
   }
 }
 
-changeScene('title');
+changeScene('game');
 const gameLoop = function () {
   stats.begin();
   requestAnimationFrame( gameLoop );
