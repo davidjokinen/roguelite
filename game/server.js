@@ -26,3 +26,4 @@ var staticServe = function(req, res) {
 var httpServer = http.createServer(staticServe);
 
 httpServer.listen(8080);
+console.log('Game server started: http://localhost:8080/index.html')
