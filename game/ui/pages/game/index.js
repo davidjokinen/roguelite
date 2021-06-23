@@ -9,7 +9,7 @@ import Tab from '@material-ui/core/Tab';
 
 import TileSelector from '../../components/tile-selector';
 import TabPanel from '../../components/tab-panel';
-import BuildSection from '../../components/build-section';
+import MapEditor from '../../components/map-editor';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -82,7 +82,7 @@ export default function Game(props) {
           Item One
         </TabPanel> */}
         <TabPanel value={value} index={1}>
-          <BuildSection {...props} />
+          <MapEditor {...props} />
         </TabPanel>
         <TabPanel value={value} index={3}>
           Item Four

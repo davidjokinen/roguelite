@@ -93,8 +93,8 @@ export default class Entity {
     }
   }
 
-  checkEdges(map, entities) {
-    this.graphic.checkEdges(map, entities);
+  checkEdges(map) {
+    this.graphic.checkEdges(map, map.entities);
   }
 
   render() {

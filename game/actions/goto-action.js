@@ -41,6 +41,11 @@ export default class GoToAction extends Action {
       return PREFORM_ACTION_RESULT.FINISHED_SUCCESS;
     const nextTile = this.path[0];
     this.path.splice(0, 1);
+    // TODO replace check
+    if (nextTile.entities.length > 0) {
+      this.path = null;
+      return PREFORM_ACTION_RESULT.ACTIVE;
+    }
     // console.log('Moving to: ', nextTile.x, nextTile.y)
     this.subAction = new WalkAction(nextTile);
     return PREFORM_ACTION_RESULT.ACTIVE;

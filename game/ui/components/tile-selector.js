@@ -57,10 +57,9 @@ export default class TileSelector extends React.Component {
     let entitySection = [];
     if (tile) {
       
-      if (tile.entities) {
-        entitySection = tile.entities.map(entity => {
-          return <p key={entity.data.id}>Entity: {entity.data.id}</p>
-        });
+      if (tile.entities.length > 0) {
+        const entity = tile.entities[0];
+        entitySection = <p key={entity.data.id}>Entity: {entity.data.id}</p>
       }
       tileSection = <p>Tile ID: {tile.data.id}</p>;
     }

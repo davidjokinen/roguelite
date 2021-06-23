@@ -1,6 +1,8 @@
 import dirt from './configs/dirt';
-import grass from './configs/grass'
-import water from './configs/water'
+import grass from './configs/grass';
+import water from './configs/water';
+import stone from './configs/stone';
+import sand from './configs/sand';
 
 const configMap = {}
 
@@ -31,3 +33,5 @@ export function getConfig(id) {
 registerConfig(dirt);
 registerConfig(grass);
 registerConfig(water);
+registerConfig(sand);
+registerConfig(stone);

@@ -1,5 +1,6 @@
 import Component from '../component';
 import Mouse from '../core/mouse';
+import Entity from '../entity';
 
 // This is the service that the react components talk to to draw on the map.
 export default class MapEditor extends Component {
@@ -27,24 +28,42 @@ export default class MapEditor extends Component {
   }
 
   updateMap() {
-    if (!this.brush)
+    if (!this.tool)
       return;
-    const { map, selectedOption } = this.brush;
+    const { map, brush } = this.tool;
     const { cursorPoint } = this.tileSelector;
-    if (!selectedOption)
+    if (!brush)
       return;
+    const { type } = brush;
     let tile = null;
     if (cursorPoint) {
       tile = map.getTile(cursorPoint.x, cursorPoint.y);
     }
-    if (tile) {
-      if (tile.data.id === selectedOption)
-        return;
-      tile.updateType(selectedOption); 
+    if (!tile) return;
+    if (!type) return;
+    if (type === 'delete') {
       tile.entities.forEach(entity => entity.remove());
+      return;
+    }
+
+    if (brush.target === 'tile') {
+      if (tile.data.id === type)
+        return;
+      tile.updateType(type);
+      if (type === 'water')
+        tile.entities.forEach(entity => entity.remove());
       tile.checkEdges(map);
       map.getNeighbors(tile.x, tile.y).forEach(tile2 => {
         tile2.checkEdges(map)
+      });
+    } else if (brush.target === 'entity') {
+      if (tile.data.id === 'water')
+        return;
+      tile.entities.forEach(entity => entity.remove());
+      map.addEntity(new Entity(type, tile.x, tile.y));
+      tile.entities.map(e => e.checkEdges(map));
+      map.getNeighbors(tile.x, tile.y).forEach(tile2 => {
+        tile2.entities.map(e => e.checkEdges(map));
       });
     }
   }
