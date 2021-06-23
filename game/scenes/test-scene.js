@@ -10,6 +10,7 @@ import Mouse from '../core/mouse';
 
 import TileSelector from '../components/tile-selector';
 import PathFindingComponent from '../components/path-finding';
+import MapEditor from '../components/map-editor';
 
 import React from 'react';
 
@@ -25,10 +26,10 @@ export default class TestScene extends DefaultScene {
 
     const tileSelector = new TileSelector(this.camera);
     const pathFindingComponent = new PathFindingComponent();
+    const mapEditor = new MapEditor(tileSelector);
     this.addComponent(tileSelector);
     this.addComponent(pathFindingComponent);
-
-    
+    this.addComponent(mapEditor);
 
     this.map = new Map(new BaseGenerator(), pathFindingComponent);
     

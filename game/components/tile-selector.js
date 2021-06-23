@@ -11,7 +11,12 @@ export default class TileSelector extends Component {
     this.raycaster = new THREE.Raycaster();
     this.mousePoint = new THREE.Vector2();
     this.plane = new THREE.Plane( new THREE.Vector3( 0, 0, 1 ),  -1 );
-    this.cursorPoint = {x:0,y:0};
+    this.cursorPoint = {
+      x: 0,
+      y: 0,
+      rawX: 0,
+      rawY: 0,
+    };
 
     this._onMouseMove = [];
     this.onMouseMove = this.onMouseMove.bind(this);

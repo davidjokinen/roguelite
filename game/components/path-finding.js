@@ -1,7 +1,8 @@
 import Component from '../component';
 
-class PathWorker {
+class PathWorker extends Component {
   constructor(map, start, end) {
+    super();
     this.map = map;
     this.start = start;
     this.end = end;

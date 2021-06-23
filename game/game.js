@@ -11,7 +11,9 @@ import { Texture, TextureMap, GroupMeshHandler, Sprite } from 'simple2d';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 30, window.innerWidth / window.innerHeight, 1, 1000 );
-camera.position.z = 30;
+camera.position.x = 75;
+camera.position.y = 75;
+camera.position.z = 60;
 
 const handler = GroupMeshHandler.getRootHandler();
 handler.scene = scene;
