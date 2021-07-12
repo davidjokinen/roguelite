@@ -8,6 +8,7 @@ import Game from '../ui/pages/game';
 import Keyboard from '../core/keyboard';
 import Mouse from '../core/mouse';
 
+import GameTime from '../services/game-time';
 import TileSelector from '../services/tile-selector';
 import PathFinding from '../services/path-finding';
 import MapEditor from '../services/map-editor';
@@ -28,12 +29,15 @@ export default class TestScene extends DefaultScene {
   init() {
     super.init();
 
+    const gameTime = new GameTime();
     const tileSelector = new TileSelector(this.camera);
     const pathFinding = new PathFinding();
     const mapEditor = new MapEditor(tileSelector);
+    
     this.addComponent(tileSelector);
     this.addComponent(pathFinding);
     this.addComponent(mapEditor);
+    this.addComponent(gameTime);
 
     this.map = new Map(new BaseGenerator(), pathFinding);
     

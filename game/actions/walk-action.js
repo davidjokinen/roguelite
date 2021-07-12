@@ -19,7 +19,7 @@ export default class WalkAction extends Action {
       this.moveToY = tile.y - entity.y;
     }
     this.moving = true;
-    this.movingStart = Date.now();
+    this.movingStart = GameTime.now(); // Date.now();
     this.lastX = entity.x;
     this.lastY = entity.y;
     this.x = entity.x + this.moveToX;
@@ -33,7 +33,7 @@ export default class WalkAction extends Action {
     if (!this.moving) {
       this.initMove(entity);
     } 
-    const now = Date.now();
+    const now = GameTime.now();
     if (now >= this.movingStart + entity.movingTime) {
       
       if (entity.sprite)

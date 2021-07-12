@@ -21,10 +21,20 @@ const useStyles = makeStyles((theme) => ({
 export default function TimeControl(props) {
   const [timeState, setTimeState] = React.useState('play');
 
+  const { components, map, } = props;
   const classes = useStyles();
+
+  const gameTime = components['game-time'];
+  const timeMap = {
+    pause: 0,
+    play: 1,
+    fast: 3,
+  }
 
   const handleTimeState = (event, newTimeState) => {
     setTimeState(newTimeState);
+    if (newTimeState in timeMap)
+      gameTime.timeSpeed = timeMap[newTimeState];
   };
 
   return (

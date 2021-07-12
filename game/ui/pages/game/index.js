@@ -85,7 +85,7 @@ export default function Game(props) {
         <div className={classes.flexItem}>
           <Button variant="contained" className={classes.button} onClick={startAction}>Pause</Button>
         </div>
-        <TimeControl className={classes.flexItem} />
+        <TimeControl className={classes.flexItem} {...props} />
       </div>
       <ResourceCounter />
       <Box className={classes.bottemLeft}>

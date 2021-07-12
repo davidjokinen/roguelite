@@ -7,10 +7,10 @@ export const createCooldown = (timeout) => {
       timeout = newTimeout;
     },
     reset: () => {
-      curTime = Date.now();
+      curTime = GameTime.now();
     },
     check: () => {
-      return curTime+timeout >= Date.now();
+      return curTime+timeout >= GameTime.now();
     }
   }
 }
