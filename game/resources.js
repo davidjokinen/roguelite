@@ -3,22 +3,31 @@ import { Texture, TextureMap, GroupMeshHandler } from 'simple2d';
 import roguelikeChar from './resources/roguelikeChar_transparent.png';
 import roguelikeSheet from './resources/roguelikeSheet_transparent.png';
 
+import colors from './resources/colors.png';
+
 const handler = GroupMeshHandler.getRootHandler();
 
 const tileHandler = handler.createChildHandler();
-tileHandler.setDefaultZ(0);
+tileHandler.setDefaultZ(0.98);
+
 const entityFloorHandler = handler.createChildHandler();
 entityFloorHandler.setDefaultZ(0.999);
 const entityHandler = handler.createChildHandler();
 entityHandler.setDefaultZ(1);
+// entityHandler.setOpacity(0.5);
+
 const entityTopHandler = handler.createChildHandler();
 entityTopHandler.setDefaultZ(1.0001);
+const overlayHander = handler.createChildHandler();
+overlayHander.setDefaultZ(1.0002);
+overlayHander.setOpacity(0.5);
 
 export const LAYERS = {
   tile: tileHandler,
   entityFloor: entityFloorHandler,
   entity: entityHandler,
-  entityTops: entityTopHandler
+  entityTops: entityTopHandler,
+  overlay: overlayHander,
 }
 
 const roguelikeCharTexture = new Texture(roguelikeChar);
@@ -32,7 +41,14 @@ export const roguelikeSheetTextureMap = new TextureMap(roguelikeSheetTexture, Te
 roguelikeSheetTextureMap.countX = 57;
 roguelikeSheetTextureMap.countY = 31;
 
+const colorsTexture = new Texture(colors);
+export const colorsTextureMap = new TextureMap(colorsTexture, TextureMap.OrginalUVScalerPadding(colorsTexture, 3, 3, 1));
+colorsTextureMap.countX = 63;
+colorsTextureMap.countY = 63;
+
 export const SHEETS = {
   roguelikeChar: roguelikeCharTextureMap,
   roguelikeSheet: roguelikeSheetTextureMap,
+  colors: colorsTextureMap,
 }
+

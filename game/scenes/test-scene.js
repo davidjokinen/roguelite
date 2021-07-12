@@ -14,6 +14,10 @@ import MapEditor from '../components/map-editor';
 
 import React from 'react';
 
+import { LAYERS, SHEETS } from '../resources.js';
+
+import { loopXbyX } from '../utils';
+
 export default class TestScene extends DefaultScene {
   constructor(camera) {
     super();
@@ -33,16 +37,23 @@ export default class TestScene extends DefaultScene {
 
     this.map = new Map(new BaseGenerator(), pathFindingComponent);
     
-    let tile = this.map.findEmptyTile(75,75);
-    const e1 = new Entity('player', tile.x, tile.y);
-    this.map.addEntity(e1);
+    // let tile = this.map.findEmptyTile(75,75);
+    // const e1 = new Entity('player', tile.x, tile.y);
+    // this.map.addEntity(e1);
 
-    for (let i=0;i<20;i++) {
-      tile = this.map.findEmptyTile(80,80);
-      const e2 = new Entity('npm-wander', tile.x, tile.y);
+    for (let i=0;i<3;i++) {
+      let tile = this.map.findEmptyTile(80,80);
+      const e2 = new Entity('npm-sim', tile.x, tile.y);
       this.map.addEntity(e2);
     }
 
+    
+    
+
+    // loopXbyX(50, 50, 50, 50, (x, y) => {
+    //   const texture = SHEETS['colors'].getTexture(~~(Math.random()*3)); 
+    //   LAYERS['overlay'].createSprite(texture, x, y);
+    // });
     for (let i=0;i<87;i++) {
       // let tile = this.map.findEmptyTile(75,75);
       // const wood = new Entity('wood-pile', tile.x, tile.y);

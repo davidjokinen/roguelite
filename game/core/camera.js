@@ -38,7 +38,7 @@ export function enableCameraMovement(camera, mouse) {
     // if(scale+((e.wheelDelta)/1800.0)>=.14&&scale+((e.wheelDelta)/1800.0)<20) {
       const oldScale = scale + 0;
       scale -= (e.wheelDelta)/10.0;
-      if (scale < -1) scale = -1;
+      if (scale < 2) scale = 2;
       // scale = camera.camera.scale;
       const oldX = camera.position.x;
       const oldY = camera.position.y;

@@ -1,4 +1,5 @@
 import npcWander from './configs/npc-wander';
+import npcSim from './configs/npc-sim';
 import player from './configs/player';
 import bush from './configs/bush';
 import longBush from './configs/long-bush';
@@ -39,6 +40,7 @@ export function getConfig(id) {
 // config register
 registerConfig(player);
 registerConfig(npcWander);
+registerConfig(npcSim);
 registerConfig(bush);
 registerConfig(berryBush);
 registerConfig(longBush);

@@ -9,14 +9,17 @@ import Tab from '@material-ui/core/Tab';
 
 import TileSelector from '../../components/tile-selector';
 import TabPanel from '../../components/tab-panel';
+import Inspector from '../../components/inspector';
 import MapEditor from '../../components/map-editor';
+import Orders from '../../components/orders';
+import Overlays from '../../components/overlays';
+
+import ResourceCounter from '../../components/resource-counter';
+import TimeControl from '../../components/time-control';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    // backgroundColor: 'gray',
-    // height: '100vh',
-    // padding: theme.spacing(2),
     pointerEvents: 'all',
   },
   paper: {
@@ -33,27 +36,30 @@ const useStyles = makeStyles((theme) => ({
   },
   bottemLeft: {
     position: 'fixed',
-    // margin: theme.spacing(2),
     bottom: '48px',
     left: '0px',
   },
   bottomRow: {
     position: 'fixed',
-    // margin: theme.spacing(2),
     textAlign: 'center',
     bottom: '0px',
-    // width: '100%',
     left: 'auto',
     right: 'auto',
   },
   topRow: {
     position: 'fixed',
-    // margin: theme.spacing(2),
     textAlign: 'center',
     top: '0px',
     width: '100%',
     left: 'auto',
     right: 'auto',
+  },
+  topLeftRow: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  flexItem: {
+    flex: '0 0 auto',
   }
 }));
 
@@ -75,17 +81,26 @@ export default function Game(props) {
 
   return (
     <div className={classes.root}>
-      <Button variant="contained" className={classes.button} onClick={startAction}>Pause</Button>
+      <div className={classes.topLeftRow}>
+        <div className={classes.flexItem}>
+          <Button variant="contained" className={classes.button} onClick={startAction}>Pause</Button>
+        </div>
+        <TimeControl className={classes.flexItem} />
+      </div>
+      <ResourceCounter />
       <Box className={classes.bottemLeft}>
         <TileSelector {...props} />
-        {/* <TabPanel value={value} index={0}>
-          Item One
-        </TabPanel> */}
+        <TabPanel value={value} index={0}>
+          <Inspector {...props} />
+        </TabPanel>
         <TabPanel value={value} index={1}>
           <MapEditor {...props} />
         </TabPanel>
+        <TabPanel value={value} index={2}>
+          <Orders {...props} />
+        </TabPanel>
         <TabPanel value={value} index={3}>
-          Item Four
+          <Overlays {...props} />
         </TabPanel>
       </Box>
       <Box className={classes.topRow}>
@@ -102,8 +117,9 @@ export default function Game(props) {
           >
             <Tab label="Inspect" />
             <Tab label="Build" />
-            <Tab label="Disabled" disabled />
             <Tab label="Orders" />
+            <Tab label="Overlays" />
+            {/* <Tab label="Disabled" disabled /> */}
           </Tabs>
         </Paper>
       </Box>

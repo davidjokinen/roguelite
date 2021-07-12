@@ -354,7 +354,9 @@ export class Texture extends BaseTexture {
 
         const material = new THREE.MeshBasicMaterial({
           map: texture,
-          alphaTest: .6,
+          alphaTest: .15,
+          transparent: true,
+          opacity: 1,
           side : THREE.DoubleSide,
         });
         material.map.minFilter = THREE.NearestFilter;
@@ -536,6 +538,7 @@ export class GroupMeshHandler {
     this.parent = null;
 
     this.focus = null;
+    this.opacity = 1;
 
     this.defaultZPosition = null;
   }
@@ -560,6 +563,7 @@ export class GroupMeshHandler {
 
   createChildHandler() {
     const handler = new GroupMeshHandler(); 
+    handler.setOpacity(this.opacity);
     this.children.push(handler);
     handler.parent = this;
     return handler;
@@ -596,11 +600,16 @@ export class GroupMeshHandler {
   setDefaultZ(z) {
     this.defaultZPosition = z;
   }
+
+  setOpacity(opacity) {
+    this.opacity = opacity;
+  }
 }
 
 class GroupMesh {
   constructor(handler, texture, maxsize) {
     this.texture = texture;
+    this.opacity = 1;
     this.size = 0;
     this.handler = handler;
     this.maxsize = maxsize || 20;
@@ -618,6 +627,9 @@ class GroupMesh {
     this.geometry.depthTest = false;
 
     this.texture.getMaterial().then(material => {
+      this.material = material;
+      // remember about alphaTest
+      this.material.opacity = handler.opacity;
       this.mesh = new THREE.Mesh( this.geometry, material );
       this.mesh.renderOrder = handler.defaultZPosition*100;
       material.depthTest = false;
