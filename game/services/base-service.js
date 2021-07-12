@@ -1,6 +1,6 @@
 
 
-export default class Component {
+export default class BaseService {
   constructor() {
     this.id = null;
   }

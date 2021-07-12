@@ -1,14 +1,14 @@
 import { createStats } from './stats';
-import { createBag } from './bag';
+import { createBag } from '../items/bag';
 
-import getScript from './entities/get-script';
-import { getConfig } from './entities/get-config';
+import getScript from './get-script';
+import { getConfig } from './get-config';
 
-import EntityGraphic from './graphics/entity-graphic.js';
+import EntityGraphic from '../graphics/entity-graphic.js';
 
-import { PREFORM_ACTION_RESULT } from './action';
+import { PREFORM_ACTION_RESULT } from '../actions/base-action';
 
-import Map from './map/map';
+import Map from '../map/map';
 
 export default class Entity {
   constructor(data, x, y) {

@@ -1,4 +1,4 @@
-import { Action, PREFORM_ACTION_RESULT } from '../action';
+import { Action, PREFORM_ACTION_RESULT } from './base-action';
 
 export default class WalkAction extends Action {
   constructor(moveToX, moveToY) {

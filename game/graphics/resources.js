@@ -1,9 +1,9 @@
 import { Texture, TextureMap, GroupMeshHandler } from 'simple2d';
 
-import roguelikeChar from './resources/roguelikeChar_transparent.png';
-import roguelikeSheet from './resources/roguelikeSheet_transparent.png';
+import roguelikeChar from '../resources/roguelikeChar_transparent.png';
+import roguelikeSheet from '../resources/roguelikeSheet_transparent.png';
 
-import colors from './resources/colors.png';
+import colors from '../resources/colors.png';
 
 const handler = GroupMeshHandler.getRootHandler();
 

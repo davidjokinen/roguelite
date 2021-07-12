@@ -1,8 +1,8 @@
 import { getConfig } from '../tiles/get-tile';
 
-import { LAYERS } from '../resources.js';
+import { LAYERS } from '../graphics/resources.js';
 
-import { getEdgesTextureID, newEdgeHits, getEdgeData, getTextureData } from '../entity-common';
+import { getEdgesTextureID, newEdgeHits, getEdgeData, getTextureData } from '../entities/entity-common';
 
 export default class Tile {
   constructor(type, x, y) {

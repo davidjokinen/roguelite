@@ -1,4 +1,4 @@
-import Entity from '../entity';
+import Entity from '../entities/entity';
 import Map from '../map/map.js';
 import BaseGenerator from '../map/generators/base-generator';
 import DefaultScene from './default-scene';
@@ -8,15 +8,15 @@ import Game from '../ui/pages/game';
 import Keyboard from '../core/keyboard';
 import Mouse from '../core/mouse';
 
-import TileSelector from '../components/tile-selector';
-import PathFindingComponent from '../components/path-finding';
-import MapEditor from '../components/map-editor';
+import TileSelector from '../services/tile-selector';
+import PathFinding from '../services/path-finding';
+import MapEditor from '../services/map-editor';
 
 import React from 'react';
 
-import { LAYERS, SHEETS } from '../resources.js';
+import { LAYERS, SHEETS } from '../graphics/resources.js';
 
-import { loopXbyX } from '../utils';
+import { loopXbyX } from '../core/utils';
 
 export default class TestScene extends DefaultScene {
   constructor(camera) {
@@ -29,13 +29,13 @@ export default class TestScene extends DefaultScene {
     super.init();
 
     const tileSelector = new TileSelector(this.camera);
-    const pathFindingComponent = new PathFindingComponent();
+    const pathFinding = new PathFinding();
     const mapEditor = new MapEditor(tileSelector);
     this.addComponent(tileSelector);
-    this.addComponent(pathFindingComponent);
+    this.addComponent(pathFinding);
     this.addComponent(mapEditor);
 
-    this.map = new Map(new BaseGenerator(), pathFindingComponent);
+    this.map = new Map(new BaseGenerator(), pathFinding);
     
     // let tile = this.map.findEmptyTile(75,75);
     // const e1 = new Entity('player', tile.x, tile.y);
@@ -47,8 +47,10 @@ export default class TestScene extends DefaultScene {
       this.map.addEntity(e2);
     }
 
-    
-    
+    let tile = this.map.findEmptyTile(80,90);
+    const e2 = new Entity('npm-wander', tile.x, tile.y);
+    this.map.addEntity(e2);
+  
 
     // loopXbyX(50, 50, 50, 50, (x, y) => {
     //   const texture = SHEETS['colors'].getTexture(~~(Math.random()*3)); 
@@ -118,6 +120,7 @@ export default class TestScene extends DefaultScene {
     const { cameraTarget, camera } = this;
     
     this.map.update();
+    
 
     if (cameraTarget) {
       if (cameraTarget.sprite) {

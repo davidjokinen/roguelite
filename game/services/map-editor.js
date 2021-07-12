@@ -1,9 +1,9 @@
-import Component from '../component';
+import BaseService from './base-service';
 import Mouse from '../core/mouse';
-import Entity from '../entity';
+import Entity from '../entities/entity';
 
 // This is the service that the react components talk to to draw on the map.
-export default class MapEditor extends Component {
+export default class MapEditor extends BaseService {
 
   constructor(tileSelector) {
     super();

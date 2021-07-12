@@ -1,6 +1,6 @@
-import { loopXbyX } from '../../utils';
+import { loopXbyX } from '../../core/utils';
 
-import Entity from '../../entity';
+import Entity from '../../entities/entity';
 import perlinNoise from './utils/perlin-noise';
 
 export default class BaseGenerator {

@@ -1,5 +1,5 @@
-import { getTextureID } from './utils';
-import { SHEETS } from './resources.js';
+import { getTextureID } from '../core/utils';
+import { SHEETS } from '../graphics/resources.js';
 
 export function getEdgeData(entity) {
   if (!entity.data) return null;

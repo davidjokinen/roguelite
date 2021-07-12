@@ -1,4 +1,4 @@
-import { Action, PREFORM_ACTION_RESULT } from '../action';
+import { Action, PREFORM_ACTION_RESULT } from './base-action';
 import WalkAction from './walk-action';
 
 export default class GoToAction extends Action {

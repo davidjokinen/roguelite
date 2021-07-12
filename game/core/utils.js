@@ -1,4 +1,4 @@
-import { SHEETS } from './resources.js';
+import { SHEETS } from '../graphics/resources.js';
 
 export const createCooldown = (timeout) => {
   let curTime = 0;

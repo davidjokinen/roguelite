@@ -1,6 +1,6 @@
 import Chunk from './chunk.js';
 
-import { loopXbyX } from '../utils';
+import { loopXbyX } from '../core/utils';
 
 const CHUNK_SIZE = 3;
 const SIZE = 50;

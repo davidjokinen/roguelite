@@ -1,6 +1,6 @@
-import Component from '../component';
+import BaseService from './base-service';
 
-class PathWorker extends Component {
+class PathWorker extends BaseService {
   constructor(map, start, end) {
     super();
     this.map = map;
@@ -88,7 +88,7 @@ class PathWorker extends Component {
 
 }
 
-export default class PathFindingComponent extends Component {
+export default class PathFinding extends BaseService {
   constructor() {
     super();
     this.id = 'path-finding';

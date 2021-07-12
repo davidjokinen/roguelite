@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import Component from '../component';
+import BaseService from './base-service';
 
 import Mouse from '../core/mouse';
 
-export default class TileSelector extends Component {
+export default class TileSelector extends BaseService {
   constructor(camera) {
     super();
     this.id = 'tile-selector';
