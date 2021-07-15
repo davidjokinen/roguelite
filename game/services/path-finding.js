@@ -15,7 +15,7 @@ class PathWorker extends BaseService {
     this.fScore[start.id] = this.tileCost(start);
 
     // Just give up if it is too much work. 
-    this.maxSearch = this.tileCost(start)*2.5;
+    this.maxSearch = this.tileCost(start)*4;
 
     this.done = false;
     this.path = null;

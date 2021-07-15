@@ -28,7 +28,7 @@ export default function TimeControl(props) {
   const timeMap = {
     pause: 0,
     play: 1,
-    fast: 3,
+    fast: 10,
   }
 
   const handleTimeState = (event, newTimeState) => {

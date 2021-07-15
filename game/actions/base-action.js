@@ -12,12 +12,13 @@ export class Action {
     this.completed = false;
     this.cancelable = false;
     this.subAction = null;
+    this.subActionResult = null;
   }
 
   performSubAction(entity, map, entities) {
     if (this.subAction) {
-      const actionResult = this.subAction.perform(entity, map, entities);
-      if (actionResult !== PREFORM_ACTION_RESULT.ACTIVE) {
+      this.subActionResult = this.subAction.perform(entity, map, entities);
+      if (this.subActionResult !== PREFORM_ACTION_RESULT.ACTIVE) {
         this.subAction = null;
         return false
       } else {

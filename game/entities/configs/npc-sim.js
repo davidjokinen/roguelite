@@ -4,9 +4,9 @@ export default {
     sheet: 'roguelikeChar',
     default: 324,
   },
-  // script: {
-  //   main: 'ai-wander'
-  // },
+  script: {
+    main: 'ai-sim'
+  },
   stats: {
 
   }

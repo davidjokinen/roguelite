@@ -32,7 +32,7 @@ export default class Entity {
     this._curTile = null;
 
     this.walkable = data.walkable || false;
-    this.movingTime = 500
+    this.movingTime = 1000
     // cur image/animation
     // status
 
@@ -86,6 +86,8 @@ export default class Entity {
     if (this.action) {
       const actionResult = this.action.perform(this, map, entities);
       if (actionResult !== PREFORM_ACTION_RESULT.ACTIVE) {
+        this.lastAction = this.action;
+        this.lastActionResult = actionResult;
         this.action = null;
       } else {
         return;

@@ -45,15 +45,15 @@ export default class TestScene extends DefaultScene {
     // const e1 = new Entity('player', tile.x, tile.y);
     // this.map.addEntity(e1);
 
-    for (let i=0;i<3;i++) {
+    for (let i=0;i<5;i++) {
       let tile = this.map.findEmptyTile(80,80);
       const e2 = new Entity('npm-sim', tile.x, tile.y);
       this.map.addEntity(e2);
     }
 
-    let tile = this.map.findEmptyTile(80,90);
-    const e2 = new Entity('npm-wander', tile.x, tile.y);
-    this.map.addEntity(e2);
+    // let tile = this.map.findEmptyTile(80,90);
+    // const e2 = new Entity('npm-wander', tile.x, tile.y);
+    // this.map.addEntity(e2);
   
 
     // loopXbyX(50, 50, 50, 50, (x, y) => {

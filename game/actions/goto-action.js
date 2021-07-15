@@ -37,8 +37,19 @@ export default class GoToAction extends Action {
       return this.waitForPathWorker();
     if (this.path === null)
       return this.initGoTo(entity, map, entities);
-    if (this.path.length === 0) 
-      return PREFORM_ACTION_RESULT.FINISHED_SUCCESS;
+    if (this.path.length === 0) {
+      let tile = map.getTile(entity.x, entity.y)
+      if (tile.entities.length > 1) {
+        this.path = null;
+        let tile = map.findRandomCloseEmptyTile(entity.x, entity.y);
+        if (!tile) return PREFORM_ACTION_RESULT.FINISHED_FAIL;
+        this.gotoTile = tile;
+        return PREFORM_ACTION_RESULT.ACTIVE;
+      } else {
+        return PREFORM_ACTION_RESULT.FINISHED_SUCCESS;
+      }
+    }
+      
     const nextTile = this.path[0];
     this.path.splice(0, 1);
     // TODO replace check

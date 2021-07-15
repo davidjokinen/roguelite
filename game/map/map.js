@@ -43,6 +43,16 @@ export default class Map {
     return this.chunks[i].getTile(x,y);
   }
 
+  findRandomCloseEmptyTile(findX, findY) {
+    const isTileGood = (checkTile) => {
+      // replace condition later
+      return checkTile && checkTile.type !== 'water' && checkTile.entities.length === 0;
+    }
+    const list = this.getNeighbors(findX, findY).filter(isTileGood);
+    if (list.length === 0) return null;
+    return list[~~(list.length*Math.random())];
+  }
+
   findEmptyTile(findX, findY) {
     let searchSize = 0;
     let tile = null;
