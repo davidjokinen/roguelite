@@ -1,12 +1,13 @@
 export default {
-  id: 'wood-pile',
+  id: 'berry-pile',
   walkable: true,
   layer: 'floor',
   sprite: {
     sheet: 'roguelikeSheet',
-    default: {x: 53,y: 22}
+    default: {x: 56,y: 16}
   },
   actions: {
     haul: true,
+    eat: true,
   }
 };

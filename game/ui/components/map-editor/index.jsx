@@ -72,6 +72,7 @@ export default function MapEditor(props) {
       >
         <Tab label="Tiles" />
         <Tab label="Nature" />
+        <Tab label="Items" />
         <Tab label="NPC" />
       </Tabs>
       <GridMenu onChange={handleChangeTileOption} selectedTab={selectedTab} index={0}>
@@ -94,7 +95,14 @@ export default function MapEditor(props) {
         <GridItem type="small-dead-tree"></GridItem>
       </GridMenu>
       <GridMenu onChange={handleChangeEntityOption} selectedTab={selectedTab} index={2}>
+        <GridItem type="bed"></GridItem>
+        <GridItem type="berry-pile"></GridItem>
+        <GridItem type="wood-pile"></GridItem>
+        <GridItem type="stone-pile"></GridItem>
+      </GridMenu>
+      <GridMenu onChange={handleChangeEntityOption} selectedTab={selectedTab} index={3}>
         <GridItem type="npm-wander"></GridItem>
+        <GridItem type="npm-sim"></GridItem>
       </GridMenu>
     </Paper>
   );

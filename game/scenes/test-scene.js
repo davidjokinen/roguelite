@@ -44,11 +44,15 @@ export default class TestScene extends DefaultScene {
     // let tile = this.map.findEmptyTile(75,75);
     // const e1 = new Entity('player', tile.x, tile.y);
     // this.map.addEntity(e1);
+    // this.map.addEntity(new Entity('stone-pile', 82, 82));
+    // this.map.addEntity(new Entity('berry-pile', 83, 82));
+    // this.map.addEntity(new Entity('bed', 86, 82));
 
     for (let i=0;i<5;i++) {
       let tile = this.map.findEmptyTile(80,80);
       const e2 = new Entity('npm-sim', tile.x, tile.y);
       this.map.addEntity(e2);
+      // this.cameraTarget = e2;
     }
 
     // let tile = this.map.findEmptyTile(80,90);

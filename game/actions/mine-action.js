@@ -3,10 +3,10 @@ import BaseEntityAction from './base-entity-action';
 import Entity from '../entities/entity';
 
 
-export default class CutAction extends BaseEntityAction {
+export default class MineAction extends BaseEntityAction {
   constructor(target) {
     super(target);
-    this.id = 'cut';
+    this.id = 'mine';
   }
 
   perform(entity, map, entities) {
@@ -14,7 +14,7 @@ export default class CutAction extends BaseEntityAction {
     if (output)
       return output;
     this.target.remove();
-    // map.addEntity(new Entity('wood-pile', this.target.x, this.target.y));
+    map.addEntity(new Entity('stone-pile', this.target.x, this.target.y));
     return PREFORM_ACTION_RESULT.FINISHED_SUCCESS;
   }
 }

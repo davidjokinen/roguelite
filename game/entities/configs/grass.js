@@ -9,5 +9,8 @@ export default {
       {x: 22, y: 11},
     ],
     default: {x: 22,y: 10}
+  },
+  actions: {
+    cut: true,
   }
 };

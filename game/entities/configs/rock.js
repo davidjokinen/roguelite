@@ -9,5 +9,13 @@ export default {
       {x: 56, y: 21},
     ],
     default: {x: 54,y: 21}
+  },
+  actions: {
+    mine: {
+      drop: {
+        id: 'rock-pile',
+        count: 20
+      }
+    }
   }
 };

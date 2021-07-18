@@ -2,13 +2,15 @@ import { createStats } from './stats';
 import { createBag } from '../items/bag';
 
 import getScript from './get-script';
-import { getConfig } from './get-config';
+import { getConfig, actionToEntityMap, actionMap } from './get-config';
 
 import EntityGraphic from '../graphics/entity-graphic.js';
 
 import { PREFORM_ACTION_RESULT } from '../actions/base-action';
 
 import Map from '../map/map';
+
+let id = 0;
 
 export default class Entity {
   constructor(data, x, y) {
@@ -25,6 +27,7 @@ export default class Entity {
     }
     this._remove = false;
     // id
+    this.id = id++;
 
     // pos 
     this.x = x;
@@ -54,6 +57,18 @@ export default class Entity {
     
     this._onChangePosition();
   }
+
+  static viewEntitiesWithAction(action) {
+    if (action in actionToEntityMap) 
+      return actionToEntityMap[action];
+    return [];
+  }
+
+  static viewActions(typeId) {
+    if (typeId in actionMap) 
+      return actionMap[typeId].allActions;
+    return [];
+  } 
 
   updateType(newType) {
     const data = getConfig(newType);
@@ -88,6 +103,7 @@ export default class Entity {
       if (actionResult !== PREFORM_ACTION_RESULT.ACTIVE) {
         this.lastAction = this.action;
         this.lastActionResult = actionResult;
+        this.action.finally();
         this.action = null;
       } else {
         return;

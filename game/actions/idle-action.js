@@ -24,6 +24,8 @@ export default class IdleAction extends Action {
       return PREFORM_ACTION_RESULT.ACTIVE;
     }
     if (this.idleTime + this.idleWait < GameTime.now()) {
+      if (Math.random() > .66)
+        return PREFORM_ACTION_RESULT.CANCELLED;
       this.idleTime = null;
       return PREFORM_ACTION_RESULT.ACTIVE;
     }

@@ -116,7 +116,7 @@ export default function Game(props) {
             aria-label="disabled tabs example"
           >
             <Tab label="Inspect" />
-            <Tab label="Build" />
+            <Tab label="DEBUG Build" />
             <Tab label="Orders" />
             <Tab label="Overlays" />
             {/* <Tab label="Disabled" disabled /> */}

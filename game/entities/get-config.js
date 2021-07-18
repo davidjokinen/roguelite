@@ -10,9 +10,37 @@ import smallDeadTree from './configs/small-dead-tree';
 import rock from './configs/rock';
 import grass from './configs/grass';
 import berryBush from './configs/berry-bush';
+
+import berryPile from './configs/berry-pile';
+import stonePile from './configs/stone-pile';
 import woodPile from './configs/wood-pile';
 
-const configMap = {}
+import bed from './configs/bed';
+
+const configMap = {};
+
+export const actionMap = {};
+export const actionToEntityMap = {};
+
+function buildEntityActionMapping(config) {
+  const id = config.id;
+  if (!actionMap[id])
+    actionMap[id] = {
+      allActions: [],
+    };
+  if (!config.actions)
+    return;
+  const actionNames = Object.keys(config.actions);
+  actionNames.forEach(action => {
+    if (!(action in actionToEntityMap)) {
+      actionToEntityMap[action] = [];
+    }
+    actionToEntityMap[action].push(id);
+
+    actionMap[id].allActions.push(action);
+    actionMap[id][action] = config.actions[action];
+  });
+}
 
 export function registerConfig(config) {
   if (!config) {
@@ -27,6 +55,7 @@ export function registerConfig(config) {
     console.error('Entity config id already in use')
     return;
   }
+  buildEntityActionMapping(config);
   configMap[config.id] = config;
 };
 
@@ -50,4 +79,8 @@ registerConfig(deadTree);
 registerConfig(smallDeadTree);
 registerConfig(rock);
 registerConfig(grass);
+registerConfig(berryPile);
+registerConfig(stonePile);
 registerConfig(woodPile);
+registerConfig(bed);
+// console.log(actionToEntityMap)
