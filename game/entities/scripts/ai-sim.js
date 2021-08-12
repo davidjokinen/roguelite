@@ -11,6 +11,8 @@ import IdleAction from '../../actions/idle-action';
 import WalkAction from '../../actions/walk-action';
 import EatAction from '../../actions/eat-action';
 
+import { getRandomInt } from '../../core/utils';
+
 const isCloser = (self, currentClosest, checkEntity) => {
   const difCurX = Math.abs(self.x - currentClosest.x);
   const difCurY = Math.abs(self.y - currentClosest.y);
@@ -75,7 +77,8 @@ export default class AiSim extends EntityScript {
     }
     let action = null;
     const actions = ['chop', 'chop', 'chop', 'harvest', 'eat', 'cut', 'mine'];
-    const randomAction = actions[~~(actions.length*Math.random())];
+    const randomInt = getRandomInt(actions.length);
+    const randomAction = actions[randomInt];
     action = this.tryAction(randomAction, target, map, entities);
     if (!action) return new IdleAction();
     return action;

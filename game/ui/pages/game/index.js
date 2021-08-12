@@ -11,6 +11,7 @@ import TileSelector from '../../components/tile-selector';
 import TabPanel from '../../components/tab-panel';
 import Inspector from '../../components/inspector';
 import MapEditor from '../../components/map-editor';
+import ConstructionMenu from '../../components/construction-menu';
 import Orders from '../../components/orders';
 import Overlays from '../../components/overlays';
 
@@ -87,7 +88,7 @@ export default function Game(props) {
         </div>
         <TimeControl className={classes.flexItem} {...props} />
       </div>
-      <ResourceCounter />
+      {/* <ResourceCounter /> */}
       <Box className={classes.bottemLeft}>
         <TileSelector {...props} />
         <TabPanel value={value} index={0}>
@@ -97,15 +98,18 @@ export default function Game(props) {
           <MapEditor {...props} />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <Orders {...props} />
+          <ConstructionMenu {...props} />
         </TabPanel>
         <TabPanel value={value} index={3}>
-          <Overlays {...props} />
+          <Orders {...props} />
         </TabPanel>
+        {/* <TabPanel value={value} index={4}>
+          <Overlays {...props} />
+        </TabPanel> */}
       </Box>
-      <Box className={classes.topRow}>
+      {/* <Box className={classes.topRow}>
         Top Row
-      </Box>
+      </Box> */}
       <Box className={classes.bottomRow}>
         <Paper square>
           <Tabs
@@ -117,8 +121,9 @@ export default function Game(props) {
           >
             <Tab label="Inspect" />
             <Tab label="DEBUG Build" />
+            <Tab label="Construct" />
             <Tab label="Orders" />
-            <Tab label="Overlays" />
+            {/* <Tab label="Overlays" /> */}
             {/* <Tab label="Disabled" disabled /> */}
           </Tabs>
         </Paper>

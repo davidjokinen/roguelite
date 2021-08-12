@@ -1,10 +1,12 @@
+import { getRandomInt } from '../../../core/utils';
+
 // old perlin noise that I used in the past.
 export default function perlinNoise(SEED) {
 	var seed = SEED;
 	var size = 256;
 	var values = new Array();
 	for(var i =0;i< size*2;i++)
-		values[i] =  Math.floor(100*Math.random());
+		values[i] = getRandomInt(100);
 	
 	function Fade(t){
 		return t*t*t*(t*(t*6-15)+10);

@@ -35,3 +35,7 @@ export const getTextureID = (data, sheet) => {
   }
   return null;
 }
+
+export const getRandomInt = (max) => {
+  return ~~(max*Math.random());
+}

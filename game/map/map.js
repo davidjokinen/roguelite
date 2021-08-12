@@ -1,6 +1,6 @@
 import Chunk from './chunk.js';
 
-import { loopXbyX } from '../core/utils';
+import { loopXbyX, getRandomInt } from '../core/utils';
 
 const CHUNK_SIZE = 3;
 const SIZE = 50;
@@ -50,7 +50,8 @@ export default class Map {
     }
     const list = this.getNeighbors(findX, findY).filter(isTileGood);
     if (list.length === 0) return null;
-    return list[~~(list.length*Math.random())];
+    const randomInt = getRandomInt(list.length);
+    return list[randomInt];
   }
 
   findEmptyTile(findX, findY) {

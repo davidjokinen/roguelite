@@ -6,8 +6,8 @@ import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
-import GridMenu from '../map-editor/grid-menu';
-import GridItem from '../map-editor/grid-item';
+import GridMenu from './map-editor/grid-menu';
+import GridItem from './map-editor/grid-item';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Orders(props) {
+export default function ConstructionMenu(props) {
   const [selectedTab, setTab] = React.useState(0);
   const [optionMap, setOptionMap] = React.useState({});
 
@@ -26,7 +26,7 @@ export default function Orders(props) {
   const mapEditor = components['map-editor'];
   const updateTool = () => {
     // TODO
-    // alert('todo')
+    // alert('todo');
   }
 
   React.useEffect(() => {
@@ -67,21 +67,23 @@ export default function Orders(props) {
         onChange={handleChange}
         aria-label="disabled tabs example"
       >
-        <Tab label="Actions" />
-        <Tab label="Zones" />
+        <Tab label="Items" />
+        <Tab label="Walls" />
+        <Tab label="Floors" />
       </Tabs>
       <GridMenu onChange={handleChangeTileOption} selectedTab={selectedTab} index={0}>
-        <GridItem type="chop"></GridItem>
-        <GridItem type="cut"></GridItem>
-        <GridItem type="haul"></GridItem>
-        <GridItem type="harvest"></GridItem>
-        <GridItem type="mine"></GridItem>
+        <GridItem type="bed"></GridItem>
+        <GridItem type="camp-fire"></GridItem>
+        <GridItem type="chair"></GridItem>
       </GridMenu>
       <GridMenu onChange={handleChangeEntityOption} selectedTab={selectedTab} index={1}>
-        <GridItem type="storage"></GridItem>
-        <GridItem type="food storage"></GridItem>
-        <GridItem type="farm land"></GridItem>
-        <GridItem type="area"></GridItem>
+        <GridItem type="wood wall"></GridItem>
+        <GridItem type="stone wall"></GridItem>
+      </GridMenu>
+      <GridMenu onChange={handleChangeEntityOption} selectedTab={selectedTab} index={2}>
+        <GridItem type="dirt path"></GridItem>
+        <GridItem type="wood floor"></GridItem>
+        <GridItem type="stone floor"></GridItem>
       </GridMenu>
     </Paper>
   );

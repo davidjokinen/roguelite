@@ -1,4 +1,4 @@
-import { getTextureID } from '../core/utils';
+import { getTextureID, getRandomInt } from '../core/utils';
 import { SHEETS } from '../graphics/resources.js';
 
 export function getEdgeData(entity) {
@@ -63,7 +63,8 @@ export function getTextureData(data) {
       targetTextureMap = SHEETS[data.sprite.sheet];
     if (data.sprite.randomTiles) {
       const randomLength = data.sprite.randomTiles.length;
-      const randomPick = data.sprite.randomTiles[~~(randomLength*Math.random())]
+      const randomInt = getRandomInt(randomLength);
+      const randomPick = data.sprite.randomTiles[randomInt];
       const newTargetTextureId = getTextureID(randomPick, data.sprite.sheet)
       if (newTargetTextureId)
         targetTextureId = newTargetTextureId;

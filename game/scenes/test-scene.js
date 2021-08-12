@@ -12,6 +12,7 @@ import GameTime from '../services/game-time';
 import TileSelector from '../services/tile-selector';
 import PathFinding from '../services/path-finding';
 import MapEditor from '../services/map-editor';
+import EntitySelector from '../services/entity-selector';
 
 import React from 'react';
 
@@ -33,14 +34,16 @@ export default class TestScene extends DefaultScene {
     const tileSelector = new TileSelector(this.camera);
     const pathFinding = new PathFinding();
     const mapEditor = new MapEditor(tileSelector);
+
+    this.map = new Map(new BaseGenerator(), pathFinding);
+
+    const entitySelector = new EntitySelector(tileSelector, this.map);
     
     this.addComponent(tileSelector);
     this.addComponent(pathFinding);
     this.addComponent(mapEditor);
     this.addComponent(gameTime);
-
-    this.map = new Map(new BaseGenerator(), pathFinding);
-    
+    this.addComponent(entitySelector);
     // let tile = this.map.findEmptyTile(75,75);
     // const e1 = new Entity('player', tile.x, tile.y);
     // this.map.addEntity(e1);

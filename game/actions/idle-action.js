@@ -1,4 +1,5 @@
 import { Action, PREFORM_ACTION_RESULT } from './base-action';
+import { getRandomInt } from '../core/utils';
 import GoToAction from './goto-action';
 
 export default class IdleAction extends Action {
@@ -20,7 +21,8 @@ export default class IdleAction extends Action {
         this.subAction = new GoToAction(tile);
       }
       this.idleTime = GameTime.now();
-      this.idleWait = 5000 + ~~(5000*Math.random());
+      const randomInt = getRandomInt(5000);
+      this.idleWait = 5000 + randomInt;
       return PREFORM_ACTION_RESULT.ACTIVE;
     }
     if (this.idleTime + this.idleWait < GameTime.now()) {
