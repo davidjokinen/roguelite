@@ -51,7 +51,11 @@ export default class TileSelector extends React.Component {
     const style = {
       padding: '5px',
       margin: '10px',
-      width: '150px'
+      width: '150px',
+      backgroundColor: '#FFFFFF99',
+      borderRadius: '0px',
+      fontFamily: "'Free Pixel', sans-serif",
+      lineHeight: '.5',
     }
     let tileSection = null;
     let entitySection = [];
@@ -59,9 +63,11 @@ export default class TileSelector extends React.Component {
       
       if (tile.entities.length > 0) {
         const entity = tile.entities[0];
-        entitySection = <p key={entity.data.id}>Entity: {entity.data.id}</p>
+        const entityName = entity.data.name || entity.data.id;
+        entitySection = <p key={entity.data.id}>Entity: {entityName}</p>
       }
-      tileSection = <p>Tile ID: {tile.data.id}</p>;
+      const tileName = tile.data.name || tile.data.id;
+      tileSection = <p>Tile: {tileName}</p>;
     }
     return (
       <Paper style={style}>

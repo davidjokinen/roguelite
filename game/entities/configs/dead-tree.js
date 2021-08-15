@@ -1,5 +1,6 @@
 export default {
   id: 'dead-tree',
+  name: 'Tree (dead)',
   walkable: false,
   sprite: {
     sheet: 'roguelikeSheet',

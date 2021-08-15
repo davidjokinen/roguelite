@@ -3,6 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import Paper from '@material-ui/core/Paper';
 
+import NpcView from './npc-view';
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     margin: 'auto',
@@ -31,9 +33,15 @@ export default function Inspector(props) {
       entitySelector.removeOnSelectedEntity(onEntityChange);
     }
   });
+  // console.log(selectedEntity)
 
   if (!selectedEntity) return (<></>);
+  if (selectedEntity.data.id === 'npm-sim') {
+    return (<Paper className={classes.paper}>
+      <NpcView selectedEntity={selectedEntity} />
+    </Paper>);
+  }
   return (<Paper className={classes.paper}>
-      Entity: {selectedEntity.id}
+      Entity: {selectedEntity.data.id}
     </Paper>)
 }

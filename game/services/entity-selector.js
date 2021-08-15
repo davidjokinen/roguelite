@@ -30,6 +30,8 @@ export default class EntitySelector extends BaseService {
   }
 
   onMouseDown(onMouseDown) {
+    if (onMouseDown.button !== 0)
+      return;
     if (!this.selectedEntity.active)
       return;
     const {

@@ -1,5 +1,6 @@
 export default {
   id: 'grass',
+  name: 'Long Grass',
   walkable: true,
   layer: 'floor',
   sprite: {

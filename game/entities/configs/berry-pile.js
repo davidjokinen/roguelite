@@ -1,5 +1,6 @@
 export default {
   id: 'berry-pile',
+  name: 'Pile of berries',
   walkable: true,
   layer: 'floor',
   sprite: {

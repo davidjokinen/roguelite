@@ -1,5 +1,6 @@
 export default {
   id: 'bed',
+  name: 'Bed',
   walkable: false,
   sprite: {
     sheet: 'roguelikeSheet',

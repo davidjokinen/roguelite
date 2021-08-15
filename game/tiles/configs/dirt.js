@@ -1,5 +1,6 @@
 export default {
   id: 'dirt',
+  name: 'Dirt',
   walkable: true,
   sprite: {
     sheet: 'roguelikeSheet',

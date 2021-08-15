@@ -1,5 +1,6 @@
 export default {
   id: 'long-bush',
+  name: 'Bush',
   walkable: false,
   sprite: {
     sheet: 'roguelikeSheet',

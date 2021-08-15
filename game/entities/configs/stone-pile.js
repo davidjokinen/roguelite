@@ -1,5 +1,6 @@
 export default {
   id: 'stone-pile',
+  name: 'Stone Pile',
   walkable: true,
   layer: 'floor',
   sprite: {

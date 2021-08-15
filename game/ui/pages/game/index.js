@@ -31,9 +31,11 @@ const useStyles = makeStyles((theme) => ({
   },
   header: {
     textAlign: 'center',
+    fontFamily: "'Free Pixel', sans-serif",
   },
   button: {
     margin: theme.spacing(2),
+    fontFamily: "'Free Pixel', sans-serif",
   },
   bottemLeft: {
     position: 'fixed',

@@ -1,5 +1,6 @@
 export default {
   id: 'tree',
+  name: 'Tree',
   walkable: false,
   // script: {
   //   main: 'tree-life'

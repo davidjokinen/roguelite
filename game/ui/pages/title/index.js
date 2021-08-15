@@ -23,9 +23,11 @@ const useStyles = makeStyles((theme) => ({
   },
   header: {
     textAlign: 'center',
+    fontFamily: "'Free Pixel', sans-serif",
   },
   button: {
     marginBottom: theme.spacing(2),
+    fontFamily: "'Free Pixel', sans-serif",
   },
 }));
 

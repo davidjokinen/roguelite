@@ -55,6 +55,7 @@ export default class Entity {
     this.renderUpdate = true;
     this.graphic = new EntityGraphic(this);
     
+    this._onEntityUpdate = [];
     this._onChangePosition();
   }
 
@@ -96,6 +97,7 @@ export default class Entity {
       const action = this.script.update(this, map, entities);
       if (action) {
         this.action = action;
+        this._onActionUpdate();
       }
     }
     if (this.action) {
@@ -142,5 +144,19 @@ export default class Entity {
     if (this._curTile) {
       this._curTile.entities.splice(this._curTile.entities.indexOf(this), 1);
     }
+  }
+
+  _onActionUpdate() {
+    this._onEntityUpdate.forEach(action => action());
+  }
+
+  addOnEntityUpdate(action) {
+    this._onEntityUpdate.push(action);
+  }
+
+  removeOnEntityUpdate(action) {
+    const index = this._onEntityUpdate.indexOf(action);
+		if (index < -1) return;
+		this._onEntityUpdate.splice(index, 1); 
   }
 }

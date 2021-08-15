@@ -1,5 +1,6 @@
 export default {
   id: 'berry-bush',
+  name: 'Berry Bush',
   walkable: false,
   sprite: {
     sheet: 'roguelikeSheet',
