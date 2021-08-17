@@ -5,6 +5,10 @@ export default class GoToAction extends Action {
   constructor(gotoTile) {
     super();
     this.id = 'goto';
+    this.actionName = {
+      presentTense: 'walking',
+      default: 'walk'
+    };
     this.gotoTile = gotoTile;
 
     this.path = null;

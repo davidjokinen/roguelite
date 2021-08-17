@@ -7,6 +7,10 @@ export default class HavestAction extends BaseEntityAction {
   constructor(target) {
     super(target);
     this.id = 'harvest';
+    this.actionName = {
+      presentTense: 'harvesting',
+      default: 'harvest'
+    };
   }
 
   perform(entity, map, entities) {

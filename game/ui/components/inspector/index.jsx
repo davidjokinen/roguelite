@@ -10,6 +10,8 @@ const useStyles = makeStyles((theme) => ({
     margin: 'auto',
     maxWidth: 500,
     height: 100,
+    width: 300,
+    padding: 5,
   },
 }));
 

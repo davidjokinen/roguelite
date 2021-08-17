@@ -7,6 +7,10 @@ export default class MineAction extends BaseEntityAction {
   constructor(target) {
     super(target);
     this.id = 'mine';
+    this.actionName = {
+      presentTense: 'mining',
+      default: 'mine'
+    };
   }
 
   perform(entity, map, entities) {

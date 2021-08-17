@@ -101,7 +101,10 @@ export default class Entity {
       }
     }
     if (this.action) {
+      const hasSubAction = !!this.action.subAction;
       const actionResult = this.action.perform(this, map, entities);
+      if (hasSubAction !== !!this.action.subAction)
+        this._onActionUpdate();
       if (actionResult !== PREFORM_ACTION_RESULT.ACTIVE) {
         this.lastAction = this.action;
         this.lastActionResult = actionResult;

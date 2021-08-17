@@ -6,6 +6,10 @@ export default class EatAction extends BaseEntityAction {
   constructor(target) {
     super(target);
     this.id = 'eat';
+    this.actionName = {
+      presentTense: 'eating',
+      default: 'eat'
+    };
   }
 
   perform(entity, map, entities) {

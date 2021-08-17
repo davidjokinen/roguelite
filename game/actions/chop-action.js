@@ -7,6 +7,10 @@ export default class ChopAction extends BaseEntityAction {
   constructor(target) {
     super(target);
     this.id = 'chop';
+    this.actionName = {
+      presentTense: 'chopping',
+      default: 'chop'
+    };
   }
 
   perform(entity, map, entities) {

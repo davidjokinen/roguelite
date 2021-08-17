@@ -8,6 +8,10 @@ export default class IdleAction extends Action {
     this.id = 'idle';
     this.idleTime = null;
     this.idleWait = null;
+    this.actionName = {
+      presentTense: 'chilling',
+      default: 'chill'
+    };
   }
 
   perform(entity, map, entities) {

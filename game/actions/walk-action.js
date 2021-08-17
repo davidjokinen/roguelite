@@ -4,6 +4,10 @@ export default class WalkAction extends Action {
   constructor(moveToX, moveToY) {
     super();
     this.id = 'walk';
+    this.actionName = {
+      presentTense: 'walking',
+      default: 'walk'
+    };
     this.moveToX = moveToX;
     this.moveToY = moveToY;
     this.moving = false;
