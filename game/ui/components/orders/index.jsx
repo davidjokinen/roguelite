@@ -25,8 +25,10 @@ export default function Orders(props) {
 
   const mapEditor = components['map-editor'];
   const updateTool = () => {
-    // TODO
-    // alert('todo')
+    mapEditor.tool = {
+      map: map,
+      brush: optionMap[selectedTab],
+    };
   }
 
   React.useEffect(() => {
@@ -43,7 +45,7 @@ export default function Orders(props) {
   const handleChangeTileOption = (event, newValue) => {
     const newMap = { ...optionMap };
     newMap[selectedTab] = {
-      target: 'tile',
+      target: 'action',
       type: newValue,
     };
     setOptionMap(newMap);
@@ -52,7 +54,7 @@ export default function Orders(props) {
   const handleChangeEntityOption = (event, newValue) => {
     const newMap = { ...optionMap };
     newMap[selectedTab] = {
-      target: 'entity',
+      target: 'zones',
       type: newValue,
     };
     setOptionMap(newMap);

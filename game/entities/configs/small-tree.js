@@ -8,5 +8,13 @@ export default {
   sprite: {
     sheet: 'roguelikeSheet',
     default: {x: 13,y: 9},
+  },
+  actions: {
+    chop: {
+      drop: {
+        id: 'wood-pile',
+        count: 10
+      }
+    }
   }
 };

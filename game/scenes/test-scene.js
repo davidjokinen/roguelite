@@ -19,6 +19,7 @@ import React from 'react';
 import { LAYERS, SHEETS } from '../graphics/resources.js';
 
 import { loopXbyX } from '../core/utils';
+import ActionQueue from '../services/action-queue';
 
 export default class TestScene extends DefaultScene {
   constructor(camera) {
@@ -33,9 +34,10 @@ export default class TestScene extends DefaultScene {
     const gameTime = new GameTime();
     const tileSelector = new TileSelector(this.camera);
     const pathFinding = new PathFinding();
-    const mapEditor = new MapEditor(tileSelector);
+    const actionQueue = new ActionQueue();
+    const mapEditor = new MapEditor(tileSelector, actionQueue);
 
-    this.map = new Map(new BaseGenerator(), pathFinding);
+    this.map = new Map(this, new BaseGenerator(), pathFinding);
 
     const entitySelector = new EntitySelector(tileSelector, this.map);
     
@@ -44,6 +46,7 @@ export default class TestScene extends DefaultScene {
     this.addComponent(mapEditor);
     this.addComponent(gameTime);
     this.addComponent(entitySelector);
+    this.addComponent(actionQueue);
     // let tile = this.map.findEmptyTile(75,75);
     // const e1 = new Entity('player', tile.x, tile.y);
     // this.map.addEntity(e1);
@@ -63,8 +66,8 @@ export default class TestScene extends DefaultScene {
     // this.map.addEntity(e2);
   
 
-    // loopXbyX(50, 50, 50, 50, (x, y) => {
-    //   const texture = SHEETS['colors'].getTexture(~~(Math.random()*3)); 
+    // loopXbyX(70, 70, 10, 10, (x, y) => {
+    //   const texture = SHEETS['colors'].getTexture(2); 
     //   LAYERS['overlay'].createSprite(texture, x, y);
     // });
     for (let i=0;i<87;i++) {

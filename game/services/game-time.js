@@ -6,6 +6,7 @@ export default class GameTime extends BaseService {
     this.id = 'game-time';
     this.time = 0;
     this.timeSpeed = 1;
+    this.lastTime = null;
   }
 
   now() {
@@ -26,8 +27,15 @@ export default class GameTime extends BaseService {
   }
 
   update() {
-    const TIME_BETWEEN_TICKS = 50;
-    const timeAdd = this.timeSpeed * TIME_BETWEEN_TICKS;
+    let timeBetweenTicks = 0;
+    if (this.lastTime) {
+      timeBetweenTicks = Date.now() - this.lastTime;
+    }
+    if (timeBetweenTicks > 200) {
+      timeBetweenTicks = 200;
+    }
+    this.lastTime = Date.now();
+    const timeAdd = this.timeSpeed * timeBetweenTicks;
     this.time += timeAdd;
   }
 

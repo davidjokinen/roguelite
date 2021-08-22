@@ -21,6 +21,14 @@ const isCloser = (self, currentClosest, checkEntity) => {
   return difCurX*difCurX + difCurY*difCurY > difCheckX*difCheckX + difCheckY*difCheckY;
 };
 
+const ACTION_MAP = {
+  mine: MineAction,
+  chop: ChopAction,
+  cut: CutAction,
+  harvest: HarvestAction,
+  eat: EatAction,
+};
+
 export default class AiSim extends EntityScript {
   start(target) {
     this.dontTargetList = [];
@@ -54,17 +62,11 @@ export default class AiSim extends EntityScript {
   tryAction(action, target, map, entities) {
     const targetEntities = Entity.viewEntitiesWithAction(action);
     if (targetEntities.length === 0) return;
-    const actionMap = {
-      mine: MineAction,
-      chop: ChopAction,
-      cut: CutAction,
-      harvest: HarvestAction,
-      eat: EatAction,
-    };
+    
     let targetEntity = this.findTarget(target, map, entities, targetEntities);
     if (!targetEntity || targetEntity === target) return;
-    if (!(action in actionMap)) return;
-    return new actionMap[action](targetEntity);
+    if (!(action in ACTION_MAP)) return;
+    return new ACTION_MAP[action](targetEntity);
   }
 
   update(target, map, entities) {
@@ -76,6 +78,19 @@ export default class AiSim extends EntityScript {
       target.lastActionResult = null;
     }
     let action = null;
+    // TODO: simplify how scripts get services
+    const { scene } = map;
+    if ('action-queue' in scene.componentMap) {
+      const actionQueue = scene.componentMap['action-queue'];
+      const actionBlueprint = actionQueue.getWork(target);
+      // if (actionBlueprint)
+      //   actionBlueprint.remove();
+      if (actionBlueprint && actionBlueprint.action in ACTION_MAP) {
+        actionBlueprint.remove();
+        // TODO: have the actionBlueprint monitor the action
+        return new ACTION_MAP[actionBlueprint.action](actionBlueprint.entity);
+      }
+    }
     const actions = ['chop', 'chop', 'chop', 'harvest', 'eat', 'cut', 'mine'];
     const randomInt = getRandomInt(actions.length);
     const randomAction = actions[randomInt];

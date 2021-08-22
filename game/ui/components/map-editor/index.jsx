@@ -81,6 +81,9 @@ export default function MapEditor(props) {
         <GridItem type="dirt"></GridItem>
         <GridItem type="sand"></GridItem>
         <GridItem type="stone"></GridItem>
+        <GridItem type="dirt-path"></GridItem>
+        <GridItem type="sand-path"></GridItem>
+        <GridItem type="stone-path"></GridItem>
       </GridMenu>
       <GridMenu onChange={handleChangeEntityOption} selectedTab={selectedTab} index={1}>
         <GridItem type="delete"></GridItem>

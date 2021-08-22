@@ -4,6 +4,10 @@ import water from './configs/water';
 import stone from './configs/stone';
 import sand from './configs/sand';
 
+import dirtPath from './configs/dirt-path';
+import sandPath from './configs/sand-path';
+import stonePath from './configs/stone-path';
+
 const configMap = {}
 
 export function registerConfig(config) {
@@ -35,3 +39,6 @@ registerConfig(grass);
 registerConfig(water);
 registerConfig(sand);
 registerConfig(stone);
+registerConfig(dirtPath);
+registerConfig(sandPath);
+registerConfig(stonePath);

@@ -8,7 +8,8 @@ const SIZE = 50;
 let mapFocus = null;
 
 export default class Map {
-  constructor(generator, pathFindingComponent) {
+  constructor(scene, generator, pathFindingComponent) {
+    this.scene = scene;
     this.generator = generator;
     this.pathFindingComponent = pathFindingComponent;
     this.chunks = {};

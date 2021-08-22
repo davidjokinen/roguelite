@@ -90,6 +90,24 @@ export default class Tile {
     }
   }
 
+  findEntities(search) {
+    // Example search: 
+    // * {action: 'chop'}
+    search = search || {};
+    return this.entities.filter(entity => {
+      let keepEntity = true;
+      if (search.action) {
+        if (!entity.data.actions || !(search.action in entity.data.actions))
+          keepEntity = false;
+      }
+      return keepEntity;
+    });
+  }
+
+  checkEntities(search) {
+    return this.findEntities(search).length > 0;
+  }
+
   render() {
     if (!this.sprite) {
       if (!this.texture) {

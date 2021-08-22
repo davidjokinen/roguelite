@@ -35,7 +35,7 @@ export default class Entity {
     this._curTile = null;
 
     this.walkable = data.walkable || false;
-    this.movingTime = 1000
+    this.movingTime = 500;
     // cur image/animation
     // status
 
