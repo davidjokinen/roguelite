@@ -44,6 +44,7 @@ export default class Entity {
 
     // script?
     this.script = null;
+    this.actionQueue = [];
     if (data.script) {
       if (data.script.main) {
         const scriptClass = getScript(data.script.main);
@@ -92,8 +93,10 @@ export default class Entity {
   }
 
   update(map, entities) {
-    // This will change later. In the future Actions will queue up and the script will be able to cancel actions.
-    if (!this.action && this.script) {
+    // This will change more later. In the future Actions will queue up and the script will be able to cancel actions.
+    if (!this.action && this.actionQueue.length > 0) {
+      this.action = this.actionQueue.shift();
+    } else if (!this.action && this.script) {
       const action = this.script.update(this, map, entities);
       if (action) {
         this.action = action;
@@ -113,6 +116,16 @@ export default class Entity {
       } else {
         return;
       }
+    }
+  }
+
+  queueAction(action, isImportant) {
+    isImportant = true
+    if (isImportant) {
+      this.action.cancel();
+      this.actionQueue.push(action);
+    } else {
+      this.actionQueue.push(action);
     }
   }
 

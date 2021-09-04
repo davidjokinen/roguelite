@@ -17,6 +17,8 @@ export default class IdleAction extends Action {
   perform(entity, map, entities) {
     if (this.performSubAction(entity, map, entities))
       return PREFORM_ACTION_RESULT.ACTIVE;
+    if (this.cancelled)
+      return PREFORM_ACTION_RESULT.CANCELLED;
     if (!this.idleTime) {
       if (this.idleWait) {
         let tile = map.findRandomCloseEmptyTile(entity.x, entity.y);

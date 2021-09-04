@@ -6,7 +6,7 @@ import ChopAction from '../../actions/chop-action';
 import CutAction from '../../actions/cut-action';
 import MineAction from '../../actions/mine-action';
 import GoToAction from '../../actions/goto-action';
-import HarvestAction from '../../actions/havest-action';
+import HarvestAction from '../../actions/harvest-action';
 import IdleAction from '../../actions/idle-action';
 import WalkAction from '../../actions/walk-action';
 import EatAction from '../../actions/eat-action';

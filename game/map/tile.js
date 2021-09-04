@@ -108,6 +108,17 @@ export default class Tile {
     return this.findEntities(search).length > 0;
   }
 
+  isWalkable(self) {
+    if (this.type === 'water') return false;
+    for (let i=0;i<this.entities.length;i++) {
+      const entity = this.entities[i];
+      if (entity === self) continue;
+      if (!entity.walkable)
+        return false;
+    }
+    return true;
+  }
+
   render() {
     if (!this.sprite) {
       if (!this.texture) {

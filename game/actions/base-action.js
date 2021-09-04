@@ -14,6 +14,8 @@ export class Action {
     this.cancelable = false;
     this.subAction = null;
     this.subActionResult = null;
+
+    this.cancelled = false;
   }
 
   performSubAction(entity, map, entities) {
@@ -34,7 +36,7 @@ export class Action {
   }
 
   cancel() {
-
+    this.cancelled = true;
   }
 
   finally() {

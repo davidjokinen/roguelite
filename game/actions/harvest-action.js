@@ -3,7 +3,7 @@ import BaseEntityAction from './base-entity-action';
 import Entity from '../entities/entity';
 
 
-export default class HavestAction extends BaseEntityAction {
+export default class HarvestAction extends BaseEntityAction {
   constructor(target) {
     super(target);
     this.id = 'harvest';

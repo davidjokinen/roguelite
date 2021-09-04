@@ -1,5 +1,9 @@
 import BaseService from './base-service';
 
+const tileWalkable = (tile) => {
+  
+}
+
 class PathWorker extends BaseService {
   constructor(map, start, end) {
     super();
@@ -24,7 +28,7 @@ class PathWorker extends BaseService {
   tileCost(tile) {
     const difX = Math.abs(tile.x-this.end.x);
     const difY = Math.abs(tile.y-this.end.y);
-    return ~~(Math.sqrt(difX*difX + difY*difY)*10);
+    return ~~(Math.sqrt(difX*difX + difY*difY)*12);
   }
 
   reconstructPath(current) {
@@ -65,11 +69,13 @@ class PathWorker extends BaseService {
       this.map.getNeighbors(searchTile.x, searchTile.y).forEach(neighborTile => {
         // console.log(neighborTile, gScore[neighborTile.id], gScore)
         // TODO replace
-        if (neighborTile.type === 'water') return;
-        if (neighborTile.entities.length > 0) return;
+        if (!neighborTile.isWalkable()) return;
+        
 
         if (cameFromMap[neighborTile.id] !== undefined) return;
         let newG = gScore[searchTile.id] + 8;
+        if (neighborTile.x - searchTile.x !== 0 && neighborTile.y - searchTile.y !== 0)
+          newG += 4;
         cameFromMap[neighborTile.id] = searchTile;
         gScore[neighborTile.id] = newG;
         const tileCost = this.tileCost(neighborTile) 

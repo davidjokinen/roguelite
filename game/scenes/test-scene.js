@@ -38,6 +38,7 @@ export default class TestScene extends DefaultScene {
     const mapEditor = new MapEditor(tileSelector, actionQueue);
 
     this.map = new Map(this, new BaseGenerator(), pathFinding);
+    // this.map = new Map(this, null, pathFinding);
 
     const entitySelector = new EntitySelector(tileSelector, this.map);
     
