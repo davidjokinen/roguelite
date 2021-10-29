@@ -1,4 +1,5 @@
-export default {
+// export default 
+module.exports = {
   id: 'water',
   name: 'Water',
   walkable: false,

@@ -1,7 +1,7 @@
 import EntityScript from '../entity-script';
-import { createCooldown } from '../../core/utils';
+import { createCooldown } from '../../core/utils.mjs';
 
-import Entity from '../../entities/entity';
+import Entity from '../entity.mjs';
 
 export default class TreeLife extends EntityScript {
   start(target) {

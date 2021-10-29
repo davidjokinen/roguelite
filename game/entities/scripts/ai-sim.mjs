@@ -1,4 +1,4 @@
-import Entity from '../entity';
+import Entity from '../entity.mjs';
 import EntityScript from '../entity-script';
 
 import { PREFORM_ACTION_RESULT } from '../../actions/base-action';
@@ -11,7 +11,7 @@ import IdleAction from '../../actions/idle-action';
 import WalkAction from '../../actions/walk-action';
 import EatAction from '../../actions/eat-action';
 
-import { getRandomInt } from '../../core/utils';
+import { getRandomInt } from '../../core/utils.mjs';
 
 const isCloser = (self, currentClosest, checkEntity) => {
   const difCurX = Math.abs(self.x - currentClosest.x);

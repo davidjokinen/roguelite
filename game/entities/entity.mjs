@@ -1,14 +1,13 @@
-import { createStats } from './stats';
-import { createBag } from '../items/bag';
+import { createStats } from './stats.mjs';
+import { createBag } from '../items/bag.mjs';
 
-import getScript from './get-script';
-import { getConfig, actionToEntityMap, actionMap } from './get-config';
+import getScript from './get-script.mjs';
+import { getConfig, actionToEntityMap, actionMap } from './get-config.mjs';
 
-import EntityGraphic from '../graphics/entity-graphic.js';
 
-import { PREFORM_ACTION_RESULT } from '../actions/base-action';
+import { PREFORM_ACTION_RESULT } from '../actions/base-action.mjs';
 
-import Map from '../map/map';
+import { Map } from '../map/map.mjs';
 
 let id = 0;
 
@@ -26,6 +25,7 @@ export default class Entity {
       this.data = data;
     }
     this._remove = false;
+    this.type = this.data;
     // id
     this.id = id++;
 
@@ -53,8 +53,7 @@ export default class Entity {
       }
     }
 
-    this.renderUpdate = true;
-    this.graphic = new EntityGraphic(this);
+    
     
     this._onEntityUpdate = [];
     this._onChangePosition();
@@ -75,8 +74,6 @@ export default class Entity {
   updateType(newType) {
     const data = getConfig(newType);
     this.data = data;
-    this.graphic.checkTextureData();
-    this.graphic.updateTextures = true;
   }
 
   _onChangePosition() {
@@ -130,11 +127,10 @@ export default class Entity {
   }
 
   checkEdges(map) {
-    this.graphic.checkEdges(map, map.entities);
+    
   }
 
   render() {
-    this.graphic.render();
     this.renderUpdate = false;
   }
 
@@ -175,4 +171,13 @@ export default class Entity {
 		if (index < -1) return;
 		this._onEntityUpdate.splice(index, 1); 
   }
+
+  export() {
+    return {
+      type: this.type,
+      x: this.x,
+      y: this.y,
+    };
+  }
+
 }

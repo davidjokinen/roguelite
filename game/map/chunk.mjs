@@ -1,4 +1,6 @@
-import Tile from './tile.js';
+import Tile from './tile.mjs';
+// const Tile = require('./tile.js');
+
 
 const SIZE = 50;
 
@@ -12,17 +14,21 @@ export default class Chunk {
     this.generate();
   }
 
+  newTile() {
+    return this.map.newTile(...arguments);
+  }
+
   generate() {
     this.grid = new Array(SIZE*SIZE);
     for (let x=0;x<SIZE*SIZE;x++) {
       const posx = ~~(x%SIZE+this.x*SIZE);
       const posy = ~~(~~(x/SIZE)+this.y*SIZE);
-      const type = (this.x+this.y)%2 === 0 ? 'grass' : 'dirt';
+      let type = (this.x+this.y)%2 === 0 ? 'grass' : 'dirt';
       if (this.map.generator) {
         const newType = this.map.generator.tileInit(posx, posy);
         if (newType) type = newType;
       }
-      this.grid[x] = new Tile(type, posx, posy);
+      this.grid[x] = this.newTile(type, posx, posy);
     }
     
   }
@@ -54,4 +60,27 @@ export default class Chunk {
       tile.remove();
     });
   }
+
+  export() {
+    const output = {};
+    output.x = this.x;
+    output.y = this.y;
+    output.grid = this.grid.map(tile => tile.export());
+    return output;
+  }
+
+  import(data) {
+    this.grid.forEach(tile => {
+      tile.remove();
+    });
+    this.grid = [];
+    data.grid.forEach((tile, i) => {
+      const posx = ~~(i%SIZE+this.x*SIZE);
+      const posy = ~~(~~(i/SIZE)+this.y*SIZE);
+      // console.log(tile.type, posx, posy)
+      this.grid[i] = this.newTile(tile.type, posx, posy);
+    });
+  }
 }
+
+// module.exports = Chunk;

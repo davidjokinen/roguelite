@@ -1,6 +1,6 @@
 import { Action, PREFORM_ACTION_RESULT } from './base-action';
 import GoToAction from './goto-action';
-import Entity from '../entities/entity';
+import Entity from '../entities/entity.mjs';
 
 import { checkIfNotNextToTarget } from './action-utils';
 

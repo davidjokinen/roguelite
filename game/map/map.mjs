@@ -1,11 +1,50 @@
-import Chunk from './chunk.js';
+import Chunk from './chunk.mjs';
+import Tile from  './tile.mjs';
 
-import { loopXbyX, getRandomInt } from '../core/utils';
+// import { loopXbyX, getRandomInt } from '../core/utils.mjs';
 
 const CHUNK_SIZE = 3;
 const SIZE = 50;
 
 let mapFocus = null;
+
+
+class EntityManager {
+  constructor(list) {
+    this.list = list;
+  }
+
+  broadcast(event, data) {
+
+  }
+
+  add(e) {
+    this.list.push(e);
+    this.broadcast(ENTITIES_COMMANDS.ENTITIES_ADD, e.export());
+  }
+
+  remove(e) {
+    const index = this.list.indexOf(event);
+		if (index < -1) return;
+		this.list.splice(index, 1); 
+    this.broadcast(ENTITIES_COMMANDS.ENTITIES_REMOVE, e.export());
+  }
+
+  export() {
+    const data = {
+      list: this.list.map(e => e.export())
+    };
+    return data;
+  }
+
+  import(data) {
+    this.list.forEach(e => {
+      e.remove();
+    });
+    // data.list.map(e => )
+
+  }
+}
 
 export default class Map {
   constructor(scene, generator, pathFindingComponent) {
@@ -15,10 +54,17 @@ export default class Map {
     this.chunks = {};
 
     this.entities = [];
+    this.entityManager = new EntityManager(this.entities);
     this.tickEntities = [];
+
+    this._tileClass = Tile;
 
     this.setFocus();
     this.init();
+  }
+
+  newTile() {
+    return new Tile(...arguments);
   }
 
   static getFocus() {
@@ -30,7 +76,7 @@ export default class Map {
   }
 
   addEntity(entity) {
-    this.entities.push(entity);
+    this.entityManager.add(entity);
     if (entity.script) {
       this.tickEntities.push(entity);
     }
@@ -51,7 +97,7 @@ export default class Map {
     }
     const list = this.getNeighbors(findX, findY).filter(isTileGood);
     if (list.length === 0) return null;
-    const randomInt = getRandomInt(list.length);
+    const randomInt = ~~(list.length*Math.random());
     return list[randomInt];
   }
 
@@ -109,6 +155,10 @@ export default class Map {
         }
       }
     }
+    this.refreshEdges();
+  }
+
+  refreshEdges() {
     Object.values(this.chunks).forEach(chunks => {
       chunks.checkEdges();
     })
@@ -159,5 +209,29 @@ export default class Map {
   remove() {
     this.entities.forEach(entity => entity.remove());
     Object.values(this.chunks).forEach(chunk => chunk.remove());
+  }
+
+  export() {
+    const out = {};
+    out.chunks = [];
+    Object.values(this.chunks).forEach(chunk => {
+      out.chunks.push(chunk.export())
+    })
+    return out;
+  }
+
+  import(data) {
+    // return;
+    Object.values(this.chunks).forEach(chunk => chunk.remove());
+    this.chunks = {};
+    const newChunkData = data.chunks;
+    
+    newChunkData.forEach(chunk => {
+      let i = `${chunk.x}_${chunk.y}`;
+      console.log(i)
+      this.chunks[i] = new Chunk(this, chunk.x, chunk.y);
+      this.chunks[i].import(chunk);
+    });
+    this.refreshEdges();
   }
 }

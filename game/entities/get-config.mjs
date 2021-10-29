@@ -1,21 +1,21 @@
-import npcWander from './configs/npc-wander';
-import npcSim from './configs/npc-sim';
-import player from './configs/player';
-import bush from './configs/bush';
-import longBush from './configs/long-bush';
-import tree from './configs/tree';
-import smallTree from './configs/small-tree';
-import deadTree from './configs/dead-tree';
-import smallDeadTree from './configs/small-dead-tree';
-import rock from './configs/rock';
-import grass from './configs/grass';
-import berryBush from './configs/berry-bush';
+import npcWander from './configs/npc-wander.mjs';
+import npcSim from './configs/npc-sim.mjs';
+import player from './configs/player.mjs';
+import bush from './configs/bush.mjs';
+import longBush from './configs/long-bush.mjs';
+import tree from './configs/tree.mjs';
+import smallTree from './configs/small-tree.mjs';
+import deadTree from './configs/dead-tree.mjs';
+import smallDeadTree from './configs/small-dead-tree.mjs';
+import rock from './configs/rock.mjs';
+import grass from './configs/grass.mjs';
+import berryBush from './configs/berry-bush.mjs';
 
-import berryPile from './configs/berry-pile';
-import stonePile from './configs/stone-pile';
-import woodPile from './configs/wood-pile';
+import berryPile from './configs/berry-pile.mjs';
+import stonePile from './configs/stone-pile.mjs';
+import woodPile from './configs/wood-pile.mjs';
 
-import bed from './configs/bed';
+import bed from './configs/bed.mjs';
 
 const configMap = {};
 

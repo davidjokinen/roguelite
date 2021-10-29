@@ -1,8 +1,8 @@
 import BaseService from './base-service';
 import Mouse from '../core/mouse';
-import Entity from '../entities/entity';
-import { loopXbyX } from '../core/utils';
-import { LAYERS, SHEETS } from '../graphics/resources';
+import Entity from '../entities/entity.mjs';
+import { loopXbyX } from '../core/utils.mjs';
+import { LAYERS, SHEETS } from '../graphics/resources.mjs';
 
 const GRAY_TEXTURE = 2;
 const RED_TEXTURE = 65;

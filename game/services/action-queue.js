@@ -1,4 +1,4 @@
-import { LAYERS, SHEETS } from '../graphics/resources';
+import { LAYERS, SHEETS } from '../graphics/resources.mjs';
 import BaseService from './base-service';
 
 class ActionBlueprint {

@@ -1,6 +1,6 @@
 import Keyboard from '../../core/keyboard';
 import EntityScript from '../entity-script';
-import { createCooldown } from '../../core/utils';
+import { createCooldown } from '../../core/utils.mjs';
 
 import WalkAction from '../../actions/walk-action';
 

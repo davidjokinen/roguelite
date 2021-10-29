@@ -1,4 +1,4 @@
-import { PREFORM_ACTION_RESULT } from './base-action';
+import { PREFORM_ACTION_RESULT } from './base-action.mjs';
 import BaseEntityAction from './base-entity-action';
 
 

@@ -1,5 +1,6 @@
-import { getTextureID, getRandomInt } from '../core/utils';
-import { SHEETS } from '../graphics/resources.js';
+import { getTextureID } from '../core/graphic-utils.mjs';
+import { getRandomInt } from '../core/utils.mjs';
+import { SHEETS } from '../graphics/resources.mjs';
 
 export function getEdgeData(entity) {
   if (!entity.data) return null;

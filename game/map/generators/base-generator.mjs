@@ -1,7 +1,7 @@
-import { loopXbyX } from '../../core/utils';
+import { loopXbyX } from '../../core/utils.mjs';
 
-import Entity from '../../entities/entity';
-import perlinNoise from './utils/perlin-noise';
+import Entity from '../../entities/entity.mjs';
+import perlinNoise from './utils/perlin-noise.mjs';
 
 export default class BaseGenerator {
 

@@ -1,8 +1,8 @@
 
-import PlayerControl from './scripts/player-control';
-import AiWander from './scripts/ai-find';
-import TreeLife from './scripts/tree-life';
-import AiSim from './scripts/ai-sim';
+import PlayerControl from './scripts/player-control.mjs';
+import AiWander from './scripts/ai-find.mjs';
+import TreeLife from './scripts/tree-life.mjs';
+import AiSim from './scripts/ai-sim.mjs';
 
 export default function getScript(name) {
   switch(name) {

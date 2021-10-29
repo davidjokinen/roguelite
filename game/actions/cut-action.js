@@ -1,6 +1,6 @@
 import { PREFORM_ACTION_RESULT } from './base-action';
 import BaseEntityAction from './base-entity-action';
-import Entity from '../entities/entity';
+import Entity from '../entities/entity.mjs';
 
 
 export default class CutAction extends BaseEntityAction {

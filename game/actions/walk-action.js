@@ -1,4 +1,4 @@
-import { Action, PREFORM_ACTION_RESULT } from './base-action';
+import { Action, PREFORM_ACTION_RESULT } from './base-action.mjs';
 
 export default class WalkAction extends Action {
   constructor(moveToX, moveToY) {

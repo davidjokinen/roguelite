@@ -1,5 +1,5 @@
-import { Action, PREFORM_ACTION_RESULT } from './base-action';
-import { getRandomInt } from '../core/utils';
+import { Action, PREFORM_ACTION_RESULT } from './base-action.mjs';
+import { getRandomInt } from '../core/utils.mjs';
 import GoToAction from './goto-action';
 
 export default class IdleAction extends Action {

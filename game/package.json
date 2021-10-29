@@ -21,6 +21,7 @@
     "react-dom": "^17.0.2",
     "regenerator-runtime": "^0.13.7",
     "simple2d": "file:../simple2d",
+    "socket.io": "^4.2.0",
     "stats.js": "^0.17.0",
     "three": "^0.127.0"
   },

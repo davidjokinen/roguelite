@@ -1,6 +1,6 @@
-import Entity from '../entities/entity';
-import Map from '../map/map.js';
-import BaseGenerator from '../map/generators/base-generator';
+import Entity from '../entities/entity.mjs';
+import { ClientMap } from '../map/client-map.mjs';
+import BaseGenerator from '../map/generators/base-generator.mjs';
 import DefaultScene from './default-scene';
 
 import Game from '../ui/pages/game';
@@ -13,13 +13,52 @@ import TileSelector from '../services/tile-selector';
 import PathFinding from '../services/path-finding';
 import MapEditor from '../services/map-editor';
 import EntitySelector from '../services/entity-selector';
+import Socket from '../services/socket';
 
 import React from 'react';
 
-import { LAYERS, SHEETS } from '../graphics/resources.js';
+import { LAYERS, SHEETS } from '../graphics/resources.mjs';
 
-import { loopXbyX } from '../core/utils';
+import { loopXbyX } from '../core/utils.mjs';
 import ActionQueue from '../services/action-queue';
+
+
+class EntityManager {
+  constructor(list) {
+    this.list = list;
+  }
+
+  broadcast(event, data) {
+
+  }
+
+  add(e) {
+    this.list.push(e);
+    this.broadcast(ENTITIES_COMMANDS.ENTITIES_ADD, e.export());
+  }
+
+  remove(e) {
+    const index = this.list.indexOf(event);
+		if (index < -1) return;
+		this.list.splice(index, 1); 
+    this.broadcast(ENTITIES_COMMANDS.ENTITIES_REMOVE, e.export());
+  }
+
+  export() {
+    const data = {
+      list: this.list.map(e => e.export())
+    };
+    return data;
+  }
+
+  import(data) {
+    this.list.forEach(e => {
+      e.remove();
+    });
+    // data.list.map(e => )
+
+  }
+}
 
 export default class TestScene extends DefaultScene {
   constructor(camera) {
@@ -36,10 +75,12 @@ export default class TestScene extends DefaultScene {
     const pathFinding = new PathFinding();
     const actionQueue = new ActionQueue();
     const mapEditor = new MapEditor(tileSelector, actionQueue);
+    const socketService = new Socket();
 
-    this.map = new Map(this, new BaseGenerator(), pathFinding);
-    // this.map = new Map(this, null, pathFinding);
+    // this.map = new Map(this, new BaseGenerator(), pathFinding);
+    this.map = new ClientMap(this, null, pathFinding);
 
+    socketService.map = this.map;
     const entitySelector = new EntitySelector(tileSelector, this.map);
     
     this.addComponent(tileSelector);
@@ -48,6 +89,7 @@ export default class TestScene extends DefaultScene {
     this.addComponent(gameTime);
     this.addComponent(entitySelector);
     this.addComponent(actionQueue);
+    this.addComponent(socketService);
     // let tile = this.map.findEmptyTile(75,75);
     // const e1 = new Entity('player', tile.x, tile.y);
     // this.map.addEntity(e1);

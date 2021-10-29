@@ -23,11 +23,11 @@ overlayHander.setDefaultZ(1.0002);
 overlayHander.setOpacity(0.5);
 
 export const LAYERS = {
-  tile: tileHandler,
-  entityFloor: entityFloorHandler,
-  entity: entityHandler,
-  entityTops: entityTopHandler,
-  overlay: overlayHander,
+tile: tileHandler,
+entityFloor: entityFloorHandler,
+entity: entityHandler,
+entityTops: entityTopHandler,
+overlay: overlayHander,
 }
 
 const roguelikeCharTexture = new Texture(roguelikeChar);
@@ -47,8 +47,7 @@ colorsTextureMap.countX = 63;
 colorsTextureMap.countY = 63;
 
 export const SHEETS = {
-  roguelikeChar: roguelikeCharTextureMap,
-  roguelikeSheet: roguelikeSheetTextureMap,
-  colors: colorsTextureMap,
+roguelikeChar: roguelikeCharTextureMap,
+roguelikeSheet: roguelikeSheetTextureMap,
+colors: colorsTextureMap,
 }
-

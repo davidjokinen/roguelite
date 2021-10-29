@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+// const THREE = require('three');
 const loadManager = new THREE.LoadingManager();
 const loader = new THREE.TextureLoader(loadManager);
 
@@ -606,7 +607,7 @@ export class GroupMeshHandler {
   }
 }
 
-class GroupMesh {
+export class GroupMesh {
   constructor(handler, texture, maxsize) {
     this.texture = texture;
     this.opacity = 1;
@@ -807,7 +808,7 @@ class GroupMesh {
 }
 
 let id = 0;
-export class Sprite {
+class Sprite {
 
   constructor( texture, x, y, w, h ) {
     this._id = id++;
@@ -948,3 +949,13 @@ class GroupSprite {
 
 }
 
+// module.exports =
+// export  {
+//   TextureMap,
+//   Texture,
+//   CanvasTexture,
+//   SubTexture,
+//   AnimationTexture,
+//   GroupMeshHandler,
+//   Sprite
+// }

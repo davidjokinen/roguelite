@@ -1,4 +1,4 @@
-import { getRandomInt } from '../../../core/utils';
+import { getRandomInt } from '../../../core/utils.mjs';
 
 // old perlin noise that I used in the past.
 export default function perlinNoise(SEED) {

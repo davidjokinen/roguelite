@@ -2,7 +2,7 @@ import EntityScript from '../entity-script';
 
 import GoToAction from '../../actions/goto-action';
 
-import { getRandomInt } from '../../core/utils';
+import { getRandomInt } from '../../core/utils.mjs';
 
 export default class AiWander extends EntityScript {
   start(target) {

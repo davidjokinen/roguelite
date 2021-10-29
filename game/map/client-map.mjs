@@ -1,40 +1,20 @@
-import { getConfig } from '../tiles/get-tile';
+import Map from  './map.mjs';
+import Tile from  './tile.mjs';
+import { LAYERS } from '../graphics/resources.mjs';
 
-import { LAYERS } from '../graphics/resources.js';
+import { getEdgesTextureID, newEdgeHits, getEdgeData, getTextureData } from '../entities/entity-common.mjs';
 
-import { getEdgesTextureID, newEdgeHits, getEdgeData, getTextureData } from '../entities/entity-common';
+export class ClientMap extends Map {
 
-export default class Tile {
-  constructor(type, x, y) {
-    this.type = type;
-    this.x = x;
-    this.y = y;
-    this.id = `${x}_${y}`
-    this.data = null;
-
-    this.entities = [];
-
-    this.walkable = true;
-    
-    this.textureMap = null;
-    this.textureId = null;
-    this.texture = null;
-    this.sprite = null;
-
-    this.updateType(type);
+  newTile() {
+    return new ClientTile(...arguments);
   }
+}
+
+export class ClientTile extends Tile {
 
   updateType(type) {
-    // if (this.type === type) return;
-    let data = getConfig(type);
-    if (data) {
-      this.data = data;
-    } else {
-      console.error('error')
-      return;
-    }
-
-    this.walkable = data.walkable;
+    const data = super.updateType(type);
 
     const textureData = getTextureData(data);
 
@@ -45,7 +25,6 @@ export default class Tile {
       this.texture = newTexture;
       this.sprite.setTexture(newTexture);
     }
-    this.type = type;
   }
 
   checkEdges(map) {
@@ -90,37 +69,11 @@ export default class Tile {
     }
   }
 
-  findEntities(search) {
-    // Example search: 
-    // * {action: 'chop'}
-    search = search || {};
-    return this.entities.filter(entity => {
-      let keepEntity = true;
-      if (search.action) {
-        if (!entity.data.actions || !(search.action in entity.data.actions))
-          keepEntity = false;
-      }
-      return keepEntity;
-    });
-  }
-
-  checkEntities(search) {
-    return this.findEntities(search).length > 0;
-  }
-
-  isWalkable(self) {
-    if (this.type === 'water') return false;
-    for (let i=0;i<this.entities.length;i++) {
-      const entity = this.entities[i];
-      if (entity === self) continue;
-      if (!entity.walkable)
-        return false;
-    }
-    return true;
-  }
-
   render() {
+   
     if (!this.sprite) {
+      // const { LAYERS } = require('../graphics/resources.mjs');
+      // 
       if (!this.texture) {
         const { textureMap, textureId } = this;
         this.texture = textureMap.getTexture(textureId);
@@ -130,6 +83,9 @@ export default class Tile {
   }
 
   remove() {
-    this.sprite.remove();
+    if (this.sprite) {
+      this.sprite.remove();
+      this.sprite = null;
+    }
   }
 }
