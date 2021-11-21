@@ -52,7 +52,18 @@ const current = {
         }
       }
     ]
-  }
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      process: {
+        env: {
+          SOCKET_TYPE: process.env.SOCKET_TYPE,
+          SOCKET_HOST: process.env.SOCKET_HOST,
+          SOCKET_PORT: process.env.SOCKET_PORT
+        }
+      }
+    }),
+  ]
 };
 
 module.exports = current;
