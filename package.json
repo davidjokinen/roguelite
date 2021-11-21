@@ -4,7 +4,8 @@
   "description": "Aiming to build a game",
   "main": "index.js",
   "scripts": {
-    "start": "echo \"Hello\"",
+    "build": "cd game && npm run build",
+    "start": "cd server && npm start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,5 +20,9 @@
   "homepage": "https://github.com/davidjokinen/roguelite#readme",
   "engines": {
     "node": "17.x"
+  },
+  "dependencies": {
+    "game": "file:game",
+    "server": "file:server"
   }
 }
