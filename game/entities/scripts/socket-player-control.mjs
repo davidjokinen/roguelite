@@ -62,7 +62,7 @@ export default class SocketPlayerControl extends EntityScript {
     //     }
     //   });
     // }
-    console.log(moveX, moveY)
+    // console.log(moveX, moveY)
 
     // if (!clearSpot || !tile) return;
 

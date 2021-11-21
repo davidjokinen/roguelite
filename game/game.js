@@ -64,17 +64,16 @@ const changeScene = (id) => {
   } else {
     newScene = id;
   }
-  console.log(id)
   const oldScene = gameScene;
   gameScene = newScene;
   gameScene._changeScene = changeScene;
   gameScene.camera = camera;
   const remove = gameScene.focusScene(oldScene);
   if (oldScene && remove) {
-    console.log('remove action ', oldScene)
+    // console.log('remove action ', oldScene)
     oldScene.remove();
     // Dirty hack to clear non-pause screen
-    if (oldScene.constructor.name !== 'PauseScreen')
+    if (!oldScene.dontDestory)
       handler.reset();
   }
 }

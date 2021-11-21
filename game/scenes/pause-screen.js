@@ -14,6 +14,7 @@ export default class PauseScreen extends DefaultScene {
   }
 
   init() {
+    this.dontDestory = true;
     const returnToGame = () => {
       const pausedScene = this.pausedScene;
       this.pausedScene = null;
@@ -32,7 +33,6 @@ export default class PauseScreen extends DefaultScene {
   }
 
   remove() {
-    console.log('remove Pause')
     const keyboard = Keyboard.getKeyboard();
     keyboard.removeOnKeyDown(this.onKeyEvent);
     if (this.pausedScene)
