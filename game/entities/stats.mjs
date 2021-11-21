@@ -1,5 +1,5 @@
 
-class Stats {
+export class Stats {
   constructor(json) {
     this.level = 1;
 
@@ -12,10 +12,6 @@ class Stats {
 }
 
 
-const createStats = (json) => {
+export const createStats = (json) => {
   return new Stats(json);
-};
-
-module.exports = {
-  createStats,
 };

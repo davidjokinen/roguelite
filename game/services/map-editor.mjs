@@ -1,8 +1,11 @@
-import BaseService from './base-service';
-import Mouse from '../core/mouse';
-import Entity from '../entities/entity.mjs';
+import BaseService from './base-service.mjs';
+import Mouse from '../core/mouse.mjs';
+import Entity from '../entities/entity-client.js';
 import { loopXbyX } from '../core/utils.mjs';
 import { LAYERS, SHEETS } from '../graphics/resources.mjs';
+
+import ENTITIES_COMMANDS from '../net/common/entities.js';
+import MAP_COMMANDS from '../net/common/map.js';
 
 const GRAY_TEXTURE = 2;
 const RED_TEXTURE = 65;
@@ -166,6 +169,10 @@ export default class MapEditor extends BaseService {
     this.spriteList = newSpriteList;
   }
 
+  removeEntities() {
+    tile.entities.forEach(entity => entity.remove());
+  }
+
   updateMap(onMouseDown) {
     if (!this.tool)
       return;
@@ -187,7 +194,8 @@ export default class MapEditor extends BaseService {
     if (!tile) return;
     if (!type) return;
     if (type === 'delete') {
-      tile.entities.forEach(entity => entity.remove());
+      this.removeEntities(tile);
+      
       return;
     }
 
@@ -198,6 +206,44 @@ export default class MapEditor extends BaseService {
     } else {
       this.addLayer();
     }
+  }
+
+  addSocket(socket) {
+    
+    this._addTile = this.addTile;
+    this.addTile = (tile) => {
+      const { brush } = this.tool;
+      const output = { ...brush };
+      output.x = tile.x;
+      output.y = tile.y;
+      console.log(MAP_COMMANDS.MAP_UPDATE, output)
+      socket.send(MAP_COMMANDS.MAP_UPDATE, output);
+    };
+
+    this._addEntity = this.addEntity;
+    this.addEntity = (tile) => {
+      const { brush } = this.tool;
+      const output = { ...brush };
+      output.x = tile.x;
+      output.y = tile.y;
+      console.log(ENTITIES_COMMANDS.ENTITIES_ADD, output)
+      socket.send(ENTITIES_COMMANDS.ENTITIES_ADD, output);
+    }
+
+    this._removeEntities = this.removeEntities;
+    this.removeEntities = (tile) => {
+      tile.entities.forEach(entity => {
+        console.log(ENTITIES_COMMANDS.ENTITIES_REMOVE, entity.id)
+        socket.send(ENTITIES_COMMANDS.ENTITIES_REMOVE, entity.id);
+      });
+    }
+  }
+
+  removeSocket() {
+    this.addTile = this._addTile;
+    this._addTile = null;
+    this.addEntity = this._addEntity;
+    this._addEntity = null;
   }
   
   init() {

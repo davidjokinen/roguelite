@@ -1,18 +1,18 @@
 import Entity from '../entities/entity.mjs';
 import { ClientMap } from '../map/client-map.mjs';
 import BaseGenerator from '../map/generators/base-generator.mjs';
-import DefaultScene from './default-scene';
+import DefaultScene from './default-scene.mjs';
 
 import Game from '../ui/pages/game';
 
 import Keyboard from '../core/keyboard';
-import Mouse from '../core/mouse';
+import Mouse from '../core/mouse.mjs';
 
-import GameTime from '../services/game-time';
-import TileSelector from '../services/tile-selector';
-import PathFinding from '../services/path-finding';
-import MapEditor from '../services/map-editor';
-import EntitySelector from '../services/entity-selector';
+import GameTime from '../services/game-time.mjs';
+import TileSelector from '../services/tile-selector.mjs';
+import PathFinding from '../services/path-finding.mjs';
+import MapEditor from '../services/map-editor.mjs';
+import EntitySelector from '../services/entity-selector.mjs';
 import Socket from '../services/socket';
 
 import React from 'react';
@@ -20,9 +20,9 @@ import React from 'react';
 import { LAYERS, SHEETS } from '../graphics/resources.mjs';
 
 import { loopXbyX } from '../core/utils.mjs';
-import ActionQueue from '../services/action-queue';
+import ActionQueue from '../services/action-queue-client.mjs';
 
-
+// TODO: Double check that it isn't needed and remove
 class EntityManager {
   constructor(list) {
     this.list = list;
@@ -77,8 +77,10 @@ export default class TestScene extends DefaultScene {
     const mapEditor = new MapEditor(tileSelector, actionQueue);
     const socketService = new Socket();
 
+    mapEditor.addSocket(socketService);
     // this.map = new Map(this, new BaseGenerator(), pathFinding);
     this.map = new ClientMap(this, null, pathFinding);
+    this.map.addSocket(socketService);
 
     socketService.map = this.map;
     const entitySelector = new EntitySelector(tileSelector, this.map);

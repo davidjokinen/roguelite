@@ -1,12 +1,12 @@
-import BaseService from './base-service';
+import BaseService from './base-service.mjs';
 
-import Mouse from '../core/mouse';
-import GoToAction from '../actions/goto-action';
-import ChopAction from '../actions/chop-action';
-import MineAction from '../actions/mine-action';
-import CutAction from '../actions/cut-action';
-import EatAction from '../actions/eat-action';
-import HarvestAction from '../actions/harvest-action';
+import Mouse from '../core/mouse.mjs';
+import GoToAction from '../actions/goto-action.mjs';
+import ChopAction from '../actions/chop-action.mjs';
+import MineAction from '../actions/mine-action.mjs';
+import CutAction from '../actions/cut-action.mjs';
+import EatAction from '../actions/eat-action.mjs';
+import HarvestAction from '../actions/harvest-action.mjs';
 
 export default class EntitySelector extends BaseService {
   constructor(tileSelector, map) {

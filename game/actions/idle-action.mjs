@@ -1,6 +1,6 @@
 import { Action, PREFORM_ACTION_RESULT } from './base-action.mjs';
 import { getRandomInt } from '../core/utils.mjs';
-import GoToAction from './goto-action';
+import GoToAction from './goto-action.mjs';
 
 export default class IdleAction extends Action {
   constructor() {
@@ -24,8 +24,10 @@ export default class IdleAction extends Action {
         let tile = map.findRandomCloseEmptyTile(entity.x, entity.y);
         if (!tile)
           return PREFORM_ACTION_RESULT.CANCELLED;
-        this.subAction = new GoToAction(tile);
+        // this.subAction = new GoToAction(tile);
+        this.setSubAction(entity, new GoToAction(tile));
       }
+      
       this.idleTime = GameTime.now();
       const randomInt = getRandomInt(5000);
       this.idleWait = 5000 + randomInt;

@@ -4,7 +4,13 @@ import { LAYERS } from '../graphics/resources.mjs';
 
 import { getEdgesTextureID, newEdgeHits, getEdgeData, getTextureData } from '../entities/entity-common.mjs';
 
+import Entity from '../entities/entity-client.js';
+
 export class ClientMap extends Map {
+
+  getEntityClass() {
+    return Entity;
+  }
 
   newTile() {
     return new ClientTile(...arguments);
@@ -83,6 +89,7 @@ export class ClientTile extends Tile {
   }
 
   remove() {
+    super.remove();
     if (this.sprite) {
       this.sprite.remove();
       this.sprite = null;

@@ -1,6 +1,6 @@
 import { loopXbyX } from '../../core/utils.mjs';
 
-import Entity from '../../entities/entity.mjs';
+// import Entity from '../../entities/entity.mjs';
 import perlinNoise from './utils/perlin-noise.mjs';
 
 export default class BaseGenerator {
@@ -29,6 +29,7 @@ export default class BaseGenerator {
   chunkPost(posX, posY, size) {
     const startX = posX*size;
     const startY = posY*size;
+    const Entity = this.map.getEntityClass();
     loopXbyX(startX, startY, size, size, (x, y) => {
       const tile = this.map.getTile(x, y);
       const height = this.waterNoise.getHeight(x/2, y/2);

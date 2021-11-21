@@ -1,4 +1,4 @@
-import DefaultScene from './default-scene';
+import DefaultScene from './default-scene.mjs';
 
 import React from 'react';
 import Title from '../ui/pages/title';

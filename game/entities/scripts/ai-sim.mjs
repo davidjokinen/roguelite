@@ -1,15 +1,15 @@
 import Entity from '../entity.mjs';
-import EntityScript from '../entity-script';
+import EntityScript from '../entity-script.mjs';
 
-import { PREFORM_ACTION_RESULT } from '../../actions/base-action';
-import ChopAction from '../../actions/chop-action';
-import CutAction from '../../actions/cut-action';
-import MineAction from '../../actions/mine-action';
-import GoToAction from '../../actions/goto-action';
-import HarvestAction from '../../actions/harvest-action';
-import IdleAction from '../../actions/idle-action';
-import WalkAction from '../../actions/walk-action';
-import EatAction from '../../actions/eat-action';
+import { PREFORM_ACTION_RESULT } from '../../actions/base-action.mjs';
+import ChopAction from '../../actions/chop-action.mjs';
+import CutAction from '../../actions/cut-action.mjs';
+import MineAction from '../../actions/mine-action.mjs';
+import GoToAction from '../../actions/goto-action.mjs';
+import HarvestAction from '../../actions/harvest-action.mjs';
+import IdleAction from '../../actions/idle-action.mjs';
+import WalkAction from '../../actions/walk-action.mjs';
+import EatAction from '../../actions/eat-action.mjs';
 
 import { getRandomInt } from '../../core/utils.mjs';
 

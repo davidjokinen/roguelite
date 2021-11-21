@@ -1,6 +1,7 @@
 import npcWander from './configs/npc-wander.mjs';
 import npcSim from './configs/npc-sim.mjs';
 import player from './configs/player.mjs';
+import socketPlayer from './configs/socket-player.mjs';
 import bush from './configs/bush.mjs';
 import longBush from './configs/long-bush.mjs';
 import tree from './configs/tree.mjs';
@@ -83,4 +84,5 @@ registerConfig(berryPile);
 registerConfig(stonePile);
 registerConfig(woodPile);
 registerConfig(bed);
+registerConfig(socketPlayer);
 // console.log(actionToEntityMap)

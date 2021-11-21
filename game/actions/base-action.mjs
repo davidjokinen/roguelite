@@ -18,6 +18,19 @@ export class Action {
     this.cancelled = false;
   }
 
+  import() {
+
+  }
+
+  export() {
+
+  }
+
+  setSubAction(entity, action) {
+    this.subAction = action;
+    entity.actionUpdate(action);
+  }
+
   performSubAction(entity, map, entities) {
     if (this.subAction) {
       this.subActionResult = this.subAction.perform(entity, map, entities);

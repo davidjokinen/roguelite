@@ -32,7 +32,7 @@ export class SocketWrapper {
     });
 
     socket.onAny((type, evt,) => {
-      console.log('aa ', type, evt)
+      // console.log('aa ', type, evt)
       try {
         if (!this.onMessage(type, evt)) {
           console.log(`Unknown command (${type} ${evt}), disconnected.`);
@@ -94,7 +94,7 @@ export class WorldServer {
   }
 
   update(timeDelta) {
-    // this._worldManager.update(timeDelta);
+    this._worldManager.update(timeDelta);
   }
 
 }

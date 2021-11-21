@@ -1,4 +1,4 @@
-import BaseService from './base-service';
+import BaseService from './base-service.mjs';
 
 class NetworkFeature {
   init(socket) {
@@ -67,6 +67,56 @@ class MapNetworkManager extends NetworkFeature {
       console.log('MAP_LIST ', data)
       socket.map.import(data);
     });
+
+    socket.addOnMessage(MAP_COMMANDS.MAP_UPDATE, (command, data) => {
+      socket.map.updateTile(data);
+    });
+  }
+}
+
+import ENTITIES_COMMANDS from '../net/common/entities.js';
+import EntityClient from '../entities/entity-client';
+import WalkAction from '../actions/walk-action.mjs';
+
+class EntitiesNetworkManager extends NetworkFeature {
+  init(socket) {
+    const { map } = socket;
+    socket.addOnMessage(ENTITIES_COMMANDS.ENTITIES_SYNC, (command, data) => {
+      console.log('ENTITIES_SYNC ', data)
+      // socket.map.import(data);
+      console.log(socket.map.entities.length)
+      socket.map.removeEntities();
+      const length = data.list.length;
+      for(let i=0; i<length; i++) {
+        const entity = data.list[i];
+        if (entity.type && entity.x && entity.y)
+          socket.map.createEntity(entity);
+        //socket.map.addEntity(new EntityClient(entity.type, entity.x, entity.y));
+      }
+      console.log(socket.map.entities.length)
+    });
+
+    socket.addOnMessage(ENTITIES_COMMANDS.ENTITIES_ADD, (command, data) => {
+      console.log('add', data)
+      map.createEntity(data);
+    });
+
+    socket.addOnMessage(ENTITIES_COMMANDS.ENTITIES_REMOVE, (command, data) => {
+      console.log('remove', data)
+      map.removeEntity(data);
+    });
+
+    socket.addOnMessage(ENTITIES_COMMANDS.ENTITY_ACTION_UPDATE, (command, data) => {
+      const entity = map.getEntityByID(data.id);
+      if (entity) {
+        if (data.type === 'walk') {
+          const newAction = new WalkAction();
+          newAction.import(entity, data);
+          entity.addSocketAction(newAction);
+        }
+         
+      }
+    });
   }
 }
 
@@ -128,13 +178,20 @@ export default class Socket extends BaseService {
     this.addFeature(new CVars());
     this.addFeature(new Players());
     this.addFeature(new MapNetworkManager());
+    this.addFeature(new EntitiesNetworkManager());
 
     this.eventMap['login.complete'] = () => {
       console.log('update login.complete')
       this.send(CVAR_COMMANDS.CVAR_SYNC);
       this.send(PLAYERS_COMMANDS.PLAYERS_LIST);
       this.send(MAP_COMMANDS.MAP_LIST);
+      this.send(ENTITIES_COMMANDS.ENTITIES_SYNC);
+      this._onLogin();
     }
+  }
+  
+  onLogin(action) {
+    this._onLogin = action;
   }
 
   remove() {

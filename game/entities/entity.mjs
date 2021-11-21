@@ -7,7 +7,7 @@ import { getConfig, actionToEntityMap, actionMap } from './get-config.mjs';
 
 import { PREFORM_ACTION_RESULT } from '../actions/base-action.mjs';
 
-import { Map } from '../map/map.mjs';
+import Map from '../map/map.mjs';
 
 let id = 0;
 
@@ -25,7 +25,7 @@ export default class Entity {
       this.data = data;
     }
     this._remove = false;
-    this.type = this.data;
+    this.type = this.data.id;
     // id
     this.id = id++;
 
@@ -35,7 +35,7 @@ export default class Entity {
     this._curTile = null;
 
     this.walkable = data.walkable || false;
-    this.movingTime = 500;
+    this.movingTime = 100;
     // cur image/animation
     // status
 
@@ -47,16 +47,24 @@ export default class Entity {
     this.actionQueue = [];
     if (data.script) {
       if (data.script.main) {
-        const scriptClass = getScript(data.script.main);
-        this.script = new scriptClass();
-        this.script.start(this);
+        const scriptClass = this.getScript(data.script.main);
+        if (scriptClass) {
+          this.script = new scriptClass();
+          this.script.start(this);
+        } else {
+          console.log(`no script loaded "${data.script.main}"`)
+        }
       }
     }
 
     
-    
+    this._onActionUpdateList = [];
     this._onEntityUpdate = [];
     this._onChangePosition();
+  }
+
+  get getScript() {
+    return getScript;
   }
 
   static viewEntitiesWithAction(action) {
@@ -69,7 +77,19 @@ export default class Entity {
     if (typeId in actionMap) 
       return actionMap[typeId].allActions;
     return [];
-  } 
+  }
+
+  actionUpdate(action) {
+    this._onActionUpdateList.forEach(event => event(action));
+  }
+
+  onActionUpdate(event) {
+    this._onActionUpdateList.push(event);
+  }
+
+  addSocketAction(action) {
+    this.socketAction = action;
+  }
 
   updateType(newType) {
     const data = getConfig(newType);
@@ -90,13 +110,28 @@ export default class Entity {
   }
 
   update(map, entities) {
+    const { SERVER_UPDATE } = this;
+    if (SERVER_UPDATE) {
+      if (this.socketAction) {
+        this.socketAction.perform(this, map, entities);
+      }
+      if (this.script) {
+        this.script.update(this, map, entities);
+      }
+      return;
+    }
     // This will change more later. In the future Actions will queue up and the script will be able to cancel actions.
     if (!this.action && this.actionQueue.length > 0) {
       this.action = this.actionQueue.shift();
+      this.actionUpdate(this.action);
+      // TODO: cleanup _onActionUpdate
+      this._onActionUpdate();
     } else if (!this.action && this.script) {
       const action = this.script.update(this, map, entities);
       if (action) {
         this.action = action;
+        this.actionUpdate(action);
+        // TODO: cleanup _onActionUpdate
         this._onActionUpdate();
       }
     }
@@ -119,8 +154,10 @@ export default class Entity {
   queueAction(action, isImportant) {
     isImportant = true
     if (isImportant) {
-      this.action.cancel();
+      if (this.action)
+        this.action.cancel();
       this.actionQueue.push(action);
+      // console.log('test ',this.actionQueue.length)
     } else {
       this.actionQueue.push(action);
     }
@@ -149,10 +186,15 @@ export default class Entity {
 
   remove() {
     if (this._remove) return;
+    this._remove = true;
+    if (this.map) {
+      this.map.removeEntity(this);
+    } else {
+      console.log('LOST?')
+    }
     if (this.graphic) {
       this.graphic.remove();
     }
-    this._remove = true;
     if (this._curTile) {
       this._curTile.entities.splice(this._curTile.entities.indexOf(this), 1);
     }
@@ -174,6 +216,7 @@ export default class Entity {
 
   export() {
     return {
+      id: this.id,
       type: this.type,
       x: this.x,
       y: this.y,

@@ -1,4 +1,4 @@
-import EntityScript from '../entity-script';
+import EntityScript from '../entity-script.mjs';
 import { createCooldown } from '../../core/utils.mjs';
 
 import Entity from '../entity.mjs';

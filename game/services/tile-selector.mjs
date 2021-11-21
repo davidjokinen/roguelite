@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import BaseService from './base-service';
+import BaseService from './base-service.mjs';
 
-import Mouse from '../core/mouse';
+import Mouse from '../core/mouse.mjs';
 
 export default class TileSelector extends BaseService {
   constructor(camera) {

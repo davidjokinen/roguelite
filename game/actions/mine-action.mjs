@@ -1,15 +1,15 @@
-import { PREFORM_ACTION_RESULT } from './base-action';
-import BaseEntityAction from './base-entity-action';
+import { PREFORM_ACTION_RESULT } from './base-action.mjs';
+import BaseEntityAction from './base-entity-action.mjs';
 import Entity from '../entities/entity.mjs';
 
 
-export default class CutAction extends BaseEntityAction {
+export default class MineAction extends BaseEntityAction {
   constructor(target) {
     super(target);
-    this.id = 'cut';
+    this.id = 'mine';
     this.actionName = {
-      presentTense: 'cutting',
-      default: 'cut'
+      presentTense: 'mining',
+      default: 'mine'
     };
   }
 
@@ -18,7 +18,7 @@ export default class CutAction extends BaseEntityAction {
     if (output)
       return output;
     this.target.remove();
-    // map.addEntity(new Entity('wood-pile', this.target.x, this.target.y));
+    map.addEntity(new Entity('stone-pile', this.target.x, this.target.y));
     return PREFORM_ACTION_RESULT.FINISHED_SUCCESS;
   }
 }

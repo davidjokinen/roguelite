@@ -1,14 +1,7 @@
 import { LAYERS, SHEETS } from '../graphics/resources.mjs';
-import BaseService from './base-service';
+import { ActionBlueprint } from './action-queue.mjs'
 
-class ActionBlueprint {
-  constructor(entity, action) {
-    this.entity = entity;
-    this.action = action;
-
-    this.sprite = null;
-    this.init();
-  }
+class ActionBlueprintClient extends ActionBlueprint {
 
   init() {
     const { x, y } = this.entity;
@@ -21,7 +14,9 @@ class ActionBlueprint {
   }
 }
 
-export default class ActionQueue extends BaseService {
+import ActionQueue from './action-queue.mjs'
+
+export default class ActionQueueClient extends ActionQueue {
   constructor() {
     super();
     this.id = 'action-queue';
@@ -38,7 +33,7 @@ export default class ActionQueue extends BaseService {
   }
 
   addWork(entity, action) {
-    this.workList.push(new ActionBlueprint(entity, action));
+    this.workList.push(new ActionBlueprintClient(entity, action));
   }
 
   getWork(entity) {

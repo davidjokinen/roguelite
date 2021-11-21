@@ -1,13 +1,17 @@
 import Entity from './entity.mjs';
 
 import EntityGraphic from '../graphics/entity-graphic.js';
+import getScript from './get-script-client.mjs';
 
-class EntityClient extends Entity {
+export default class EntityClient extends Entity {
   constructor() {
-    super();
+    super(...arguments);
 
-    this.renderUpdate = true;
     this.graphic = new EntityGraphic(this);
+  }
+
+  get getScript() {
+    return getScript;
   }
 
   updateType(newType) {

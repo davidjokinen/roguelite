@@ -2,12 +2,14 @@ import regeneratorRuntime from "regenerator-runtime";
 
 import * as THREE from 'three';;
 import * as Stats from 'stats.js';
-import Mouse from "./core/mouse";
+import Mouse from "./core/mouse.mjs";
 import { enableCameraMovement } from './core/camera.js';
 import TestScene from './scenes/test-scene';
+import SinglePlayerSimScene from './scenes/single-player-sim';
 import TitleScreen from './scenes/title-screen';
 import PauseScreen from './scenes/pause-screen';
 import { Texture, TextureMap, GroupMeshHandler, Sprite } from 'simple2d';
+import RoguelikeGame from "./scenes/roguelike-game";
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 30, window.innerWidth / window.innerHeight, 1, 1000 );
@@ -15,7 +17,7 @@ camera.position.x = 75;
 camera.position.y = 75;
 camera.position.z = 60;
 
-const handler = GroupMeshHandler.getRootHandler();
+let handler = GroupMeshHandler.getRootHandler();
 handler.scene = scene;
 handler.setDefaultZ(0);
 
@@ -50,6 +52,8 @@ const changeScene = (id) => {
   const sceneMap = {
     'title': TitleScreen,
     'game': TestScene,
+    'single-player-game': SinglePlayerSimScene,
+    'roguelike-game': RoguelikeGame,
     'pause': PauseScreen,
   }
   let newScene = null
@@ -58,17 +62,23 @@ const changeScene = (id) => {
   } else {
     newScene = id;
   }
+  console.log(id)
   const oldScene = gameScene;
   gameScene = newScene;
   gameScene._changeScene = changeScene;
   gameScene.camera = camera;
   const remove = gameScene.focusScene(oldScene);
   if (oldScene && remove) {
+    console.log('remove action ', oldScene)
     oldScene.remove();
+    // Dirty hack to clear non-pause screen
+    if (oldScene.constructor.name !== 'PauseScreen')
+      handler.reset();
   }
 }
 
-changeScene('game');
+// changeScene('single-player-game');
+changeScene('roguelike-game');
 const gameLoop = function () {
   stats.begin();
   requestAnimationFrame( gameLoop );

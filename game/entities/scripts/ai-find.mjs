@@ -1,6 +1,6 @@
-import EntityScript from '../entity-script';
+import EntityScript from '../entity-script.mjs';
 
-import GoToAction from '../../actions/goto-action';
+import GoToAction from '../../actions/goto-action.mjs';
 
 import { getRandomInt } from '../../core/utils.mjs';
 

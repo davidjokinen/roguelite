@@ -1,8 +1,8 @@
-import { Action, PREFORM_ACTION_RESULT } from './base-action';
-import GoToAction from './goto-action';
+import { Action, PREFORM_ACTION_RESULT } from './base-action.mjs';
+import GoToAction from './goto-action.mjs';
 import Entity from '../entities/entity.mjs';
 
-import { checkIfNotNextToTarget } from './action-utils';
+import { checkIfNotNextToTarget } from './action-utils.mjs';
 
 const globalTargeting = {};
 
@@ -31,7 +31,8 @@ export default class BaseEntityAction extends Action {
       if (!tile) {
         return PREFORM_ACTION_RESULT.CANCELLED;
       }
-      this.subAction = new GoToAction(tile);
+      // this.subAction = new GoToAction(tile);
+      this.setSubAction(entity, new GoToAction(tile));
       return PREFORM_ACTION_RESULT.ACTIVE;
     }
     if (!this.cuttingTime) {

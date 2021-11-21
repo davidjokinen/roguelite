@@ -42,6 +42,9 @@ export default function Title(props) {
   const { changeScene } = props;
   const classes = useStyles();
   const startAction = () => { 
+    changeScene('single-player-game');
+  };
+  const joinAction = () => { 
     changeScene('game');
   };
   const settingsAction = () => { 
@@ -56,7 +59,8 @@ export default function Title(props) {
         </Typography>
       </Paper>
       <Paper className={classes.paper}>
-        <Button variant="contained" fullWidth={true} className={classes.button} onClick={startAction}>New Game</Button>
+        <Button variant="contained" fullWidth={true} className={classes.button} onClick={startAction}>Single-Player Game</Button>
+        <Button variant="contained" fullWidth={true} className={classes.button} onClick={joinAction}>Multi-player Game</Button>
         <Button variant="contained" fullWidth={true} className={classes.button} onClick={settingsAction}>Settings</Button>
       </Paper>
     </Container>

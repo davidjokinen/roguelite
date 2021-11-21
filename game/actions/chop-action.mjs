@@ -1,5 +1,5 @@
-import { PREFORM_ACTION_RESULT } from './base-action';
-import BaseEntityAction from './base-entity-action';
+import { PREFORM_ACTION_RESULT } from './base-action.mjs';
+import BaseEntityAction from './base-entity-action.mjs';
 import Entity from '../entities/entity.mjs';
 
 

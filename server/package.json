@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "babel src -d dist",
-    "start": "tsc index.ts",
+    "start": "node --experimental-modules index.mjs ",
     "restart": "rimraf dist && npm run start",
     "dev": "ts-node-dev --respawn --pretty --transpile-only index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -2,6 +2,8 @@ import Chunk from './chunk.mjs';
 import Tile from  './tile.mjs';
 
 // import { loopXbyX, getRandomInt } from '../core/utils.mjs';
+import ENTITIES_COMMANDS from '../../game/net/common/entities.js';
+import Entity from '../entities/entity.mjs';
 
 const CHUNK_SIZE = 3;
 const SIZE = 50;
@@ -9,7 +11,7 @@ const SIZE = 50;
 let mapFocus = null;
 
 
-class EntityManager {
+export class EntityManager {
   constructor(list) {
     this.list = list;
   }
@@ -20,17 +22,18 @@ class EntityManager {
 
   add(e) {
     this.list.push(e);
-    this.broadcast(ENTITIES_COMMANDS.ENTITIES_ADD, e.export());
+    this.broadcast(ENTITIES_COMMANDS.ENTITIES_ADD, e);
   }
 
   remove(e) {
     const index = this.list.indexOf(event);
 		if (index < -1) return;
 		this.list.splice(index, 1); 
-    this.broadcast(ENTITIES_COMMANDS.ENTITIES_REMOVE, e.export());
+    this.broadcast(ENTITIES_COMMANDS.ENTITIES_REMOVE, e);
   }
 
   export() {
+    console.log('export')
     const data = {
       list: this.list.map(e => e.export())
     };
@@ -53,9 +56,13 @@ export default class Map {
     this.pathFindingComponent = pathFindingComponent;
     this.chunks = {};
 
+    this._onAddEntity = [];
+    this._onRemoveEntity = [];
+
     this.entities = [];
     this.entityManager = new EntityManager(this.entities);
     this.tickEntities = [];
+    this.renderEntities = [];
 
     this._tileClass = Tile;
 
@@ -75,11 +82,45 @@ export default class Map {
     mapFocus = this;
   }
 
+  getEntityByID(id) {
+    for(let i=0;i<this.entities.length;i++) {
+      if (this.entities[i].id === id) {
+        return this.entities[i];
+      }
+    }
+    return null;
+  }
+
   addEntity(entity) {
+    entity.map = this;
     this.entityManager.add(entity);
+    entity.needsRender = () => {
+      this.renderEntities.push(entity);
+    };
+    this.renderEntities.push(entity);
     if (entity.script) {
       this.tickEntities.push(entity);
     }
+    this._onAddEntity.forEach(evt => evt(entity));
+    return entity;
+  }
+
+  removeEntity(entity) {
+    if (Number.isInteger(entity)) {
+      entity = this.getEntityByID(entity);
+    }
+    if (!entity)
+      return;
+    let index = this.entities.indexOf(entity);
+    if (index > -1) {
+      this.entities.splice(index, 1);
+    }
+    index = this.tickEntities.indexOf(entity);
+    if (index > -1) {
+      this.tickEntities.splice(index, 1);
+    }
+    this._onRemoveEntity.forEach(evt => evt(entity));
+    entity.remove();
   }
 
   getTile(x, y) {
@@ -192,12 +233,13 @@ export default class Map {
   }
 
   render() {
-    const listLength = this.entities.length;
+    const listLength =  this.renderEntities.length;
     // TODO: can be moved into chunks 
     for(let i=0; i<listLength; i++) {
-      if (this.entities[i].renderUpdate)
-        this.entities[i].render();
+      this.renderEntities[i].render();
     }
+    if (this.renderEntities.length > 1)
+      this.renderEntities = [];
     const chunks = Object.values(this.chunks);
     const length = chunks.length;
     // TODO: Check if we need to render 
@@ -206,9 +248,18 @@ export default class Map {
     }
   }
 
-  remove() {
+  removeEntities() {
     this.entities.forEach(entity => entity.remove());
+    this.entities = [];
+    this.entityManager.list = this.entities;
+    this.tickEntities = [];
+  }
+
+  remove() {
+    console.log('MAP CLEAR')
+    this.removeEntities();
     Object.values(this.chunks).forEach(chunk => chunk.remove());
+    this.chunks = {};
   }
 
   export() {
@@ -218,6 +269,10 @@ export default class Map {
       out.chunks.push(chunk.export())
     })
     return out;
+  }
+
+  exportEntities() {
+    return this.entityManager.export();
   }
 
   import(data) {
@@ -233,5 +288,64 @@ export default class Map {
       this.chunks[i].import(chunk);
     });
     this.refreshEdges();
+  }
+
+  updateTile(data) {
+    if (!data.x || !data.y)
+      return;
+    const tile = this.getTile(data.x, data.y);
+    const { type } = data;
+    if (tile.data.id === type)
+      return;
+    tile.updateType(type);
+    if (type === 'water')
+      tile.entities.forEach(entity => entity.remove());
+    tile.checkEdges(this);
+    this.getNeighbors(tile.x, tile.y).forEach(tile2 => {
+      tile2.checkEdges(this)
+    });
+  }
+
+  getEntityClass() {
+    return Entity;
+  }
+
+  createEntity(data) {
+    const _Entity = this.getEntityClass();
+    const { type } = data;
+    const tile = this.getTile(data.x, data.y);
+    if (tile.data.id === 'water')
+      return;
+    tile.entities.forEach(entity => entity.remove());
+    const newEntity = new _Entity(type, data.x, data.y);
+    if (data.id)
+      newEntity.id = data.id;
+    this.addEntity(newEntity);
+    tile.entities.map(e => e.checkEdges(this));
+    this.getNeighbors(tile.x, tile.y).forEach(tile2 => {
+      tile2.entities.map(e => e.checkEdges(this));
+    });
+    return newEntity;
+  }
+
+  onAddEntity(event) {
+    this._onAddEntity.push(event);
+  }
+
+  onRemoveEntity(event) {
+    this._onRemoveEntity.push(event);
+  }
+
+  addSocket(socket) {
+    this._addEntity = this.addEntity;
+    this.addEntity = (entity) => {
+      entity.SERVER_UPDATE = true;
+      return this._addEntity(entity);
+    };
+
+    this._removeEntity = this.removeEntity;
+    this.removeEntity = (entity) => {
+      return this._removeEntity(entity);
+    };
   }
 }

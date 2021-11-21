@@ -543,6 +543,12 @@ export class GroupMeshHandler {
 
     this.defaultZPosition = null;
   }
+  
+  reset() {
+    console.log(this.children)
+    this.allMeshes.forEach(mesh => mesh.reset());
+    this.children.forEach(child => child.reset());
+  }
 
   getScene() {
     if (this.scene)
@@ -647,6 +653,14 @@ export class GroupMesh {
 
     this._textures = [];
     this._sprites = [];
+  }
+
+  reset() {
+    this.size = 0;
+    this.updatePos = true;
+    this.updateUVs = true;
+    this.resized = true;
+    this.update();
   }
 
   update() {
@@ -768,6 +782,7 @@ export class GroupMesh {
     const removePos = this.sprites.indexOf(sprite);
     // const removePos = this.sprites._link.pos;
     const lastPos = this.size - 1;
+    if (lastPos < 0) return;
     this.sprites[lastPos].needsUpdate = true;
     this.sprites[removePos].needsUpdate = true;
     this.sprites[lastPos]._link.pos = this.sprites[removePos]._link.pos;

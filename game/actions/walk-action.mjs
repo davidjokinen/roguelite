@@ -16,6 +16,35 @@ export default class WalkAction extends Action {
     this.lastY = 0;
   }
 
+  import(entity, data) {
+    entity.x = data.startX;
+    entity.y = data.startY;
+    this.moveToX = data.endX;
+    this.moveToY = data.endY;
+    entity._onChangePosition();
+    if (entity.sprite)
+      entity.sprite.updatePosition(entity.x, entity.y);
+  }
+
+  export(entity) {
+    let moveToX = this.moveToX;
+    let moveToY = this.moveToY;
+    // TODO: I hate this
+    if (this.moveToY === undefined) {
+      const tile = this.moveToX;
+      moveToX = tile.x - entity.x;
+      moveToY = tile.y - entity.y;
+    }
+    return {
+      id: entity.id,
+      type: this.id,
+      startX: entity.x,
+      startY: entity.y,
+      endX: moveToX,
+      endY: moveToY,
+    }
+  }
+
   initMove(entity) {
     if (this.moveToY === undefined) {
       const tile = this.moveToX;

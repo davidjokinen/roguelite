@@ -1,5 +1,5 @@
 import { Action, PREFORM_ACTION_RESULT } from './base-action.mjs';
-import WalkAction from './walk-action';
+import WalkAction from './walk-action.mjs';
 
 export default class GoToAction extends Action {
   constructor(gotoTile) {
@@ -64,7 +64,8 @@ export default class GoToAction extends Action {
       return PREFORM_ACTION_RESULT.ACTIVE;
     }
     // console.log('Moving to: ', nextTile.x, nextTile.y)
-    this.subAction = new WalkAction(nextTile);
+    // this.subAction = new WalkAction(nextTile);
+    this.setSubAction(entity, new WalkAction(nextTile));
     return PREFORM_ACTION_RESULT.ACTIVE;
   }
 }
