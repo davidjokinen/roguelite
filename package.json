@@ -1,0 +1,22 @@
+{
+  "name": "simple-game",
+  "version": "1.0.0",
+  "description": "Aiming to build a game",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidjokinen/roguelite.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/davidjokinen/roguelite/issues"
+  },
+  "homepage": "https://github.com/davidjokinen/roguelite#readme",
+  "engines": {
+    "node": "17.x"
+  }
+}
