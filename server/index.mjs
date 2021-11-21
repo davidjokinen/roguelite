@@ -39,6 +39,7 @@ function staticServe(req, res) {
 };
 
 function Main() {
+  console.log('Starting server')
   const port = process.env.PORT || 3000;
 
   const server = createServer(staticServe);
