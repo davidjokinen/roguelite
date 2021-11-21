@@ -176,8 +176,6 @@ class EntitiesNetworkManager extends NetworkFeature {
       }
     }
 
-  
-
     manager.addOnMessage(ENTITIES_COMMANDS.ENTITIES_SYNC, (client, _) => {
       client.send(ENTITIES_COMMANDS.ENTITIES_SYNC, map.exportEntities());
     });
@@ -241,7 +239,9 @@ export default class WorldManger extends DefaultScene  {
   broadcast(evt, data) {
     const length = this.clients.length;
     for(let i=0; i<length; i++) {
-      this.clients[i].send(evt, data);
+      const client = this.clients[i];
+      if (client)
+        client.send(evt, data);
     }
   }
 
@@ -311,6 +311,7 @@ export default class WorldManger extends DefaultScene  {
     const _client = new WorldClient(this, client, params, () => {
       this.remove(client);
     });
+    console.log('Player Connected:',_client.ID)
     this.clients.push(_client);
     this.features.forEach(feature => {
       feature.clientAdd(this, _client);
@@ -320,6 +321,7 @@ export default class WorldManger extends DefaultScene  {
 
   remove(client) {
     const _client = client;
+    console.log('Player Disconnected:',_client.ID)
     if (client.entity)
       client.entity.remove();
     this.clients = this.clients.filter(test => client.ID !== test.ID);

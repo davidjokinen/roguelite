@@ -10,10 +10,10 @@ import Typography from '@material-ui/core/Typography';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    backgroundColor: 'gray',
     height: '100vh',
     padding: theme.spacing(2),
     pointerEvents: 'all',
+    fontFamily: "'Free Pixel', sans-serif",
   },
   paper: {
     padding: theme.spacing(2),
@@ -36,36 +36,33 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
     fontFamily: "'Free Pixel', sans-serif",
   },
+
 }));
 
-export default function Title(props) {
-  const { changeScene } = props;
+export default function Disconnect(props) {
+  const { changeScene, backToGame } = props;
   const classes = useStyles();
   const startAction = () => { 
-    changeScene('single-player-game');
-  };
-  const joinAction = () => { 
-    changeScene('game');
-  };
-  const joinRogueliteGame = () => { 
-    changeScene('roguelike-game');
+    changeScene(backToGame());
   };
   const settingsAction = () => { 
     alert('clicked settings') 
+  };
+  const titleAction = () => { 
+    changeScene('title');
   };
 
   return (
     <Container maxWidth={false} className={classes.root}>
       <Paper className={classes.paper}>
         <Typography variant="h1" component="h2" className={classes.header}>
-          Rougelite
+          Server Disconnected
         </Typography>
       </Paper>
       <Paper className={classes.paper}>
-        <Button variant="contained" fullWidth={true} className={classes.button} onClick={joinRogueliteGame}>Roguelite Game</Button>
-        <Button variant="contained" fullWidth={true} className={classes.button} onClick={startAction}>Single-Player Game</Button>
-        <Button variant="contained" fullWidth={true} className={classes.button} onClick={joinAction}>Multi-player Game</Button>
-        <Button variant="contained" fullWidth={true} className={classes.button} onClick={settingsAction}>Settings</Button>
+        {/* <Button variant="contained" fullWidth={true} className={classes.button} onClick={startAction}>Back to Game</Button> */}
+        {/* <Button variant="contained" fullWidth={true} className={classes.button} onClick={settingsAction}>Settings</Button> */}
+        <Button variant="contained" fullWidth={true} className={classes.button} onClick={titleAction}>Exit to Title Screen</Button>
       </Paper>
     </Container>
   );

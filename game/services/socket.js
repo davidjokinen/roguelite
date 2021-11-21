@@ -89,7 +89,7 @@ class EntitiesNetworkManager extends NetworkFeature {
       const length = data.list.length;
       for(let i=0; i<length; i++) {
         const entity = data.list[i];
-        if (entity.type && entity.x && entity.y)
+        if (entity.type !== undefined && entity.x !== undefined && entity.y !== undefined)
           socket.map.createEntity(entity);
         //socket.map.addEntity(new EntityClient(entity.type, entity.x, entity.y));
       }
@@ -128,12 +128,9 @@ export default class Socket extends BaseService {
 
     this.features = [];
     this.eventMap = {};
-    // Todo replace
-    window.send = this.send.bind(this);
   }
 
   connect() {
-    // TODO replace defaults for release
     const type = SOCKET_TYPE;
     const host = SOCKET_HOST;
     const port = SOCKET_PORT;
@@ -150,14 +147,15 @@ export default class Socket extends BaseService {
 
     this._socket.on('disconnect', () => {
       console.log('Disconnected')
+      if (this._onDisconnect)
+        this._onDisconnect();
     });
 
     this._socket.onAny((e, d) => {
-      console.log(e)
       if (e in this.eventMap)
-        this.eventMap[e](e,d)
+        this.eventMap[e](e,d);
       else
-        console.log(e, d)
+        console.log(e, d);
     })
   }
 
@@ -198,6 +196,10 @@ export default class Socket extends BaseService {
   
   onLogin(action) {
     this._onLogin = action;
+  }
+
+  onDisconnect(action) {
+    this._onDisconnect = action;
   }
 
   remove() {

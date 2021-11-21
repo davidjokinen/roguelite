@@ -153,14 +153,10 @@ export default class Entity {
 
   queueAction(action, isImportant) {
     isImportant = true
-    if (isImportant) {
-      if (this.action)
-        this.action.cancel();
-      this.actionQueue.push(action);
-      // console.log('test ',this.actionQueue.length)
-    } else {
-      this.actionQueue.push(action);
+    if (isImportant && this.action) {
+      this.action.cancel();
     }
+    this.actionQueue.push(action);
   }
 
   checkEdges(map) {

@@ -64,7 +64,7 @@ export default class RoguelikeGame extends DefaultScene {
         return false;
       }
     });
-
+    this.socketService = socketService;
     socketService.onLogin(() => {
       // TODO: spawn in
       console.log('On login')
@@ -80,6 +80,11 @@ export default class RoguelikeGame extends DefaultScene {
       };
       
       socketService.send(PLAYER_SPAWN, playerData);
+    });
+
+    socketService.onDisconnect(() => {
+      console.log('On Disconnect')
+      this.changeScene('disconnect');
     });
 
     
@@ -98,8 +103,12 @@ export default class RoguelikeGame extends DefaultScene {
 
     if (cameraTarget) {
       if (cameraTarget.sprite) {
-        camera.position.x = cameraTarget.sprite._x + .5;
-        camera.position.y = cameraTarget.sprite._y + .5;
+        // camera.position.x = cameraTarget.sprite._x + .5;
+        // camera.position.y = cameraTarget.sprite._y + .5;
+        const difX = camera.position.x-(cameraTarget.sprite._x + .5);
+        const difY = camera.position.y-(cameraTarget.sprite._y + .5);
+        camera.position.x -= Math.abs(difX) < .001 ? difX : difX * .3;
+        camera.position.y -= Math.abs(difY) < .001 ? difY : difY * .3;
       } else {
         camera.position.x = cameraTarget.x + .5;
         camera.position.y = cameraTarget.y + .5;
@@ -113,6 +122,8 @@ export default class RoguelikeGame extends DefaultScene {
   }
 
   remove() {
+    if (this.socketService)
+      this.socketService.onDisconnect(() => {});
     super.remove();
     const keyboard = Keyboard.getKeyboard();
     keyboard.removeOnKeyDown(this.onKeyEvent);

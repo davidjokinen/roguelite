@@ -33,7 +33,6 @@ export class EntityManager {
   }
 
   export() {
-    console.log('export')
     const data = {
       list: this.list.map(e => e.export())
     };
@@ -291,7 +290,7 @@ export default class Map {
   }
 
   updateTile(data) {
-    if (!data.x || !data.y)
+    if (data.x === undefined || data.y === undefined)
       return;
     const tile = this.getTile(data.x, data.y);
     if (!tile) {
@@ -318,8 +317,8 @@ export default class Map {
     const _Entity = this.getEntityClass();
     const { type } = data;
     const tile = this.getTile(data.x, data.y);
-    if (tile.data.id === 'water')
-      return;
+    // if (tile.data.id === 'water')
+    //   return;
     tile.entities.forEach(entity => entity.remove());
     const newEntity = new _Entity(type, data.x, data.y);
     if (data.id)

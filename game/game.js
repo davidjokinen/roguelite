@@ -10,6 +10,7 @@ import TitleScreen from './scenes/title-screen';
 import PauseScreen from './scenes/pause-screen';
 import { Texture, TextureMap, GroupMeshHandler, Sprite } from 'simple2d';
 import RoguelikeGame from "./scenes/roguelike-game";
+import DisconnectScreen from "./scenes/disconnect-screen";
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 30, window.innerWidth / window.innerHeight, 1, 1000 );
@@ -55,6 +56,7 @@ const changeScene = (id) => {
     'single-player-game': SinglePlayerSimScene,
     'roguelike-game': RoguelikeGame,
     'pause': PauseScreen,
+    'disconnect': DisconnectScreen
   }
   let newScene = null
   if (typeof id === 'string') {
