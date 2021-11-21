@@ -17,7 +17,7 @@ import * as socket_io from 'socket.io';
 // const world_server = require('./src/world-server');
 import * as world_server from './src/world-server.mjs';
 
-const staticBasePath = '../game/static';
+const staticBasePath = process.env.STATIC || '../game/static';
 
 function staticServe(req, res) {
   var resolvedBase = resolve(staticBasePath);
