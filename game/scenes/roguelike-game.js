@@ -71,6 +71,7 @@ export default class RoguelikeGame extends DefaultScene {
       socketService.addOnMessage(PLAYER_SPAWN, (command, data) => {
         const { id } = data;
         const entity = this.map.getEntityByID(id);
+        if (!entity) return;
         entity.client = true;
         this.cameraTarget = entity;
       });

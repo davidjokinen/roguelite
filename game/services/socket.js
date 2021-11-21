@@ -153,6 +153,7 @@ export default class Socket extends BaseService {
     });
 
     this._socket.onAny((e, d) => {
+      console.log(e)
       if (e in this.eventMap)
         this.eventMap[e](e,d)
       else
@@ -190,7 +191,8 @@ export default class Socket extends BaseService {
       this.send(PLAYERS_COMMANDS.PLAYERS_LIST);
       this.send(MAP_COMMANDS.MAP_LIST);
       this.send(ENTITIES_COMMANDS.ENTITIES_SYNC);
-      this._onLogin();
+      if (this._onLogin)
+        this._onLogin();
     }
   }
   
@@ -199,7 +201,8 @@ export default class Socket extends BaseService {
   }
 
   remove() {
-
+    console.log('Disconnected from server')
+    this._socket.disconnect();
   }
 
   send(key, data) {

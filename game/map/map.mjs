@@ -294,6 +294,10 @@ export default class Map {
     if (!data.x || !data.y)
       return;
     const tile = this.getTile(data.x, data.y);
+    if (!tile) {
+      console.log('Bad update tile data ', data)
+      return;
+    }
     const { type } = data;
     if (tile.data.id === type)
       return;

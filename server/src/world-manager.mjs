@@ -289,8 +289,10 @@ export default class WorldManger extends DefaultScene  {
     this.addFeature(new EntitiesNetworkManager({ map: this.map }));
     
     this.addOnMessage(PLAYER_COMMANDS.PLAYER_SPAWN, (client, event, data) => {
-      client.entity = this.map.addEntity(new Entity('socket-player', 75, 75));
-      client.send(PLAYER_COMMANDS.PLAYER_SPAWN, { id: client.entity.id });
+      if (!client.entity) {
+        client.entity = this.map.addEntity(new Entity('socket-player', 75, 75));
+        client.send(PLAYER_COMMANDS.PLAYER_SPAWN, { id: client.entity.id });
+      }
     });
 
     this.addOnMessage(PLAYER_COMMANDS.PLAYER_MOVE, (client, event, data) => {
