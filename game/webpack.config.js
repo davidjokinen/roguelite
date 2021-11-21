@@ -55,13 +55,9 @@ const current = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      process: {
-        env: {
-          SOCKET_TYPE: JSON.parse(process.env.SOCKET_TYPE),
-          SOCKET_HOST: JSON.parse(process.env.SOCKET_HOST),
-          SOCKET_PORT: JSON.parse(process.env.SOCKET_PORT)
-        }
-      }
+      SOCKET_TYPE: JSON.stringify(`${process.env.SOCKET_TYPE || 'ws'}`),
+      SOCKET_HOST: JSON.stringify(`${process.env.SOCKET_HOST || 'localhost'}`),
+      SOCKET_PORT: JSON.stringify(`${process.env.SOCKET_PORT || '3000'}`)
     }),
   ]
 };

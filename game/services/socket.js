@@ -134,9 +134,9 @@ export default class Socket extends BaseService {
 
   connect() {
     // TODO replace defaults for release
-    const type = process.env.SOCKET_TYPE || 'ws';
-    const host = process.env.SOCKET_HOST || 'coolmacbookpro.local';
-    const port = process.env.SOCKET_PORT || '3000';
+    const type = SOCKET_TYPE;
+    const host = SOCKET_HOST;
+    const port = SOCKET_PORT;
     this._socket = io(`${type}://${host}:${port}`, {
       reconnection: false,
       transports: ['websocket'],
