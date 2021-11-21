@@ -1,4 +1,5 @@
-export default {
+// export default 
+module.exports = {
   id: 'sand-path',
   name: 'Sand Path',
   walkable: true,

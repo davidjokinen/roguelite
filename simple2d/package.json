@@ -2,7 +2,7 @@
   "name": "simple2d",
   "version": "1.0.0",
   "description": "A simple 2d lib for using threeJS",
-  "main": "render.js",
+  "main": "render.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

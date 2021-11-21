@@ -1,4 +1,4 @@
-import DefaultScene from './default-scene';
+import DefaultScene from './default-scene.mjs';
 
 import React from 'react';
 import Pause from '../ui/pages/pause';
@@ -32,6 +32,7 @@ export default class PauseScreen extends DefaultScene {
   }
 
   remove() {
+    console.log('remove Pause')
     const keyboard = Keyboard.getKeyboard();
     keyboard.removeOnKeyDown(this.onKeyEvent);
     if (this.pausedScene)

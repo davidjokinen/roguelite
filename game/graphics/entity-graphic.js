@@ -1,9 +1,9 @@
 import BaseGraphic from './base-graphic';
 
-import { LAYERS } from './resources.js';
+import { LAYERS } from './resources.mjs';
 
-import { getTextureID } from '../core/utils';
-import { getEdgesTextureID, newEdgeHits, getEdgeData, getTextureData } from '../entities/entity-common';
+import { getTextureID } from '../core/graphic-utils.mjs';
+import { getEdgesTextureID, newEdgeHits, getEdgeData, getTextureData } from '../entities/entity-common.mjs';
 
 export default class EntityGraphic extends BaseGraphic {
   constructor(entity) {

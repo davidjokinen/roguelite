@@ -1,16 +1,24 @@
-import dirt from './configs/dirt';
-import grass from './configs/grass';
-import water from './configs/water';
-import stone from './configs/stone';
-import sand from './configs/sand';
+// import dirt from './configs/dirt';
+// import grass from './configs/grass';
+// import water from './configs/water';
+// import stone from './configs/stone';
+// import sand from './configs/sand';
+const dirt = require('./configs/dirt');
+const grass = require('./configs/grass');
+const water = require('./configs/water');
+const stone = require('./configs/stone');
+const sand = require('./configs/sand');
 
-import dirtPath from './configs/dirt-path';
-import sandPath from './configs/sand-path';
-import stonePath from './configs/stone-path';
+// import dirtPath from './configs/dirt-path';
+// import sandPath from './configs/sand-path';
+// import stonePath from './configs/stone-path';
+const dirtPath = require('./configs/dirt-path');
+const sandPath = require('./configs/sand-path');
+const stonePath = require('./configs/stone-path');
 
 const configMap = {}
 
-export function registerConfig(config) {
+function registerConfig(config) {
   if (!config) {
     console.error('Tile config empty')
     return;
@@ -26,7 +34,7 @@ export function registerConfig(config) {
   configMap[config.id] = config;
 };
 
-export function getConfig(id) {
+function getConfig(id) {
   if (id in configMap) {
     return configMap[id];
   }
@@ -42,3 +50,8 @@ registerConfig(stone);
 registerConfig(dirtPath);
 registerConfig(sandPath);
 registerConfig(stonePath);
+
+module.exports = {
+  registerConfig,
+  getConfig,
+}
