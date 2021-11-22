@@ -39,12 +39,14 @@ const useStyles = makeStyles((theme) => ({
   },
   bottemLeft: {
     position: 'fixed',
-    bottom: '48px',
+    bottom: '0px',
     left: '0px',
+    padding: '10px',
   },
   bottomRow: {
     position: 'fixed',
     textAlign: 'center',
+    width: '400px',
     bottom: '0px',
     left: 'auto',
     right: 'auto',
@@ -63,6 +65,16 @@ const useStyles = makeStyles((theme) => ({
   },
   flexItem: {
     flex: '0 0 auto',
+  },
+  bar: {
+    width: '200px',
+    height: '10px',
+    backgroundColor: '#666',
+    display: 'inline-block',
+  },
+  barContainer: {
+
+    height: '20px',
   }
 }));
 
@@ -91,13 +103,21 @@ export default function Game(props) {
       </div>
       {/* <ResourceCounter /> */}
       <Box className={classes.bottemLeft}>
-        Health 10/10
+        <div className={classes.barContainer}>
+          <div className={classes.bar} style={{backgroundColor: '#F00'}}></div> 100/100
+        </div>
+        <div className={classes.barContainer}>
+          <div className={classes.bar} style={{backgroundColor: '#0F0'}}></div> 100/100
+        </div>
+        <div className={classes.barContainer}>
+          <div className={classes.bar} style={{backgroundColor: '#00F'}}></div> 100/100
+        </div>
       </Box>
       {/* <Box className={classes.topRow}>
         Top Row
       </Box> */}
       <Box className={classes.bottomRow}>
-        
+        Test
       </Box>
       
     </div>
