@@ -56,7 +56,7 @@ export default class Entity {
           this.script = new scriptClass();
           this.script.start(this);
         } else {
-          console.log(`no script loaded "${data.script.main}"`)
+          console.log(`no script loaded "${this.data.script.main}"`)
         }
       }
     }
