@@ -316,18 +316,24 @@ export default class Map {
   createEntity(data) {
     const _Entity = this.getEntityClass();
     const { type } = data;
-    const tile = this.getTile(data.x, data.y);
-    // if (tile.data.id === 'water')
-    //   return;
-    tile.entities.forEach(entity => entity.remove());
+    if (type === undefined) {
+      console.log('error ', data)
+      return;
+    }
     const newEntity = new _Entity(type, data.x, data.y);
     if (data.id)
       newEntity.id = data.id;
     this.addEntity(newEntity);
-    tile.entities.map(e => e.checkEdges(this));
-    this.getNeighbors(tile.x, tile.y).forEach(tile2 => {
-      tile2.entities.map(e => e.checkEdges(this));
-    });
+    const tile = this.getTile(data.x, data.y);
+    if (tile) {
+      // tile.entities.forEach(entity => entity.remove());
+      tile.entities.map(e => e.checkEdges(this));
+      this.getNeighbors(tile.x, tile.y).forEach(tile2 => {
+        tile2.entities.map(e => e.checkEdges(this));
+      });
+    } else {
+      console.log('error ')
+    }
     return newEntity;
   }
 

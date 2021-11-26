@@ -70,8 +70,12 @@ export default class RoguelikeGame extends DefaultScene {
       console.log('On login')
       socketService.addOnMessage(PLAYER_SPAWN, (command, data) => {
         const { id } = data;
+        console.log(PLAYER_SPAWN, data);
         const entity = this.map.getEntityByID(id);
-        if (!entity) return;
+        if (!entity) {
+          console.log('Did not find player');
+          return;
+        }
         entity.client = true;
         this.cameraTarget = entity;
       });

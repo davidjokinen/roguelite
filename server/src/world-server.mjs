@@ -49,8 +49,8 @@ export class SocketWrapper {
     this._socket.disconnect(true);
   }
 
-  send(msg, data) {
-    this._socket.emit(msg, data);
+  send(evt, data) {
+    this._socket.emit(evt, data);
   }
 
 }

@@ -309,7 +309,7 @@ export default class WorldManger extends DefaultScene  {
 
   add(client, params) {
     const _client = new WorldClient(this, client, params, () => {
-      this.remove(client);
+      this.remove(_client);
     });
     console.log('Player Connected:',_client.ID)
     this.clients.push(_client);
@@ -333,6 +333,9 @@ export default class WorldManger extends DefaultScene  {
   update() {
     super.update();
     this.map.update();
+    for (let i=0;i<this.clients.length;i++) {
+      this.clients[i].update();
+    }
   }
 }
 

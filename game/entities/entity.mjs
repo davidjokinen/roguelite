@@ -14,15 +14,19 @@ let id = 0;
 export default class Entity {
   constructor(data, x, y) {
     this.data = null;
-    if (!y) {
+    let loadData = null;
+    if (y === undefined) {
       y = x;
       x = data;
       this.data = {};
     } else {
+      
       if (typeof data === 'string') {
-        data = getConfig(data);
+        loadData = getConfig(data);
       }
-      this.data = data;
+      this.data = loadData;
+      if (!this.data)
+        console.log('Error ',data, loadData)
     }
     this._remove = false;
     this.type = this.data.id;
@@ -34,7 +38,7 @@ export default class Entity {
     this.y = y;
     this._curTile = null;
 
-    this.walkable = data.walkable || false;
+    this.walkable = this.data.walkable || false;
     this.movingTime = 100;
     // cur image/animation
     // status
@@ -45,9 +49,9 @@ export default class Entity {
     // script?
     this.script = null;
     this.actionQueue = [];
-    if (data.script) {
-      if (data.script.main) {
-        const scriptClass = this.getScript(data.script.main);
+    if (this.data.script) {
+      if (this.data.script.main) {
+        const scriptClass = this.getScript(this.data.script.main);
         if (scriptClass) {
           this.script = new scriptClass();
           this.script.start(this);

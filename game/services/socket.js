@@ -97,12 +97,12 @@ class EntitiesNetworkManager extends NetworkFeature {
     });
 
     socket.addOnMessage(ENTITIES_COMMANDS.ENTITIES_ADD, (command, data) => {
-      console.log('add', data)
+      // console.log('add', data)
       map.createEntity(data);
     });
 
     socket.addOnMessage(ENTITIES_COMMANDS.ENTITIES_REMOVE, (command, data) => {
-      console.log('remove', data)
+      // console.log('remove', data)
       map.removeEntity(data);
     });
 
@@ -128,6 +128,9 @@ export default class Socket extends BaseService {
 
     this.features = [];
     this.eventMap = {};
+
+    this.storedEvents = {};
+    this.storedEventsList = [];
   }
 
   connect() {
@@ -152,11 +155,62 @@ export default class Socket extends BaseService {
     });
 
     this._socket.onAny((e, d) => {
-      if (e in this.eventMap)
-        this.eventMap[e](e,d);
-      else
-        console.log(e, d);
+      if (e in this.storedEvents)
+        this.storedEvents[e].push(d);
+      else 
+        this.storedEvents[e] = [d];
+      if (!this.storedEventsList.includes(e))
+        this.storedEventsList.push(e);
+      // if (e in this.eventMap)
+      //   this.eventMap[e](e,d);
+      // else
+      //   console.log(e, d);
     })
+  }
+
+  readEvents() {
+    const parseEvents = (e, data) => {
+      if (Array.isArray(data)) {
+        for (let i=0;i<data.length;i++) {
+          let d = data[i];
+          if (Array.isArray(d) && !(e in test)) {
+            // OH boy this is garbage
+            for (let i2=0;i2<d.length;i2++) {
+              let d2 = d[i2];
+              if (e in this.eventMap)
+                this.eventMap[e](e,d2);
+            }
+          } else {
+            if (e in this.eventMap)
+              this.eventMap[e](e,d);
+          }
+        }
+      } else {
+        if (e in this.eventMap)
+          this.eventMap[e](e,data);
+      }
+    }
+
+    const test = {
+      // 'players.list': true,
+      // 'players.add': true,
+      // 'socket.players': true,
+      // 'player.spawn': true,
+    }
+    if (ENTITIES_COMMANDS.ENTITIES_SYNC in this.storedEvents) {
+      parseEvents(ENTITIES_COMMANDS.ENTITIES_SYNC, this.storedEvents[ENTITIES_COMMANDS.ENTITIES_SYNC])
+      delete this.storedEvents[ENTITIES_COMMANDS.ENTITIES_SYNC];
+      console.log('WWWWWW')
+    }
+    // console.log(this.storedEventsList)
+    this.storedEventsList.forEach((e) => {
+      if (this.storedEvents[e])
+        parseEvents(e, this.storedEvents[e]);
+      // const data = this.storedEvents[e];
+      
+    });
+    this.storedEvents = {};
+    this.storedEventsList = [];
   }
 
   addOnMessage(key, callback) {
@@ -214,7 +268,7 @@ export default class Socket extends BaseService {
   }
 
   update() {
-    
+    this.readEvents();
   }
 
 }
