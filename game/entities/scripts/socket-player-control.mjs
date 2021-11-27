@@ -33,45 +33,50 @@ export default class SocketPlayerControl extends EntityScript {
     const KEY_S = 83;
     const KEY_A = 65;
     const KEY_D = 68;
-    let moveX = 0;
-    let moveY = 0;
-    if (keyboard.key[KEY_W])
-      moveY += 1;
-    if (keyboard.key[KEY_S])
-      moveY -= 1;
-    if (keyboard.key[KEY_D])
-      moveX += 1;
-    if (keyboard.key[KEY_A])
-      moveX -= 1;
+    // let moveX = 0;
+    // let moveY = 0;
+    // if (keyboard.key[KEY_W])
+    //   moveY += 1;
+    // if (keyboard.key[KEY_S])
+    //   moveY -= 1;
+    // if (keyboard.key[KEY_D])
+    //   moveX += 1;
+    // if (keyboard.key[KEY_A])
+    //   moveX -= 1;
 
-    if (moveX == 0 && moveY == 0)
-      return;
+    // if (moveX == 0 && moveY == 0)
+    //   return;
     
     // replace when entites are stored in map
-    let clearSpot = true;
-    let newX = target.x + moveX;
-    let newY = target.y + moveY;
-    // const tile = map.getTile(newX, newY);
-    // if (tile) {
-    //   if (!tile.walkable) {
-    //     clearSpot = false;
-    //   }
-    //   tile.entities.forEach(entity => {
-    //     if (!entity.walkable) {
-    //       clearSpot = false;
-    //     }
-    //   });
-    // }
-    // console.log(moveX, moveY)
+    // let clearSpot = true;
+    // let newX = target.x + moveX;
+    // let newY = target.y + moveY;
 
-    // if (!clearSpot || !tile) return;
+    const MOVE_UP = keyboard.key[KEY_W];
+    const MOVE_DOWN = keyboard.key[KEY_S];
+    const MOVE_LEFT = keyboard.key[KEY_A];
+    const MOVE_RIGHT = keyboard.key[KEY_D];
 
-    this.socket.send(PLAYER_COMMANDS.PLAYER_MOVE, {
-      moveX,
-      moveY,
-    });
+    if (MOVE_UP !== this.MOVE_UP ||
+      MOVE_DOWN !== this.MOVE_DOWN ||
+      MOVE_LEFT !== this.MOVE_LEFT ||
+      MOVE_RIGHT !== this.MOVE_RIGHT 
+      ) {
+      
+      this.MOVE_UP = MOVE_UP;
+      this.MOVE_DOWN = MOVE_DOWN;
+      this.MOVE_LEFT = MOVE_LEFT;
+      this.MOVE_RIGHT = MOVE_RIGHT;
+      this.socket.send(PLAYER_COMMANDS.PLAYER_MOVE, {
+        MOVE_UP,
+        MOVE_DOWN,
+        MOVE_LEFT,
+        MOVE_RIGHT
+      });
+    }
+    
     // target.move(moveX, moveY);
-    this.inputCooldown.reset();
+    // this.inputCooldown.reset();
     // return new WalkAction(moveX, moveY);
   }
 

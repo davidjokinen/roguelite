@@ -65,6 +65,8 @@ export default class Entity {
     this._onActionUpdateList = [];
     this._onEntityUpdate = [];
     this._onChangePosition();
+
+    this.socketActionList = [];
   }
 
   get getScript() {
@@ -92,7 +94,9 @@ export default class Entity {
   }
 
   addSocketAction(action) {
-    this.socketAction = action;
+    // this.socketAction = action;
+    this.socketActionList.push(action)
+    
   }
 
   updateType(newType) {
@@ -116,8 +120,14 @@ export default class Entity {
   update(map, entities) {
     const { SERVER_UPDATE } = this;
     if (SERVER_UPDATE) {
+      if (this.socketActionList.length > 0) {
+        this.socketAction = this.socketActionList.shift();
+      }
       if (this.socketAction) {
-        this.socketAction.perform(this, map, entities);
+        const actionResult = this.socketAction.perform(this, map, entities);
+        if (actionResult !== PREFORM_ACTION_RESULT.ACTIVE) {
+          this.socketAction = null;
+        }
       }
       if (this.script) {
         this.script.update(this, map, entities);
@@ -156,7 +166,7 @@ export default class Entity {
   }
 
   queueAction(action, isImportant) {
-    isImportant = true
+    isImportant = false
     if (isImportant && this.action) {
       this.action.cancel();
     }

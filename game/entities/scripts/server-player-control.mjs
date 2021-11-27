@@ -14,61 +14,40 @@ export default class ServerPlayerControl extends EntityScript {
   update(target, map, entities) {
     if (this.inputCooldown.check()) return;
 
-    const socket = map.scene.componentMap['socket'];
+    let moveX = 0;
+    let moveY = 0;
+    if (target.MOVE_UP)
+      moveY += 1;
+    if (target.MOVE_DOWN)
+      moveY -= 1;
+    if (target.MOVE_LEFT)
+      moveX -= 1;
+    if (target.MOVE_RIGHT)
+      moveX += 1;
 
-    if (!socket) return;
-    if (!this.socket) {
-      // Init player controls to socket
-      // this.socket = socket;
-      // this.socket.addOnMessage(PLAYER_COMMANDS.PLAYER_MOVE, (command, data) => {
-      //   console.log('PLAYER_MOVE')
-      // });
+    if (moveX == 0 && moveY == 0)
+      return;
+    
+    // replace when entites are stored in map
+    let clearSpot = true;
+    let newX = target.x + moveX;
+    let newY = target.y + moveY;
+    const tile = map.getTile(newX, newY);
+    if (tile) {
+      if (!tile.walkable) {
+        clearSpot = false;
+      }
+      tile.entities.forEach(entity => {
+        if (!entity.walkable) {
+          clearSpot = false;
+        }
+      });
     }
 
-    // const keyboard = Keyboard.getKeyboard();
-    // const KEY_W = 87;
-    // const KEY_S = 83;
-    // const KEY_A = 65;
-    // const KEY_D = 68;
-    // let moveX = 0;
-    // let moveY = 0;
-    // if (keyboard.key[KEY_W])
-    //   moveY += 1;
-    // if (keyboard.key[KEY_S])
-    //   moveY -= 1;
-    // if (keyboard.key[KEY_D])
-    //   moveX += 1;
-    // if (keyboard.key[KEY_A])
-    //   moveX -= 1;
+    if (!clearSpot || !tile) return;
 
-    // if (moveX == 0 && moveY == 0)
-    //   return;
-    
-    // // replace when entites are stored in map
-    // let clearSpot = true;
-    // let newX = target.x + moveX;
-    // let newY = target.y + moveY;
-    // const tile = map.getTile(newX, newY);
-    // if (tile) {
-    //   if (!tile.walkable) {
-    //     clearSpot = false;
-    //   }
-    //   tile.entities.forEach(entity => {
-    //     if (!entity.walkable) {
-    //       clearSpot = false;
-    //     }
-    //   });
-    // }
-
-    // if (!clearSpot || !tile) return;
-
-    // this.socket.send(PLAYER_COMMANDS.PLAYER_MOVE, {
-    //   moveX,
-    //   moveY,
-    // });
-    // target.move(moveX, moveY);
-    // this.inputCooldown.reset();
-    // return new WalkAction(moveX, moveY);
+    this.inputCooldown.reset();
+    return new WalkAction(moveX, moveY);
   }
 
   end(target, map, entities) {

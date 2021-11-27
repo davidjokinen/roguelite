@@ -299,9 +299,10 @@ export default class WorldManger extends DefaultScene  {
       const entity = client.entity;
       if (!entity) return;
 
-      // TODO have a better solution 
-      const newAction = new WalkAction(data.moveX || 0, data.moveY || 0);
-      entity.actionQueue = [newAction];
+      entity.MOVE_UP = data.MOVE_UP;
+      entity.MOVE_DOWN = data.MOVE_DOWN;
+      entity.MOVE_LEFT = data.MOVE_LEFT;
+      entity.MOVE_RIGHT = data.MOVE_RIGHT;
     });
 
     this.setCvar('title', 'Multiplayer Game Test');

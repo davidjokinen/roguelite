@@ -3,7 +3,7 @@ export default {
   name: 'Player',
   sprite: {
     sheet: 'roguelikeChar',
-    default: 324,
+    default: 325,
   },
   script: {
     main: 'socket-player-control'
