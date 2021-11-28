@@ -96,7 +96,8 @@ export default class Entity {
   addSocketAction(action) {
     // this.socketAction = action;
     this.socketActionList.push(action)
-    
+    if (this.socketActionList.length > 1)
+      this.socketActionList.shift();
   }
 
   updateType(newType) {

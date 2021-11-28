@@ -17,6 +17,8 @@ import Overlays from '../../components/overlays';
 
 import ResourceCounter from '../../components/resource-counter';
 import TimeControl from '../../components/time-control';
+import NetworkDetails from '../../components/network-details';
+import ChatWindow from '../../components/chat-window';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   bottomRow: {
     position: 'fixed',
     textAlign: 'center',
-    width: '400px',
+    width: '100%',
     bottom: '0px',
     left: 'auto',
     right: 'auto',
@@ -62,6 +64,12 @@ const useStyles = makeStyles((theme) => ({
   topLeftRow: {
     display: 'flex',
     alignItems: 'center',
+  },
+  topRightRow: {
+    position: 'fixed',
+    top: '0px',
+    right: '80px',
+    padding: '5px',
   },
   flexItem: {
     flex: '0 0 auto',
@@ -101,13 +109,19 @@ export default function Game(props) {
           <Button variant="contained" className={classes.button} onClick={startAction}>Pause</Button>
         </div>
       </div>
+      <div className={classes.topRightRow}>
+        <NetworkDetails {...props}/>
+      </div>
       {/* <ResourceCounter /> */}
       <Box className={classes.bottemLeft}>
+        <div>
+          <ChatWindow />
+        </div> 
         <div className={classes.barContainer}>
-          <div className={classes.bar} style={{backgroundColor: '#F00'}}></div> 100/100
+          <div className={classes.bar} style={{backgroundColor: '#F00'}}></div> 100/100 Health
         </div>
         <div className={classes.barContainer}>
-          <div className={classes.bar} style={{backgroundColor: '#0F0'}}></div> 100/100
+          <div className={classes.bar} style={{backgroundColor: '#0F0'}}></div> 100/100 
         </div>
         <div className={classes.barContainer}>
           <div className={classes.bar} style={{backgroundColor: '#00F'}}></div> 100/100
@@ -117,7 +131,7 @@ export default function Game(props) {
         Top Row
       </Box> */}
       <Box className={classes.bottomRow}>
-        Test
+        Action Bar
       </Box>
       
     </div>

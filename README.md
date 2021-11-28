@@ -2,12 +2,37 @@
 Aiming to build a game
 
 ## Current playable version
-[https://roguelite-3rkvm.ondigitalocean.app/](https://roguelite-3rkvm.ondigitalocean.app/)
+[https://roguelite-2-546nu.ondigitalocean.app/index.html](https://roguelite-2-546nu.ondigitalocean.app/index.html)
 It updates everytime I push.
 
-## Getting it working
+## Getting it working in dev mode
 1. Install Node.js
-2. run `npm install` 
-3. run `npm run watch` or `npm run build` in `./game` to build the javascript.
-5. run `npm run start` in `./game` to run the server (Its a static HTML server)
-5. Game should be up and running!
+2. Run build commands
+```
+cd ./game
+npm install
+npm run watch
+```
+3. Run sever
+```
+cd ./server
+npm install
+npm start
+```
+4. Game should be up and running!
+
+
+## CI setup
+build 
+```
+cd ../game
+npm install
+npm run build
+cp -r ./static ../server/static
+cp -r ./ ../server/test
+```
+run
+```
+cp -r ./test ../game
+npm start
+```

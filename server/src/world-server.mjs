@@ -27,7 +27,8 @@ export class SocketWrapper {
     const socket = this._socket;
 
     socket.on('disconnect', () => {
-      this.onDisconnect();
+      if (this.onDisconnect)
+        this.onDisconnect();
       this._dead = true;
     });
 

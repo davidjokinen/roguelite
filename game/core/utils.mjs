@@ -26,3 +26,22 @@ export const loopXbyX = (startX, startY, width, height, promise) => {
 export const getRandomInt = (max) => {
   return ~~(max*Math.random());
 }
+
+export function createEventlistener() {
+  const list = [];
+  return {
+    add: newEvent => {
+      list.push(newEvent);
+    },
+    trigger: () => {
+      for (let i=0; i<list.length; i++) {
+        list[i](...arguments);
+      }
+    },
+    remove: removeEvent => {
+      const index = list.indexOf(removeEvent);
+      if (index < -1) return;
+      list.splice(index, 1);
+    },
+  }
+}

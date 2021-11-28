@@ -37,18 +37,29 @@ import PLAYERS_COMMANDS from '../net/common/players';
 class Players extends NetworkFeature {
   init(socket) {
     socket.players = [];
+    const playerEventListener = createEventlistener();
     socket.addOnMessage(PLAYERS_COMMANDS.PLAYERS_LIST, (command, list) => {
       console.log('socket.players ', list)
       socket.players = [...list];
+      playerEventListener.trigger();
     });
     socket.addOnMessage(PLAYERS_COMMANDS.PLAYERS_ADD, (command, add) => {
       socket.players.push(add);
       console.log('Addplayers ', socket.players)
+      playerEventListener.trigger();
     });
     socket.addOnMessage(PLAYERS_COMMANDS.PLAYERS_REMOVE, (command, id) => {
       socket.players = socket.players.filter(player => player.id !== id);
       console.log('Removeplayers ', socket.players);
+      playerEventListener.trigger();
     });
+
+    socket.addOnPlayerChange = (event) => {
+      playerEventListener.add(event);
+    }
+    socket.removeOnPlayerChange = (event) => {
+      playerEventListener.remove(event);
+    }
   }
 
   remove(socket) {
@@ -77,6 +88,7 @@ class MapNetworkManager extends NetworkFeature {
 import ENTITIES_COMMANDS from '../net/common/entities.js';
 import EntityClient from '../entities/entity-client';
 import WalkAction from '../actions/walk-action.mjs';
+import { createEventlistener } from '../core/utils.mjs';
 
 class EntitiesNetworkManager extends NetworkFeature {
   init(socket) {
