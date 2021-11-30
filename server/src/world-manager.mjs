@@ -1,6 +1,5 @@
-// const WorldClient = require('./world-client') 
 import WorldClient from './world-client.mjs'; 
-
+import { v4 as uuidv4 } from 'uuid';
 
 class NetworkFeature {
   constructor(params) {
@@ -24,7 +23,6 @@ class NetworkFeature {
   }
 }
 
-// const CVAR_COMMANDS = require('../../game/net/common/cvar');
 import CVAR_COMMANDS from '../../game/net/common/cvar.js';
 
 class CVarsNetworkManager extends NetworkFeature {
@@ -48,7 +46,29 @@ class CVarsNetworkManager extends NetworkFeature {
   }
 }
 
-// const PLAYERS_COMMANDS = require('../../game/net/common/players');
+import CHAT_COMMANDS from '../../game/net/common/chat.js';
+
+class ChatNetworkManager extends NetworkFeature {
+  init(manager) {
+    manager.chatRooms = {
+      global: [],
+    };
+    manager.addOnMessage(CHAT_COMMANDS.CHAT_MESSAGE, (client, event, data) => {
+      // TODO: check message
+      manager.broadcast(CHAT_COMMANDS.CHAT_MESSAGE, {
+        id: uuidv4(),
+        user: client.ID,
+        message: data
+      });
+    });
+  }
+
+  remove(manager) {
+    delete manager.chatRooms;
+    manager.removeOnMessage(CHAT_COMMANDS.CHAT_MESSAGE);
+  }
+}
+
 import PLAYERS_COMMANDS from '../../game/net/common/players.js';
 
 class PlayersNetworkManager extends NetworkFeature {
@@ -76,9 +96,7 @@ class PlayersNetworkManager extends NetworkFeature {
   }
 }
 
-// const MAP_COMMANDS = require('../../game/net/common/map');
 import MAP_COMMANDS from '../../game/net/common/map.js';
-// const Map = require('../../game/map/map');
 
 class MapNetworkManager extends NetworkFeature {
   init(manager) {
@@ -107,50 +125,10 @@ class MapNetworkManager extends NetworkFeature {
 }
 
 
-// const ENTITIES_COMMANDS = require('../../game/net/common/entities');
 import ENTITIES_COMMANDS from '../../game/net/common/entities.js';
-// const Map = require('../../game/map/map');
 import Map from '../../game/map/map.mjs';
 import { EntityManager } from '../../game/map/map.mjs';
 import BaseGenerator from '../../game/map/generators/base-generator.mjs';
-
-// class EntityManager {
-//   constructor(list) {
-//     this.list = list;
-//   }
-
-//   broadcast(event, data) {
-
-//   }
-
-//   add(e) {
-//     console.log(e)
-//     this.list.push(e);
-//     this.broadcast(ENTITIES_COMMANDS.ENTITIES_ADD, e.export());
-//   }
-
-//   remove(e) {
-//     const index = this.list.indexOf(event);
-// 		if (index < -1) return;
-// 		this.list.splice(index, 1); 
-//     this.broadcast(ENTITIES_COMMANDS.ENTITIES_REMOVE, e.export());
-//   }
-
-//   export() {
-//     const data = {
-//       list: this.list.map(e => e.export())
-//     };
-//     return data;
-//   }
-
-//   import(data) {
-//     this.list.forEach(e => {
-//       e.remove();
-//     });
-//     // data.list.map(e => )
-
-//   }
-// }
 
 class EntitiesNetworkManager extends NetworkFeature {
   
@@ -260,30 +238,18 @@ export default class WorldManger extends DefaultScene  {
 
   init() {
     const gameTime = new GameTime();
-    // const tileSelector = new TileSelector(this.camera);
     const pathFinding = new PathFinding();
     const actionQueue = new ActionQueue();
-    // const mapEditor = new MapEditor(tileSelector, actionQueue);
 
     this.map = new Map(this, new BaseGenerator(), pathFinding);
-    // this.map = new ClientMap(this, null, pathFinding);
-    // this.map = new Map(this, new BaseGenerator());
     const Entity = this.map.getEntityClass();
-    // 
-    // this.map.addEntity(new Entity('npm-sim', 76, 75));
-    // this.map.addEntity(new Entity('npm-sim', 77, 75));
-    // this.map.addEntity(new Entity('npm-sim', 78, 75));
 
-    // const entitySelector = new EntitySelector(tileSelector, this.map);
-    
-    // this.addComponent(tileSelector);
     this.addComponent(pathFinding);
-    // this.addComponent(mapEditor);
     this.addComponent(gameTime);
-    // this.addComponent(entitySelector);
     this.addComponent(actionQueue);
 
     this.addFeature(new CVarsNetworkManager());
+    this.addFeature(new ChatNetworkManager());
     this.addFeature(new PlayersNetworkManager());
     this.addFeature(new MapNetworkManager({ map: this.map }));
     this.addFeature(new EntitiesNetworkManager({ map: this.map }));
@@ -339,5 +305,3 @@ export default class WorldManger extends DefaultScene  {
     }
   }
 }
-
-// module.exports = WorldManger;

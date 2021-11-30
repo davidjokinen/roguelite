@@ -115,7 +115,7 @@ export default function Game(props) {
       {/* <ResourceCounter /> */}
       <Box className={classes.bottemLeft}>
         <div>
-          <ChatWindow />
+          <ChatWindow {...props}/>
         </div> 
         <div className={classes.barContainer}>
           <div className={classes.bar} style={{backgroundColor: '#F00'}}></div> 100/100 Health

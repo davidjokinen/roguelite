@@ -1,6 +1,9 @@
 import { Texture, TextureMap, GroupMeshHandler } from 'simple2d';
 
 import roguelikeChar from '../resources/roguelikeChar_transparent.png';
+import roguelikeCity from '../resources/roguelikeCity_transparent.png';
+import roguelikeDungeon from '../resources/roguelikeDungeon_transparent.png';
+import roguelikeIndoor from '../resources/roguelikeIndoor_transparent.png';
 import roguelikeSheet from '../resources/roguelikeSheet_transparent.png';
 
 import colors from '../resources/colors.png';
