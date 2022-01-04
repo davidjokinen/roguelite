@@ -50,10 +50,24 @@ export default class BaseGenerator {
         this.map.addEntity(new Entity('rock', x, y));
       else if (Math.random() > 1.05-plantDense)
         this.map.addEntity(new Entity('grass', x, y));
+      // else if (Math.random() > 1.15-plantDense)
+      //   this.map.addEntity(new Entity('enemy', x, y));
       else if (Math.random() > .99)
         this.map.addEntity(new Entity('dead-tree', x, y));
       else if (Math.random() > .99)
         this.map.addEntity(new Entity('small-dead-tree', x, y));
     });
+    // Clear spawn area
+    loopXbyX(32, 32, 10, 10, (x, y) => {
+      const tile = this.map.getTile(x, y);
+      if (!tile) return;
+      tile.updateType('grass');
+      tile.entities.forEach(entity => {
+        entity.destroy();
+      });
+    });
+    // const test = ;
+    // console.log(test)
+    // this.map.addEntity(test);
   }
 }

@@ -1,6 +1,7 @@
 import npcWander from './configs/npc-wander.mjs';
 import npcSim from './configs/npc-sim.mjs';
 import player from './configs/player.mjs';
+import enemy from './configs/enemy.mjs';
 import socketPlayer from './configs/socket-player.mjs';
 import bush from './configs/bush.mjs';
 import longBush from './configs/long-bush.mjs';
@@ -17,6 +18,8 @@ import stonePile from './configs/stone-pile.mjs';
 import woodPile from './configs/wood-pile.mjs';
 
 import bed from './configs/bed.mjs';
+
+import caveEnter from './configs/cave-enter.mjs'
 
 const configMap = {};
 
@@ -85,4 +88,6 @@ registerConfig(stonePile);
 registerConfig(woodPile);
 registerConfig(bed);
 registerConfig(socketPlayer);
+registerConfig(enemy);
+registerConfig(caveEnter);
 // console.log(actionToEntityMap)

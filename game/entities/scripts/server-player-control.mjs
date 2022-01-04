@@ -2,9 +2,6 @@ import EntityScript from '../entity-script.mjs';
 import { createCooldown } from '../../core/utils.mjs';
 
 import WalkAction from '../../actions/walk-action.mjs';
-import PLAYER_COMMANDS from '../../net/common/player.js';
-
-
 
 export default class ServerPlayerControl extends EntityScript {
   start(target) {
@@ -33,6 +30,8 @@ export default class ServerPlayerControl extends EntityScript {
     let newX = target.x + moveX;
     let newY = target.y + moveY;
     const tile = map.getTile(newX, newY);
+    // console.log(tile.entities.map(e => e.id))
+    // console.log(target.id)
     if (tile) {
       if (!tile.walkable) {
         clearSpot = false;
@@ -45,7 +44,6 @@ export default class ServerPlayerControl extends EntityScript {
     }
 
     if (!clearSpot || !tile) return;
-
     this.inputCooldown.reset();
     return new WalkAction(moveX, moveY);
   }

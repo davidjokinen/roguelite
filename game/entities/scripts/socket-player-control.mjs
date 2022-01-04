@@ -1,24 +1,37 @@
 import Keyboard from '../../core/keyboard.js';
+import Mouse from '../../core/mouse.mjs';
 import EntityScript from '../entity-script.mjs';
 import { createCooldown } from '../../core/utils.mjs';
 
-import WalkAction from '../../actions/walk-action.mjs';
 import PLAYER_COMMANDS from '../../net/common/player.js';
-
-
 
 export default class SocketPlayerControl extends EntityScript {
   start(target) {
     this.inputCooldown = createCooldown(target.movingTime);
   }
 
+  _onAttack(target, e) {
+    // if (!target.client) return;
+    const tileSelector = target.world.scene.componentMap['tile-selector'];
+    const { cursorPoint } = tileSelector;
+    console.log(e)
+    tileSelector.onMouseMove(e, true);
+    if (e.button === 0) {
+      target.broadcast({
+        topic: 'entity.attack',
+        targetX: cursorPoint.rawX,
+        targetY: cursorPoint.rawY,
+      });
+    }
+  }
+
   update(target, map, entities) {
-    // console.log('test')
+    if (!target.client) return;
     if (this.inputCooldown.check()) return;
 
     const socket = map.scene.componentMap['socket'];
+    const mouse = Mouse.getMouse();
     
-    if (!target.client) return;
     if (!socket) return;
     if (!this.socket) {
       // Init player controls to socket
@@ -26,6 +39,8 @@ export default class SocketPlayerControl extends EntityScript {
       this.socket.addOnMessage(PLAYER_COMMANDS.PLAYER_MOVE, (command, data) => {
         console.log('PLAYER_MOVE')
       });
+      this.onAttack = this._onAttack.bind(this, target);
+      mouse.addOnClickDown(this.onAttack);
     }
 
     const keyboard = Keyboard.getKeyboard();
@@ -33,24 +48,6 @@ export default class SocketPlayerControl extends EntityScript {
     const KEY_S = 83;
     const KEY_A = 65;
     const KEY_D = 68;
-    // let moveX = 0;
-    // let moveY = 0;
-    // if (keyboard.key[KEY_W])
-    //   moveY += 1;
-    // if (keyboard.key[KEY_S])
-    //   moveY -= 1;
-    // if (keyboard.key[KEY_D])
-    //   moveX += 1;
-    // if (keyboard.key[KEY_A])
-    //   moveX -= 1;
-
-    // if (moveX == 0 && moveY == 0)
-    //   return;
-    
-    // replace when entites are stored in map
-    // let clearSpot = true;
-    // let newX = target.x + moveX;
-    // let newY = target.y + moveY;
 
     const MOVE_UP = keyboard.key[KEY_W];
     const MOVE_DOWN = keyboard.key[KEY_S];
@@ -74,13 +71,12 @@ export default class SocketPlayerControl extends EntityScript {
         MOVE_RIGHT
       });
     }
-    
-    // target.move(moveX, moveY);
-    // this.inputCooldown.reset();
-    // return new WalkAction(moveX, moveY);
   }
 
   end(target, map, entities) {
     delete this.inputCooldown;
+    const mouse = Mouse.getMouse();
+    if (this.onAttack)
+      mouse.removeOnClickDown(this.onAttack);
   }
 }

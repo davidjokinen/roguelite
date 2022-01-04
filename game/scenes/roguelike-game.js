@@ -22,6 +22,8 @@ import { LAYERS, SHEETS } from '../graphics/resources.mjs';
 import { loopXbyX } from '../core/utils.mjs';
 import ActionQueue from '../services/action-queue-client.mjs';
 import { PLAYER_SPAWN } from '../net/common/player';
+import ClientGameWorld from '../map/client-world.mjs';
+import PlayerService from '../services/player-service.mjs';
 
 export default class RoguelikeGame extends DefaultScene {
   constructor(camera) {
@@ -39,13 +41,19 @@ export default class RoguelikeGame extends DefaultScene {
     const actionQueue = new ActionQueue();
     const mapEditor = new MapEditor(tileSelector, actionQueue);
     const socketService = new Socket();
+    const playerService = new PlayerService(this);
 
     mapEditor.addSocket(socketService);
-    this.map = new ClientMap(this, null, pathFinding);
-    this.map.addSocket(socketService);
+    
+    this.world = new ClientGameWorld(this);
+    // this.map = new ClientMap(this, null, pathFinding);
+    // this.map.addSocket(socketService);
 
-    socketService.map = this.map;
-    const entitySelector = new EntitySelector(tileSelector, this.map);
+    this.world.addSocket(socketService);
+
+    // socketService.map = this.map;
+    socketService.world = this.world;
+    const entitySelector = new EntitySelector(tileSelector, this.world);
     
     this.addComponent(tileSelector);
     this.addComponent(pathFinding);
@@ -54,6 +62,7 @@ export default class RoguelikeGame extends DefaultScene {
     this.addComponent(entitySelector);
     this.addComponent(actionQueue);
     this.addComponent(socketService);
+    this.addComponent(playerService);
 
     const mouse = Mouse.getMouse();
     const keyboard = Keyboard.getKeyboard();
@@ -71,19 +80,27 @@ export default class RoguelikeGame extends DefaultScene {
       socketService.addOnMessage(PLAYER_SPAWN, (command, data) => {
         const { id } = data;
         console.log(PLAYER_SPAWN, data);
-        const entity = this.map.getEntityByID(id);
+        const entity = this.world.getEntityByID(id);
+        const test = this.world.maps[0].entities;
+        console.log(test[test.length-1])
         if (!entity) {
           console.log('Did not find player');
           return;
         }
         entity.client = true;
         this.cameraTarget = entity;
+        // console.log(this.world)
       });
       const playerData = {
         // TODO customization 
       };
       
-      socketService.send(PLAYER_SPAWN, playerData);
+      console.log('spawning in 5 sec')
+      setTimeout(() => {
+        console.log('Asking to spawn in now')
+        socketService.send(PLAYER_SPAWN, playerData);
+      }, 1000);
+      
     });
 
     socketService.onDisconnect(() => {
@@ -91,10 +108,11 @@ export default class RoguelikeGame extends DefaultScene {
       this.changeScene('disconnect');
     });
 
-    
-    this.map.entities.forEach(entity => entity.checkEdges(this.map, this.entities));
+    this.world.forEachEntity((entity, map) => entity.checkEdges(map, map.entities));
 
-    this.sceneComponent = <Game {...this.getUiProps()} map={this.map} keyboard={keyboard} mouse={mouse}/>;
+    // this.map.entities.forEach(entity => entity.checkEdges(this.map, this.entities));
+
+    this.sceneComponent = <Game {...this.getUiProps()} world={this.world} keyboard={keyboard} mouse={mouse}/>;
     this.drawUI();
   }
 
@@ -102,7 +120,7 @@ export default class RoguelikeGame extends DefaultScene {
     super.update();
     const { cameraTarget, camera } = this;
     
-    this.map.update();
+    this.world.update();
     
 
     if (cameraTarget) {
@@ -122,7 +140,7 @@ export default class RoguelikeGame extends DefaultScene {
   }
 
   render() {
-    this.map.render();
+    this.world.render();
   }
 
   remove() {
@@ -131,6 +149,6 @@ export default class RoguelikeGame extends DefaultScene {
     super.remove();
     const keyboard = Keyboard.getKeyboard();
     keyboard.removeOnKeyDown(this.onKeyEvent);
-    this.map.remove();
+    this.world.remove();
   }
 }

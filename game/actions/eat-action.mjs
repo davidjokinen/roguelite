@@ -16,7 +16,7 @@ export default class EatAction extends BaseEntityAction {
     const output = super.perform(entity, map, entities);
     if (output)
       return output;
-    this.target.remove();
+    this.target.destroy();
     return PREFORM_ACTION_RESULT.FINISHED_SUCCESS;
   }
 }

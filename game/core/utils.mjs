@@ -33,7 +33,7 @@ export function createEventlistener() {
     add: newEvent => {
       list.push(newEvent);
     },
-    trigger: () => {
+    trigger: function () {
       for (let i=0; i<list.length; i++) {
         list[i](...arguments);
       }

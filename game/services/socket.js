@@ -85,6 +85,40 @@ class MapNetworkManager extends NetworkFeature {
   }
 }
 
+import WORLD_COMMANDS from '../net/common/world';
+import { ClientMap } from '../map/client-map.mjs';
+
+class WorldNetworkManager extends NetworkFeature {
+  init(socket) {
+    const world = socket.world;
+
+    socket.addOnMessage(WORLD_COMMANDS.WORLD_PING, (command, data) => {
+      console.log('WORLD_PING', data)
+      const map = new ClientMap(world);
+      
+      world.addMap(map);
+      map.importAll(data);
+      world.setMapFocus(map);
+
+      
+      
+    });
+
+    socket.addOnMessage(WORLD_COMMANDS.WORLD_UPDATE, (command, data) => {
+      console.log('WORLD_UPDATE', data)
+      
+      // TODO: update so it doesn't block the main loop
+      const map = new ClientMap(world);
+      
+      world.addMap(map);
+      world.setMapFocus(map); 
+           
+      map.importAll(data); 
+      
+    });
+  }
+}
+
 import ENTITIES_COMMANDS from '../net/common/entities.js';
 import EntityClient from '../entities/entity-client';
 import WalkAction from '../actions/walk-action.mjs';
@@ -92,34 +126,57 @@ import { createEventlistener } from '../core/utils.mjs';
 
 class EntitiesNetworkManager extends NetworkFeature {
   init(socket) {
-    const { map } = socket;
+    const { world } = socket;
     socket.addOnMessage(ENTITIES_COMMANDS.ENTITIES_SYNC, (command, data) => {
       console.log('ENTITIES_SYNC ', data)
+      const world = socket.world;
+      if (!world) {
+        console.error('No world');
+        return;
+      }
+      const mapID = data.mapID;
+      if (!mapID) {
+        console.error('No MapID');
+        return;
+      }
+      const map = world.getMapByID(mapID);
+      if (!map) {
+        console.error('Map Not Loaded');
+        return;
+      }
       // socket.map.import(data);
-      console.log(socket.map.entities.length)
-      socket.map.removeEntities();
+      console.log(map.entities.length)
+      map.removeEntities();
       const length = data.list.length;
       for(let i=0; i<length; i++) {
         const entity = data.list[i];
         if (entity.type !== undefined && entity.x !== undefined && entity.y !== undefined)
-          socket.map.createEntity(entity);
+          map.createEntity(entity);
         //socket.map.addEntity(new EntityClient(entity.type, entity.x, entity.y));
       }
-      console.log(socket.map.entities.length)
+      console.log(map.entities.length)
     });
 
     socket.addOnMessage(ENTITIES_COMMANDS.ENTITIES_ADD, (command, data) => {
-      // console.log('add', data)
-      map.createEntity(data);
+      console.log('add', data)
+      // map.createEntity(data);
+      world.createEntity(data);
     });
 
     socket.addOnMessage(ENTITIES_COMMANDS.ENTITIES_REMOVE, (command, data) => {
-      // console.log('remove', data)
-      map.removeEntity(data);
+      console.log('remove', data)
+      // map.removeEntity(data);
+      world.removeEntity(data);
+    });
+
+    socket.addOnMessage(ENTITIES_COMMANDS.ENTITIES_MOVE_MAP, (command, data) => {
+      console.log('ENTITIES_MOVE_MAP', data)
+      // map.removeEntity(data);
+      world.moveEntity(data);
     });
 
     socket.addOnMessage(ENTITIES_COMMANDS.ENTITY_ACTION_UPDATE, (command, data) => {
-      const entity = map.getEntityByID(data.id);
+      const entity = world.getEntityByID(data.id);
       if (entity) {
         if (data.type === 'walk') {
           const newAction = new WalkAction();
@@ -248,13 +305,15 @@ export default class Socket extends BaseService {
     this.addFeature(new Players());
     this.addFeature(new MapNetworkManager());
     this.addFeature(new EntitiesNetworkManager());
+    this.addFeature(new WorldNetworkManager());
 
     this.eventMap['login.complete'] = () => {
       console.log('update login.complete')
       this.send(CVAR_COMMANDS.CVAR_SYNC);
       this.send(PLAYERS_COMMANDS.PLAYERS_LIST);
-      this.send(MAP_COMMANDS.MAP_LIST);
-      this.send(ENTITIES_COMMANDS.ENTITIES_SYNC);
+      this.send(WORLD_COMMANDS.WORLD_PING);
+      // this.send(MAP_COMMANDS.MAP_LIST);
+      // this.send(ENTITIES_COMMANDS.ENTITIES_SYNC);
       if (this._onLogin)
         this._onLogin();
     }

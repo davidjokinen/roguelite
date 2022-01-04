@@ -10,6 +10,7 @@ export default class AiWander extends EntityScript {
   }
 
   update(target, map, entities) {
+    if (entities.length === 0) return;
     const randomInt = getRandomInt(entities.length);
     let goToEntity = entities[randomInt];
     if (goToEntity === target) return;

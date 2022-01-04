@@ -1,13 +1,14 @@
 import Entity from './entity.mjs';
 
-import EntityGraphic from '../graphics/entity-graphic.js';
+
 import getScript from './get-script-client.mjs';
+import GraphicComponent from './components/graphic-component.mjs';
 
 export default class EntityClient extends Entity {
   constructor() {
     super(...arguments);
 
-    this.graphic = new EntityGraphic(this);
+    this.addComponent(new GraphicComponent());
   }
 
   get getScript() {
@@ -17,17 +18,24 @@ export default class EntityClient extends Entity {
   updateType(newType) {
     super.updateType(newType);
 
-    this.graphic.checkTextureData();
-    this.graphic.updateTextures = true;
+    this.getComponent('GraphicComponent').updateType(map);
   }
 
   checkEdges(map) {
-    this.graphic.checkEdges(map, map.entities);
+    this.getComponent('GraphicComponent').checkEdges(map);
   }
 
   render() {
-    this.graphic.render();
-    this.renderUpdate = false;
+    const graphicComponent = this.getComponent('GraphicComponent');
+    if (graphicComponent)
+      graphicComponent.render();
+  }
+
+  update(map, entities) {
+    super.update(map, entities);
+    const graphicComponent = this.getComponent('GraphicComponent');
+    if (graphicComponent)
+      graphicComponent.update();
   }
 
 }

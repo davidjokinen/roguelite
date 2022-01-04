@@ -12,6 +12,7 @@ export default class EntityGraphic extends BaseGraphic {
 
     // sprite 
     const { data } = entity;
+    this._remove = false;
     this.updateTextures = false;
     this.layer = data.layer === 'floor' ? LAYERS['entityFloor'] :  LAYERS['entity'];
     this.textureMap = null;
@@ -24,6 +25,13 @@ export default class EntityGraphic extends BaseGraphic {
     this.updateTopSprite = this.updateTopSprite.bind(this);
 
     this.checkTextureData();
+  }
+
+  updatePosition(x, y) {
+    if (this.sprite)
+      this.sprite.updatePosition(x, y);
+    if (this.topSprite)
+      this.topSprite.updatePosition(x, y+1);
   }
 
   init() {
@@ -71,8 +79,12 @@ export default class EntityGraphic extends BaseGraphic {
   }
 
   remove() {
-    if (this.sprite)
+    this._remove = true;
+    if (this.sprite) {
       this.sprite.remove();
+      this.entity.sprite = this.sprite;
+    }
+      
     if (this.topSprite) 
       this.topSprite.remove();
   }
@@ -84,6 +96,7 @@ export default class EntityGraphic extends BaseGraphic {
   }
 
   render() {
+    if (this._remove) return;
     if (!this.sprite || this.updateTextures) {
       if (!this.texture || this.updateTextures) {
         const { textureMap, textureId } = this;
@@ -92,7 +105,8 @@ export default class EntityGraphic extends BaseGraphic {
       if (!this.sprite) {
         this.sprite = this.layer.createSprite(this.texture, this.entity.x, this.entity.y);
         this.entity.sprite = this.sprite;
-      } else 
+      } 
+      else 
         this.sprite.setTexture(this.texture);
       
       if (this.topTargetTextureId) {

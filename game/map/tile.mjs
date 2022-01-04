@@ -15,9 +15,12 @@ export default class Tile {
     this.id = `${x}_${y}`
     this.data = null;
 
+    this._handlers = {};
     this.entities = [];
 
     this.walkable = true;
+
+    this._RegisterHandler('tile.onEnter', (m) => this._onTileEnter(m));
     
     this.textureMap = null;
     this.textureId = null;
@@ -25,6 +28,29 @@ export default class Tile {
     this.sprite = null;
 
     this.updateType(type);
+  }
+
+  _RegisterHandler(n, h) {
+    if (!(n in this._handlers)) {
+      this._handlers[n] = [];
+    }
+    this._handlers[n].push(h);
+  }
+
+  _onTileEnter(m) {
+    for (let i=0;i<this.entities.length;i++) {
+      this.entities[i].broadcast(m);
+    }
+  }
+
+  broadcast(msg) {
+    if (!(msg.topic in this._handlers)) {
+      return;
+    }
+
+    for (let curHandler of this._handlers[msg.topic]) {
+      curHandler(msg);
+    }
   }
 
   updateType(type) {

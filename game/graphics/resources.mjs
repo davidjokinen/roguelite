@@ -1,4 +1,5 @@
 import { Texture, TextureMap, GroupMeshHandler } from 'simple2d';
+import simple2d from 'simple2d';
 
 import roguelikeChar from '../resources/roguelikeChar_transparent.png';
 import roguelikeCity from '../resources/roguelikeCity_transparent.png';
@@ -26,31 +27,31 @@ overlayHander.setDefaultZ(1.0002);
 overlayHander.setOpacity(0.5);
 
 export const LAYERS = {
-tile: tileHandler,
-entityFloor: entityFloorHandler,
-entity: entityHandler,
-entityTops: entityTopHandler,
-overlay: overlayHander,
+  tile: tileHandler,
+  entityFloor: entityFloorHandler,
+  entity: entityHandler,
+  entityTops: entityTopHandler,
+  overlay: overlayHander,
 }
 
-const roguelikeCharTexture = new Texture(roguelikeChar);
+const roguelikeCharTexture = new simple2d.ImageTexture(roguelikeChar);
 export const roguelikeCharTextureMap = new TextureMap(roguelikeCharTexture, TextureMap.OrginalUVScalerPadding(roguelikeCharTexture, 16, 16, 1));
 // Makes referencing earier 
 roguelikeCharTextureMap.countX = 54; // image width/17 (grid size)
 roguelikeCharTextureMap.countY = 12;
 
-const roguelikeSheetTexture = new Texture(roguelikeSheet);
+const roguelikeSheetTexture = new simple2d.ImageTexture(roguelikeSheet);
 export const roguelikeSheetTextureMap = new TextureMap(roguelikeSheetTexture, TextureMap.OrginalUVScalerPadding(roguelikeSheetTexture, 16, 16, 1));
 roguelikeSheetTextureMap.countX = 57;
 roguelikeSheetTextureMap.countY = 31;
 
-const colorsTexture = new Texture(colors);
+const colorsTexture = new simple2d.ImageTexture(colors);
 export const colorsTextureMap = new TextureMap(colorsTexture, TextureMap.OrginalUVScalerPadding(colorsTexture, 3, 3, 1));
 colorsTextureMap.countX = 63;
 colorsTextureMap.countY = 63;
 
 export const SHEETS = {
-roguelikeChar: roguelikeCharTextureMap,
-roguelikeSheet: roguelikeSheetTextureMap,
-colors: colorsTextureMap,
+  roguelikeChar: roguelikeCharTextureMap,
+  roguelikeSheet: roguelikeSheetTextureMap,
+  colors: colorsTextureMap,
 }

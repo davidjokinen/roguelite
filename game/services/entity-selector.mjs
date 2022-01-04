@@ -9,11 +9,11 @@ import EatAction from '../actions/eat-action.mjs';
 import HarvestAction from '../actions/harvest-action.mjs';
 
 export default class EntitySelector extends BaseService {
-  constructor(tileSelector, map) {
+  constructor(tileSelector, world) {
     super();
     this.id = 'entity-selector';
     this.tileSelector = tileSelector;
-    this.map = map;
+    this.world = world;
 
     this.selectedEntity = {
       active: true,
@@ -68,7 +68,9 @@ export default class EntitySelector extends BaseService {
     const { x, y } = this.tileSelector.cursorPoint;
     const ACTION_TIME_WINDOW = 250;
     if (Date.now() - this.actionTimer < ACTION_TIME_WINDOW) {
-      const tile = this.map.getTile(x, y);
+      const map = this.world.getMapFocus();
+      if (!map) return;
+      const tile = map.getTile(x, y);
       if (!tile) return;
       if (this.selectedEntity.entity)
         this.giveEntityAction(this.selectedEntity.entity, tile);
@@ -86,7 +88,9 @@ export default class EntitySelector extends BaseService {
     }
     if (!this.selectedEntity.active)
       return;
-    const tile = this.map.getTile(x, y);
+    const map = this.world.getMapFocus();
+    if (!map) return;
+    const tile = map.getTile(x, y);
     if (!tile) return;
     if (tile.entities.length === 0) {
       this.selectedEntity.entity = null;

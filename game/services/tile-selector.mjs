@@ -22,7 +22,7 @@ export default class TileSelector extends BaseService {
     this.onMouseMove = this.onMouseMove.bind(this);
   }
 
-  onMouseMove(event) {
+  onMouseMove(event, dontTrigger) {
     const {
       raycaster,
       mousePoint,
@@ -30,8 +30,10 @@ export default class TileSelector extends BaseService {
       cursorPoint,
       camera,
     } = this;
-    mousePoint.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-    mousePoint.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+    const clientX = event.clientX;
+    const clientY = event.clientY;
+    mousePoint.x = ( clientX / window.innerWidth ) * 2 - 1;
+    mousePoint.y = - ( clientY / window.innerHeight ) * 2 + 1;
     
     raycaster.setFromCamera( mousePoint, camera );
     
@@ -42,12 +44,13 @@ export default class TileSelector extends BaseService {
     let y = ~~intersects.y;
     if (intersects.x<0) x-=1;
     if (intersects.y<0) y-=1;
+    cursorPoint.x = x;
+    cursorPoint.y = y;
+    cursorPoint.rawX = intersects.x;
+    cursorPoint.rawY = intersects.y;
     if (cursorPoint.x !== x || cursorPoint.y !== y) {
-      cursorPoint.x = x;
-      cursorPoint.y = y;
-      cursorPoint.rawX = intersects.x;
-      cursorPoint.rawY = intersects.y;
-      this._onMouseMove.forEach(event => event(cursorPoint));
+      if (!dontTrigger)
+        this._onMouseMove.forEach(event => event(cursorPoint));
     }
   }
 

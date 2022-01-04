@@ -1,56 +1,23 @@
 import Chunk from './chunk.mjs';
 import Tile from  './tile.mjs';
 
+import { v4 as uuidv4 } from 'uuid';
+
 // import { loopXbyX, getRandomInt } from '../core/utils.mjs';
 import ENTITIES_COMMANDS from '../../game/net/common/entities.js';
 import Entity from '../entities/entity.mjs';
 
 const CHUNK_SIZE = 3;
-const SIZE = 50;
+const SIZE = 25;
 
 let mapFocus = null;
 
 
-export class EntityManager {
-  constructor(list) {
-    this.list = list;
-  }
-
-  broadcast(event, data) {
-
-  }
-
-  add(e) {
-    this.list.push(e);
-    this.broadcast(ENTITIES_COMMANDS.ENTITIES_ADD, e);
-  }
-
-  remove(e) {
-    const index = this.list.indexOf(event);
-		if (index < -1) return;
-		this.list.splice(index, 1); 
-    this.broadcast(ENTITIES_COMMANDS.ENTITIES_REMOVE, e);
-  }
-
-  export() {
-    const data = {
-      list: this.list.map(e => e.export())
-    };
-    return data;
-  }
-
-  import(data) {
-    this.list.forEach(e => {
-      e.remove();
-    });
-    // data.list.map(e => )
-
-  }
-}
-
 export default class Map {
-  constructor(scene, generator, pathFindingComponent) {
-    this.scene = scene;
+  constructor(world, generator, pathFindingComponent) {
+    this.id = uuidv4();
+    this.world = world;
+    this.scene = world.scene;
     this.generator = generator;
     this.pathFindingComponent = pathFindingComponent;
     this.chunks = {};
@@ -59,7 +26,6 @@ export default class Map {
     this._onRemoveEntity = [];
 
     this.entities = [];
-    this.entityManager = new EntityManager(this.entities);
     this.tickEntities = [];
     this.renderEntities = [];
 
@@ -90,25 +56,40 @@ export default class Map {
     return null;
   }
 
-  addEntity(entity) {
+  addEntity(entity) { 
+    if (entity._removed) {
+      entity._removed = false;
+    } else {
+      entity.initEntity(this, this.world);
+    }
+    
     entity.map = this;
-    this.entityManager.add(entity);
+    if (this.world) {
+      this.world.addEntity(entity);
+    } else {
+      throw new Error('WHy')
+    }    
+
+    if (this.entities.indexOf(entity) !== -1) {
+      return;
+    }
+    this.entities.push(entity);
     entity.needsRender = () => {
       this.renderEntities.push(entity);
     };
     this.renderEntities.push(entity);
-    if (entity.script) {
+    if (entity.isUpdateEntity) {
       this.tickEntities.push(entity);
     }
     this._onAddEntity.forEach(evt => evt(entity));
     return entity;
   }
 
-  removeEntity(entity) {
+  removeEntity(entity, dontDelete) {
     if (Number.isInteger(entity)) {
       entity = this.getEntityByID(entity);
     }
-    if (!entity)
+    if (!entity) 
       return;
     let index = this.entities.indexOf(entity);
     if (index > -1) {
@@ -119,7 +100,9 @@ export default class Map {
       this.tickEntities.splice(index, 1);
     }
     this._onRemoveEntity.forEach(evt => evt(entity));
-    entity.remove();
+    if (!dontDelete)
+      entity.destroy();
+    return true;
   }
 
   getTile(x, y) {
@@ -220,6 +203,8 @@ export default class Map {
   findPath(startX, startY, endX, endY) {
     const startTile = this.getTile(startX, startY);
     const endTile = this.getTile(endX, endY);
+    if (!startTile || !endTile) return null;
+    if (this.pathFindingComponent) return null;
     return this.pathFindingComponent.findPath(this, startTile, endTile);
   }
 
@@ -227,7 +212,13 @@ export default class Map {
     const length = this.tickEntities.length;
     // console.log(length)
     for (let i=0; i<length; i++) {
-      this.tickEntities[i].update(this, this.entities);
+      const entity = this.tickEntities[i];
+      if (!entity) return;
+      // if (entity.map !== this) {
+      //   console.log('error')
+      //   continue;
+      // }
+      entity.update(this, this.entities);
     }
   }
 
@@ -248,21 +239,37 @@ export default class Map {
   }
 
   removeEntities() {
-    this.entities.forEach(entity => entity.remove());
+    // console.log(this.entities.length)
+    while (this.entities.length > 0) {
+      const entity = this.entities[0];
+      if (!entity.world)
+        this.entities.shift();
+      entity.destroy();
+    }
+    // console.log('DONE?')
+    // this.entities.forEach((entity, i) => {
+    //   console.log(i)
+    //   entity.remove()
+    // });
     this.entities = [];
-    this.entityManager.list = this.entities;
     this.tickEntities = [];
   }
 
   remove() {
-    console.log('MAP CLEAR')
+    // console.log('MAP CLEAR')
+    if (this.world) {
+      this.world.removeMap(this);
+    }
+    // console.log(this.entities.length)
     this.removeEntities();
     Object.values(this.chunks).forEach(chunk => chunk.remove());
     this.chunks = {};
   }
 
   export() {
-    const out = {};
+    const out = {
+      id: this.id,
+    };
     out.chunks = [];
     Object.values(this.chunks).forEach(chunk => {
       out.chunks.push(chunk.export())
@@ -271,7 +278,17 @@ export default class Map {
   }
 
   exportEntities() {
-    return this.entityManager.export();
+    return {
+      mapID: this.id,
+      list: this.entities.map(entity => entity.export()),
+    };
+  }
+
+  exportAll() {
+    return {
+      map: this.export(),
+      entities: this.exportEntities(),
+    };
   }
 
   import(data) {
@@ -279,14 +296,29 @@ export default class Map {
     Object.values(this.chunks).forEach(chunk => chunk.remove());
     this.chunks = {};
     const newChunkData = data.chunks;
-    
+    if (this.world) {
+      this.world.replaceMapID(this, this.id, data.id);
+    }
+    this.id = data.id;
     newChunkData.forEach(chunk => {
       let i = `${chunk.x}_${chunk.y}`;
-      console.log(i)
+      // console.log(i)
       this.chunks[i] = new Chunk(this, chunk.x, chunk.y);
       this.chunks[i].import(chunk);
     });
     this.refreshEdges();
+  }
+
+  importAll(data) {
+    this.removeEntities();
+    this.import(data.map);
+    const length = data.entities.list.length;
+    for(let i=0; i<length; i++) {
+      const entity = data.entities.list[i];
+      if (entity.type !== undefined && entity.x !== undefined && entity.y !== undefined) {
+        this.createEntity(entity);
+      }
+    }
   }
 
   updateTile(data) {
@@ -320,7 +352,11 @@ export default class Map {
       console.log('error ', data)
       return;
     }
+    const searchEntity = this.getEntityByID(data.id);
+    if (searchEntity) return searchEntity;
     const newEntity = new _Entity(type, data.x, data.y);
+    if (this.SERVER_UPDATE)
+      newEntity.SERVER_UPDATE = this.SERVER_UPDATE;
     if (data.id)
       newEntity.id = data.id;
     this.addEntity(newEntity);
@@ -352,9 +388,9 @@ export default class Map {
       return this._addEntity(entity);
     };
 
-    this._removeEntity = this.removeEntity;
-    this.removeEntity = (entity) => {
-      return this._removeEntity(entity);
-    };
+    // this._removeEntity = this.removeEntity;
+    // this.removeEntity = (entity) => {
+    //   return this._removeEntity(entity);
+    // };
   }
 }

@@ -1,0 +1,3 @@
+[submodule "simple-2d"]
+	path = simple-2d
+	url = git@github.com:davidjokinen/simple-2d.git

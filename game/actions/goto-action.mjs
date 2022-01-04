@@ -19,6 +19,7 @@ export default class GoToAction extends Action {
     const { gotoTile } = this;
     if (!gotoTile) return PREFORM_ACTION_RESULT.FINISHED_FAIL;
     this.pathWorker = map.findPath(entity.x, entity.y, gotoTile.x, gotoTile.y);
+    if (!this.pathWorker) return PREFORM_ACTION_RESULT.FINISHED_FAIL;
     return PREFORM_ACTION_RESULT.ACTIVE;
   }
 

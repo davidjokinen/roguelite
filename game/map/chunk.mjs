@@ -2,7 +2,7 @@ import Tile from './tile.mjs';
 // const Tile = require('./tile.js');
 
 
-const SIZE = 50;
+const SIZE = 25;
 
 export default class Chunk {
   constructor(map, x, y) {

@@ -9,7 +9,7 @@ export default function getScript(name) {
   switch(name) {
     // case 'player-control': return PlayerControl;
     case 'socket-player-control': return SocketPlayerControl;
-    // case 'ai-wander': return AiWander;
+    case 'ai-wander': return SocketAiSim;
     // case 'tree-life': return TreeLife;
     case 'ai-sim': return SocketAiSim;
   }

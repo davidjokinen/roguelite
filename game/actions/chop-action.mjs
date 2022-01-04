@@ -18,7 +18,7 @@ export default class ChopAction extends BaseEntityAction {
     if (output)
       return output;
     // this.cuttingTime = null;
-    this.target.remove();
+    this.target.destroy();
     map.addEntity(new Entity('wood-pile', this.target.x, this.target.y));
     return PREFORM_ACTION_RESULT.FINISHED_SUCCESS;
   }

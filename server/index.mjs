@@ -2,7 +2,7 @@
 // const http = require('http');
 // const path = require('path');
 // const socket_io = require('socket.io');
-
+Error.stackTraceLimit = 20
 import { readFile } from 'fs';
 import { createServer } from 'http';
 import Module from 'module';

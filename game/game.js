@@ -72,9 +72,6 @@ const changeScene = (id) => {
   if (oldScene && remove) {
     // console.log('remove action ', oldScene)
     oldScene.remove();
-    // Dirty hack to clear non-pause screen
-    if (!oldScene.dontDestory)
-      handler.reset();
   }
 }
 
@@ -91,6 +88,22 @@ const gameLoop = function () {
   renderer.render( scene, camera );
   stats.end();
 };
+
+const updateGameloopNoRender = function () {
+  gameScene.update();
+  gameScene.render();
+
+  handler.checkMeshes();
+};
+let intervalUpdateID = null;
+document.addEventListener("visibilitychange", (e) => {
+  console.log(document.visibilityState)
+  if (document.visibilityState == 'visible') {
+    clearInterval(intervalUpdateID);
+  } else {
+    intervalUpdateID = setInterval(updateGameloopNoRender, 200);
+  }
+});
 
 
 gameLoop();

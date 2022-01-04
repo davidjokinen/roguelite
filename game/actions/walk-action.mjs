@@ -17,11 +17,18 @@ export default class WalkAction extends Action {
   }
 
   import(entity, data) {
-    entity.x = data.startX;
-    entity.y = data.startY;
-    this.moveToX = data.endX;
-    this.moveToY = data.endY;
-    entity._onChangePosition();
+    if (Math.abs(data.startX - entity.x) > 1)
+      entity.x = data.startX;
+    if (Math.abs(data.startY - entity.y) > 1)
+      entity.y = data.startY;
+    this.moveToX = (data.startX - entity.x) + data.endX;
+    this.moveToY = (data.startY - entity.y) + data.endY;
+    // entity._onChangePosition();
+    entity.broadcast({
+      topic: 'update.position',
+      skipTileTrigger: false,
+      mapChanged: false,
+    });
     if (entity.sprite)
       entity.sprite.updatePosition(entity.x, entity.y);
   }
@@ -34,9 +41,11 @@ export default class WalkAction extends Action {
       const tile = this.moveToX;
       moveToX = tile.x - entity.x;
       moveToY = tile.y - entity.y;
+     
     }
     return {
       id: entity.id,
+      mapID: entity.map.id,
       type: this.id,
       startX: entity.x,
       startY: entity.y,
@@ -59,7 +68,12 @@ export default class WalkAction extends Action {
     this.y = entity.y + this.moveToY;
     entity.x = this.x;
     entity.y = this.y;
-    entity._onChangePosition();
+    // entity._onChangePosition();
+    entity.broadcast({
+      topic: 'update.position',
+      skipTileTrigger: false,
+      mapChanged: false,
+    });
   }
 
   perform(entity, map, entities) {

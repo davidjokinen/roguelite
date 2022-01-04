@@ -61,6 +61,14 @@ class ChatNetworkManager extends NetworkFeature {
         message: data
       });
     });
+
+    manager.sendMessage = (message) => {
+      manager.broadcast(CHAT_COMMANDS.CHAT_MESSAGE, {
+        id: uuidv4(),
+        server: true,
+        message: message
+      });
+    };
   }
 
   remove(manager) {
@@ -96,6 +104,29 @@ class PlayersNetworkManager extends NetworkFeature {
   }
 }
 
+import WORLD_COMMANDS from '../../game/net/common/world.js';
+
+class WorldNetworkManager extends NetworkFeature {
+  init(manager) {
+    const world = this.params.world;
+    if (!world) {
+      console.error('World not loaded');
+      return;
+    }
+    
+    manager.addOnMessage(WORLD_COMMANDS.WORLD_PING, (client, _) => {
+      const map = world.getMapFocusByClient(client);
+      client.send(WORLD_COMMANDS.WORLD_PING, map.exportAll());
+      // client.send(ENTITIES_COMMANDS.ENTITIES_SYNC, map.exportEntities());
+    });
+
+    manager.addOnMessage(WORLD_COMMANDS.WORLD_UPDATE, (client, _) => {
+      // Event for client
+    });
+
+  }
+}
+
 import MAP_COMMANDS from '../../game/net/common/map.js';
 
 class MapNetworkManager extends NetworkFeature {
@@ -127,65 +158,96 @@ class MapNetworkManager extends NetworkFeature {
 
 import ENTITIES_COMMANDS from '../../game/net/common/entities.js';
 import Map from '../../game/map/map.mjs';
-import { EntityManager } from '../../game/map/map.mjs';
+// import { EntityManager } from '../../game/map/map.mjs';
 import BaseGenerator from '../../game/map/generators/base-generator.mjs';
 
 class EntitiesNetworkManager extends NetworkFeature {
   
   init(manager) {
-    const map = this.params.map;
-    if (!map) {
-      console.error('Map not loaded');
+    const world = this.params.world;
+    if (!world) {
+      console.error('World not loaded');
       return;
     }
 
     const onEntityUpdate = (entity, action) => {
       if (action.id === 'walk') {
-        manager.broadcast(ENTITIES_COMMANDS.ENTITY_ACTION_UPDATE, action.export(entity));
+        const output = action.export(entity);
+        manager.broadcast(ENTITIES_COMMANDS.ENTITY_ACTION_UPDATE, output);
       }
     }
 
-    for (let i=0; i<map.entities.length; i++) {
-      const entity = map.entities[i];
-      if (entity.script) {
-        entity.onActionUpdate((action) => {
-          onEntityUpdate(entity, action);
-        });
+    world.maps.forEach(map => {
+      for (let i=0; i<map.entities.length; i++) {
+        const entity = map.entities[i];
+        if (entity.isUpdateEntity) {
+          entity.onActionUpdate((action) => {
+            onEntityUpdate(entity, action);
+          });
+        }
       }
-    }
+    });
+
+    world.onAddMap(map => {
+
+    });
+
+    world.onRemoveMap(map => {
+
+    });
 
     manager.addOnMessage(ENTITIES_COMMANDS.ENTITIES_SYNC, (client, _) => {
-      client.send(ENTITIES_COMMANDS.ENTITIES_SYNC, map.exportEntities());
+      let map = null;
+      if (client.entity) {
+        map = client.entity.map;
+      } else {
+        map = world.getMapFocus();
+      }
+      if (map) {
+        client.send(ENTITIES_COMMANDS.ENTITIES_SYNC, map.exportEntities());
+      }
     });
 
     manager.addOnMessage(ENTITIES_COMMANDS.ENTITIES_ADD, (client, event, data) => {
       const newEntity = {
         target: data.target,
         id: data.id,
+        mapID: data.mapID,
         type: data.type,
         x: data.x,
         y: data.y,
       };
-      map.createEntity(newEntity);
+      world.createEntity(newEntity);
     });
 
     manager.addOnMessage(ENTITIES_COMMANDS.ENTITIES_REMOVE, (client, event, data) => {
       const removeEntityID = data;
-      map.removeEntity(removeEntityID);
+      world.removeEntity(removeEntityID);
+      // map.removeEntity(removeEntityID);
     });
 
-    map.onAddEntity(entity => {
+    world.onAddEntity(entity => {
+      // console.log('Add Entity')
       manager.broadcast(ENTITIES_COMMANDS.ENTITIES_ADD, entity.export());
-      if (entity.script) {
+      if (entity.isUpdateEntity) {
         entity.onActionUpdate((action) => {
           onEntityUpdate(entity, action);
         });
       }
     });
 
-    map.onRemoveEntity(entity => {
+    world.onRemoveEntity(entity => {
+      // console.log('Remove Entity ', !!entity, entity.id)
+      if (!entity.id) {
+        console.log(entity)
+        throw new Error('test')
+      }
       const removeEntityID = entity.id;
       manager.broadcast(ENTITIES_COMMANDS.ENTITIES_REMOVE, removeEntityID);
+    });
+
+    world.onEntityMapMove(entity => {
+      manager.broadcast(ENTITIES_COMMANDS.ENTITIES_MOVE_MAP, entity.export());
     });
   }
 }
@@ -197,6 +259,8 @@ import DefaultScene from '../../game/scenes/default-scene.mjs';
 import PLAYER_COMMANDS from '../../game/net/common/player.js';
 
 import WalkAction from '../../game/actions/walk-action.mjs';
+import CaveGenerator from '../../game/map/generators/cave-generator.mjs';
+import GameWorld from '../../game/map/game-world.mjs';
 
 export default class WorldManger extends DefaultScene  {
   constructor() {
@@ -241,8 +305,20 @@ export default class WorldManger extends DefaultScene  {
     const pathFinding = new PathFinding();
     const actionQueue = new ActionQueue();
 
-    this.map = new Map(this, new BaseGenerator(), pathFinding);
-    const Entity = this.map.getEntityClass();
+    this.world = new GameWorld();
+    this.world.scene = this;
+
+    this.map = new Map(this.world, new BaseGenerator(), pathFinding);
+    this.caveTest = new Map(this.world, new CaveGenerator(), pathFinding);
+    this.titleTest = new Map(this.world, null, pathFinding);
+
+    this.world.addMap(this.map);
+    this.world.addMap(this.caveTest);
+    this.world.addMap(this.titleTest);
+    
+    this.world.setMapFocus(this.caveTest, 0, 0);
+
+    const Entity = this.world.getEntityClass();
 
     this.addComponent(pathFinding);
     this.addComponent(gameTime);
@@ -251,12 +327,22 @@ export default class WorldManger extends DefaultScene  {
     this.addFeature(new CVarsNetworkManager());
     this.addFeature(new ChatNetworkManager());
     this.addFeature(new PlayersNetworkManager());
-    this.addFeature(new MapNetworkManager({ map: this.map }));
-    this.addFeature(new EntitiesNetworkManager({ map: this.map }));
+    this.addFeature(new WorldNetworkManager({ world: this.world }));
+    // this.addFeature(new MapNetworkManager({ map: this.map }));
+    this.addFeature(new EntitiesNetworkManager({ world: this.world }));
     
     this.addOnMessage(PLAYER_COMMANDS.PLAYER_SPAWN, (client, event, data) => {
       if (!client.entity) {
-        client.entity = this.map.addEntity(new Entity('socket-player', 75, 75));
+        client.onMapChange = () => {
+          const map = this.world.getMapFocusByClient(client);
+          // console.log('map ',!!client.entity.world)
+          client.send(WORLD_COMMANDS.WORLD_UPDATE, map.exportAll());
+          client.send(PLAYER_COMMANDS.PLAYER_SPAWN, { id: client.entity.id });
+        }
+        client.entity = this.map.addEntity(new Entity('socket-player', 37, 37));
+        client.entity.addOnMapChange(client.onMapChange);
+        const map = this.world.getMapFocusByClient(client);
+        client.send(WORLD_COMMANDS.WORLD_UPDATE, map.exportAll());
         client.send(PLAYER_COMMANDS.PLAYER_SPAWN, { id: client.entity.id });
       }
     });
@@ -271,6 +357,38 @@ export default class WorldManger extends DefaultScene  {
       entity.MOVE_RIGHT = data.MOVE_RIGHT;
     });
 
+    this.map.addEntity(new Entity('cave-enter', 40, 40, {
+      teleport: {
+        map: this.caveTest,
+        x: 40,
+        y: 35,
+      }
+    }));
+
+    this.caveTest.addEntity(new Entity('cave-enter', 40, 35, {
+      teleport: {
+        map: this.map,
+        x: 40,
+        y: 40,
+      }
+    }));
+
+    this.map.addEntity(new Entity('cave-enter', 35, 35, {
+      teleport: {
+        map: this.map,
+        x: 35,
+        y: 40,
+      }
+    }));
+
+    this.map.addEntity(new Entity('cave-enter', 35, 40, {
+      teleport: {
+        map: this.map,
+        x: 35,
+        y: 35,
+      }
+    }));
+
     this.setCvar('title', 'Multiplayer Game Test');
   }
 
@@ -279,6 +397,8 @@ export default class WorldManger extends DefaultScene  {
       this.remove(_client);
     });
     console.log('Player Connected:',_client.ID)
+    if (this.sendMessage) 
+      this.sendMessage(`Player Connected: ${_client.ID}`);
     this.clients.push(_client);
     this.features.forEach(feature => {
       feature.clientAdd(this, _client);
@@ -289,8 +409,13 @@ export default class WorldManger extends DefaultScene  {
   remove(client) {
     const _client = client;
     console.log('Player Disconnected:',_client.ID)
-    if (client.entity)
-      client.entity.remove();
+    if (this.sendMessage) 
+      this.sendMessage(`Player Disconnected: ${_client.ID}`);
+    if (client.entity) {
+      client.entity.removeOnMapChange(client.onMapChange);
+      client.entity.destroy();
+      client.entity = null;
+    }
     this.clients = this.clients.filter(test => client.ID !== test.ID);
     this.features.forEach(feature => {
       feature.clientRemove(this, _client);
@@ -299,7 +424,7 @@ export default class WorldManger extends DefaultScene  {
 
   update() {
     super.update();
-    this.map.update();
+    this.world.update();
     for (let i=0;i<this.clients.length;i++) {
       this.clients[i].update();
     }

@@ -19,7 +19,7 @@ export default class BaseEntityAction extends Action {
       globalTargeting[this.target.id] = entity;
     if (globalTargeting[this.target.id] !== entity)
       return PREFORM_ACTION_RESULT.FINISHED_FAIL;
-    if (this.target._remove)
+    if (this.target._destroyed)
       return PREFORM_ACTION_RESULT.CANCELLED;
     if (this.performSubAction(entity, map, entities))
       return PREFORM_ACTION_RESULT.ACTIVE;
@@ -44,7 +44,7 @@ export default class BaseEntityAction extends Action {
     }
     return null;
     this.cuttingTime = null;
-    this.target.remove();
+    this.target.destroy();
     delete globalTargeting[this.target.id];
     map.addEntity(new Entity('wood-pile', this.target.x, this.target.y));
     return PREFORM_ACTION_RESULT.FINISHED_SUCCESS;

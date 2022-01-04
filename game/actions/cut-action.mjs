@@ -17,7 +17,7 @@ export default class CutAction extends BaseEntityAction {
     const output = super.perform(entity, map, entities);
     if (output)
       return output;
-    this.target.remove();
+    this.target.destroy();
     // map.addEntity(new Entity('wood-pile', this.target.x, this.target.y));
     return PREFORM_ACTION_RESULT.FINISHED_SUCCESS;
   }

@@ -42,7 +42,7 @@ export default class TreeLife extends EntityScript {
       } else if (target.data.id === 'tree') {
         target.updateType('dead-tree');
       } else {
-        target.remove();
+        target.destroy();
       }
     } else if (repopulate) {
       const tile = map.findEmptyTile(target.x, target.y);

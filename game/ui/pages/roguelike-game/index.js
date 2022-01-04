@@ -19,6 +19,8 @@ import ResourceCounter from '../../components/resource-counter';
 import TimeControl from '../../components/time-control';
 import NetworkDetails from '../../components/network-details';
 import ChatWindow from '../../components/chat-window';
+import PlayerStatus from '../../components/player-status';
+import PlayerToolbar from '../../components/player-toolbar';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,12 +47,19 @@ const useStyles = makeStyles((theme) => ({
     left: '0px',
     padding: '10px',
   },
+  bottemRight: {
+    position: 'fixed',
+    bottom: '0px',
+    right: '0px',
+    padding: '10px',
+  },
   bottomRow: {
     position: 'fixed',
-    textAlign: 'center',
+    // textAlign: 'center',
     width: '100%',
     bottom: '0px',
-    left: 'auto',
+    left: '50%',
+    marginLeft: '-150px',
     right: 'auto',
   },
   topRow: {
@@ -74,16 +83,7 @@ const useStyles = makeStyles((theme) => ({
   flexItem: {
     flex: '0 0 auto',
   },
-  bar: {
-    width: '200px',
-    height: '10px',
-    backgroundColor: '#666',
-    display: 'inline-block',
-  },
-  barContainer: {
-
-    height: '20px',
-  }
+  
 }));
 
 export default function Game(props) {
@@ -114,26 +114,19 @@ export default function Game(props) {
       </div>
       {/* <ResourceCounter /> */}
       <Box className={classes.bottemLeft}>
-        <div>
-          <ChatWindow {...props}/>
-        </div> 
-        <div className={classes.barContainer}>
-          <div className={classes.bar} style={{backgroundColor: '#F00'}}></div> 100/100 Health
-        </div>
-        <div className={classes.barContainer}>
-          <div className={classes.bar} style={{backgroundColor: '#0F0'}}></div> 100/100 
-        </div>
-        <div className={classes.barContainer}>
-          <div className={classes.bar} style={{backgroundColor: '#00F'}}></div> 100/100
-        </div>
+        <PlayerStatus {...props}/>
       </Box>
       {/* <Box className={classes.topRow}>
         Top Row
       </Box> */}
       <Box className={classes.bottomRow}>
-        Action Bar
+        <PlayerToolbar {...props}/>
       </Box>
-      
+      <Box className={classes.bottemRight}>
+      <div>
+          <ChatWindow {...props}/>
+        </div> 
+      </Box>
     </div>
   );
 }

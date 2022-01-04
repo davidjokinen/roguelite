@@ -39,47 +39,6 @@ class ChatMessageHistory extends React.Component {
   }
 };   
 
- class ChatWindowOld extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      messages: [],
-      inputText: ''
-    };
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.onChange = this.onChange.bind(this);
-  }
-  handleSubmit(e) {
-    e.preventDefault();
-    const { sendMessage } = this.props;
-    sendMessage({ message: this.state.inputText });
-    this.setState({inputText: '' });
-  }
-  componentDidMount() {
-    // const { onMessage } = this.props;
-    // onMessage.on(message => {
-    //   var nextMessages = this.state.messages.concat([message]);
-    //   this.setState({ messages: nextMessages});
-    // });
-  }
-  onChange(e) {
-    this.setState({inputText: e.target.value});
-  }
-  render() {
-    
-     
-     return (
-        <div style={windowStyles}>
-           <ChatMessageHistory messages={this.state.messages} />
-           <form style={formStyles} onSubmit={this.handleSubmit}>
-              <input style={inputStyles} type="text" onChange={this.onChange} value={this.state.inputText} />
-              <button style={btnStyles}>Send</button>
-           </form>
-        </div>
-     );
-  }
-};
-
 var windowStyles = {
   maxWidth: '40em',
   margin: '1rem auto'
@@ -125,6 +84,7 @@ export default function ChatWindow(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
     let message = e.target.elements.message.value;
+    if (message === '') return;
     e.target.elements.message.value = '';
     socket.send(CHAT_MESSAGE, message);
   };
