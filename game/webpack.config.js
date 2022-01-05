@@ -11,6 +11,7 @@ const current = {
       three: path.resolve('./node_modules/three'),
       react: path.resolve('./node_modules/react'),
       'core-js': path.resolve('./node_modules/core-js'),
+      'simple2d': path.resolve('../simple-2d'),
       'react-dom': path.resolve('./node_modules/react-dom'),
       'react-is': path.resolve('./node_modules/react-is'),
     },
