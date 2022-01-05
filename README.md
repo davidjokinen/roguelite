@@ -2,7 +2,7 @@
 Aiming to build a game
 
 ## Current playable version
-[https://roguelite-2-546nu.ondigitalocean.app/index.html](https://roguelite-2-546nu.ondigitalocean.app/index.html)
+[https://roguelite-3rkvm.ondigitalocean.app/index.html](https://roguelite-3rkvm.ondigitalocean.app/index.html)
 It updates everytime I push.
 
 ## Getting it working in dev mode
