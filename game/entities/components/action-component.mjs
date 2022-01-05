@@ -4,7 +4,7 @@ import { PREFORM_ACTION_RESULT } from '../../actions/base-action.mjs';
 export default class ActionComponent extends Component {
   constructor() {
     super();
-
+    this.id = 'ActionComponent';
     this.action = null;
     this.script = null;
     this.actionQueue = [];

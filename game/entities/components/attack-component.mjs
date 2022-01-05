@@ -5,7 +5,7 @@ import VelocityComponent from "./velocity-component.mjs";
 export default class AttackComponent extends Component {
   constructor() {
     super();
-
+    this.id = 'AttackComponent';
   }
 
   initComponent() {

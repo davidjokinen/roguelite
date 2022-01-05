@@ -1,6 +1,7 @@
 
 export default class Component {
   constructor() {
+    this.id = '';
     this.parent_ = null;
     this.tickComponent = false;
   }

@@ -11,7 +11,7 @@ const classMap = {
 export default class GraphicComponent extends Component {
   constructor() {
     super();
-
+    this.id = 'GraphicComponent';
     this.effects = [];
   }
 

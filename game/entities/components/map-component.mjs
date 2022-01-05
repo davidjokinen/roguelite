@@ -5,7 +5,7 @@ import WalkAction from '../../actions/walk-action.mjs';
 export default class MapComponent extends Component {
   constructor() {
     super();
-
+    this.id = 'MapComponent';
     this._curTile = null;
     this._map = null;
 

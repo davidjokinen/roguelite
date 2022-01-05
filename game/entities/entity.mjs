@@ -79,7 +79,7 @@ export default class Entity {
 
   addComponent(c) {
     c.setParent(this);
-    this._components[c.constructor.name] = c;
+    this._components[c.id] = c;
     
     c.initComponent();
     if (c.tickComponent)

@@ -4,7 +4,7 @@ import { createEventlistener } from '../../core/utils.mjs';
 export default class HealthComponent extends Component {
   constructor() {
     super();
-
+    this.id = 'HealthComponent';
     this.health = 160;
     this.maxHealth = 200;
 

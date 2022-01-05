@@ -3,6 +3,7 @@ import Component from "../component.mjs";
 export default class VelocityComponent extends Component {
   constructor(vx, vy) {
     super();
+    this.id = 'MapComponent';
     this.tickComponent = true;
     this.vx = vx || 0;
     this.vy = vy || 0;
